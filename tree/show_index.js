@@ -15,7 +15,7 @@ index.prototype =  {
         var show = this.getQueryString('show', location.search);
         show = show || 'index';
         var loadArr = [];
-        loadArr.push(publicPath + show + version + '.js?0.4645917871523575');
+        loadArr.push(publicPath + show + version + '.js?0.19890242977596162');
         require(loadArr);
     },
 
