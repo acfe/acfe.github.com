@@ -1,5 +1,5 @@
 const version = '';
-const publicPath = '/';
+const publicPath = '/tree/';
 
 var index = function () {
     this.init();
@@ -15,7 +15,7 @@ index.prototype =  {
         var show = this.getQueryString('show', location.search);
         show = show || 'index';
         var loadArr = [];
-        loadArr.push(publicPath + show + version + '.js?0.9936646613107663');
+        loadArr.push(publicPath + show + version + '.js?0.7151345832386211');
         require(loadArr);
     },
 
