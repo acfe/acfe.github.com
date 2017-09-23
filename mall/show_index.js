@@ -1,5 +1,5 @@
 const version = '';
-const publicPath = '/';
+const publicPath = '/mall/';
 
 var index = function () {
     this.init();
@@ -15,7 +15,7 @@ index.prototype =  {
         var show = this.getQueryString('show', location.search);
         show = show || 'index';
         var loadArr = [];
-        loadArr.push(publicPath + show + version + '.js?0.9072902875595421');
+        loadArr.push(publicPath + show + version + '.js?0.9522747538805334');
         require(loadArr);
     },
 
