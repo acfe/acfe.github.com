@@ -1,0 +1,44 @@
+.fc-textarea {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  .placeholder-text {
+    line-height: 20px;
+    font-size: 14px;
+    color: transparent;
+    pointer-events: none;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+  .textarea {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    line-height: 20px;
+    font-size: 14px;
+    background-color: transparent;
+    outline: none;
+    resize: none;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    border: none;
+    font-family: inherit;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+    padding: 0;
+    margin: 0;
+  }
+  .textarea::-webkit-input-placeholder {
+    color: #999999;
+  }
+  .tip {
+    padding: 5px;
+    color: #ff6600;
+    font-size: 14px;
+  }
+}

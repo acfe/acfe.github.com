@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log*
+.DS_Store
+.idea/
+*~
+.swp
+.vscode
+dist
+scripts/config/env.config.js
+scripts/templates/www/entry.js
+scripts/templates/www/*.html
+src/common/js/env.config.js

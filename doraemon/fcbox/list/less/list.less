@@ -1,0 +1,32 @@
+.fc-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  &-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  &-pre-loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    visibility: hidden;
+    left: 100%;
+    top: 0;
+  }
+  .fc-list-data-loading {
+    width: 100%;
+    height: 60px;
+    background: no-repeat center url(../img/list_loading.gif);
+    background-size: 60px auto;
+  }
+  .fc-list-local-item {
+    position: absolute;
+    width: 100%;
+  }
+}

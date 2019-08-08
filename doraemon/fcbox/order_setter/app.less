@@ -1,0 +1,48 @@
+.OrderSetter {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .OrderSetterItem {
+    position: relative;
+    width: 100%;
+    .selectedBorder {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      box-sizing: border-box;
+      z-index: 1;
+    }
+  }
+  .delOrderIcon {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 1000;
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+    background: no-repeat center url('img/ordersetter-close.png');
+    background-color: #fff;
+    background-size: auto 15px;
+    cursor: pointer;
+  }
+  .delOrderIconSetter {
+    right: 0;
+    top: 0;
+  }
+  .addOrderIcon {
+    position: absolute;
+    right: 45px;
+    top: 5px;
+    z-index: 1000;
+    width: 30px;
+    height: 30px;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+    background: no-repeat center url('img/ordersetter-add.png');
+    background-color: #fff;
+    background-size: auto 24px;
+    cursor: pointer;
+  }
+}

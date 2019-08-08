@@ -1,0 +1,31 @@
+.fc-dom-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .dom-player-scroll {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: transparent;
+    .dom-player-content {
+      transform: translate3d(0, 0 , 0);
+      z-index: 0;
+      display: table;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      .player-td {
+        display: table-cell;
+        position: relative;
+        width: 100%;
+        vertical-align: middle;
+        .image {
+          font-size: 0;
+          line-height: 0;
+        }
+      }
+    }
+  }
+}

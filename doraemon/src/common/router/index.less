@@ -1,0 +1,171 @@
+@import '../less/color.less';
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 12px #ccc;
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 12px #ccc;
+  background-color: #ccc;
+}
+
+.router-main {
+  padding-left: 250px;
+  height: 100%;
+  min-width: 840px;
+  .router-menu {
+    position: fixed;
+    width: 240px;
+    height: 100%;
+    background-color: #0abdc0;
+    left: 0;
+    top: 0;
+    .logo {
+      position: absolute;
+      height: 100px;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      background: #0abdc0 no-repeat center url('../../common/img/hivebox-logo.png');
+      background-size: 120px auto;
+      border-bottom: 1px solid #fff;
+    }
+    .menu-content {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding-top: 101px;
+      box-sizing: border-box;
+      .menu-scroll-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
+  .router-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .header-content {
+      position: absolute;
+      height: 60px;
+      width: 100%;
+      background-color: #fff;
+      text-align: center;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      border-bottom: 10px solid #f0f0f0;
+      .header-title {
+        color: #0abdc0;
+        font-size: 24px;
+        line-height: 60px;
+        float: left;
+        padding-left: 20px;
+      }
+      .header-control {
+        float: right;
+        color: #0abdc0;
+        padding-right: 20px;
+        line-height: 60px;
+        span {
+          display: inline-block;
+          font-size: 14px;
+          cursor: pointer;
+        }
+        span:hover {
+          color: #ff0000;
+        }
+      }
+    }
+    .main-content {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding-top: 70px;
+      box-sizing: border-box;
+      background-color: #fff;
+      .main-scroll-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+      .main-title {
+        padding: 20px;
+        border-bottom: 1px solid #0abdc0;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.item-group {
+  padding: 10px 20px;
+  line-height: 40px;
+  .fl {
+    float: left;
+  }
+  .item-title {
+    width: 120px;
+    height: 40px;
+    padding-right: 10px;
+    float: left;
+    text-align: right;
+  }
+  .item-content {
+    width: 240px;
+    padding-right: 10px;
+    height: 40px;
+    float: left;
+  }
+  .item-content-table {
+    width: 240px;
+    padding-right: 10px;
+    height: 40px;
+    float: left;
+    display: table;
+    .item-content-cell {
+      display: table-cell;
+    }
+  }
+  .item-area {
+    padding-right: 10px;
+    height: 40px;
+    float: left;
+  }
+  .checkbox-area {
+    line-height: 20px;
+    padding-top: 10px;
+  }
+  .lh0 {
+    line-height: 0;
+  }
+  .pr20 {
+    padding-right: 20px;
+  }
+  .upload {
+    line-height: 0;
+    width: 80px;
+    height: 80px;
+  }
+  .item-table {
+    min-height: 300px;
+  }
+}

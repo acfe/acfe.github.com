@@ -1,0 +1,69 @@
+.fc-table {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  line-height: normal;
+  table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    .table-title {
+      background-color: #f5f5f5;
+    }
+    td {
+      border: 1px solid #cccccc;
+      padding: 5px 10px;
+      height: 40px;
+      text-align: center;
+      vertical-align: middle;
+      .span {
+        display: inline-block;
+        text-align: left;
+        padding: 0 5px;
+        position: relative;
+      }
+      .empty-span {
+        display: inline-block;
+      }
+      .img-span {
+        vertical-align: middle;
+        line-height: 0;
+        font-size: 0;
+        padding: 10px;
+      }
+      .action {
+        cursor: pointer;
+        user-select: none;
+      }
+      .img-content {
+        img {
+          max-height: 50px;
+        }
+      }
+    }
+    .td-selector {
+      width: 40px;
+      vertical-align: middle;
+      .td-checkbox {
+        width: 15px;
+        height: 15px;
+        border: 1px solid #cccccc;
+        cursor: pointer;
+        margin: 0 auto;
+      }
+      .td-radio {
+        width: 15px;
+        height: 15px;
+        border: 1px solid #cccccc;
+        border-radius: 50%;
+        margin: 0 auto;
+        cursor: pointer;
+      }
+      .td-checked {
+        background: #0abdc0 url('../form/selector/img/checked.png') no-repeat center;
+        background-size: 12px auto;
+        border-color: #0abdc0;
+      }
+    }
+  }
+}

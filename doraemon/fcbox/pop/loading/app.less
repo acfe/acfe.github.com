@@ -1,0 +1,26 @@
+.fc-loading-component {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10001;
+  .fc-loading-mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0);
+  }
+  .fc-loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    width: 60px;
+    height: 60px;
+    background: no-repeat center url(./img/loading.gif);
+    background-size: 60px auto;
+  }
+}
