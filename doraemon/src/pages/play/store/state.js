@@ -1,7 +1,8 @@
 module.exports = {
   title: '丰巢科技',
-  configContent: {},
+  contentConfig: {},
   showPage: {},
+  showObj: {},
   showPops: [],
   showContent: [],
   showPageId: 0,

@@ -1,18 +1,20 @@
 /* eslint-disable no-undef */
 /**
- * Created by 001264 on 2018/7/25.
+ * Created by 001264 on 2019/8/15.
  */
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import FcDomPlayer from 'fcbox/player/dom'
 import FcLazyImage from 'fcbox/image/lazy'
 // modules
-import Mimages from '../../modules/images'
+import MImages from '../../modules/images'
+import MMenus from '../../modules/menus'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
 import EText from '../../elements/text'
-Vue.use(Mimages)
+Vue.use(MImages)
+Vue.use(MMenus)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
@@ -24,39 +26,112 @@ const Index = {
   data () {
     return {
       bodyStyle: {},
-      pageStyle: {}
+      pageStyle: {},
+      setModuleStyle (item) {
+        let style = {}
+        if (item.moduleTop || item.moduleTop === 0) {
+          style.top = item.moduleTop + 'px'
+        }
+        if (item.moduleBottom || item.moduleBottom === 0) {
+          style.bottom = item.moduleBottom + 'px'
+        }
+        return style
+      }
     }
   },
   computed: mapState({
-    configContent: state => state.configContent,
+    contentConfig: state => state.contentConfig,
     showPageId: state => state.showPageId,
     showPage: state => state.showPage,
     showPops: state => state.showPops,
-    pageKey: state => state.pageKey,
-    showContent: state => state.showContent
+    showObj: state => state.showObj,
+    pageKey: state => state.pageKey
   }),
   created () {
     if (localStorage.getItem('previewData')) {
-      Object.assign(this.configContent, JSON.parse(localStorage.getItem('previewData')))
+      Object.assign(this.contentConfig, JSON.parse(localStorage.getItem('previewData')))
     }
-    if (this.configContent.body.content && this.configContent.body.content.title) {
-      document.title = this.configContent.body.content.title
+    if (this.contentConfig.body.content && this.contentConfig.body.content.title) {
+      document.title = this.contentConfig.body.content.title
     }
-    if (this.configContent.body.style) {
-      this.bodyStyle = this.refreshBodyStyle(this.configContent.body.style)
+    // 页面默认白底
+    Object.assign(document.documentElement.style, { 'background-color': '#ffffff' })
+    Object.assign(document.body.style, { 'background-color': '#ffffff' })
+    if (this.contentConfig.body.style) {
+      this.bodyStyle = this.refreshBodyStyle(this.contentConfig.body.style)
+      Object.assign(document.documentElement.style, this.bodyStyle)
+      Object.assign(document.body.style, this.bodyStyle)
     }
-    this.$store.commit('setShowPops')
-    this.refreshContent()
+    this.$store.dispatch('setShowPops')
+    this.$store.dispatch('setShowContent', this.$store)
+    this.refreshPageStyle()
   },
   mounted () {
-
+    this.setScrollListener()
   },
   methods: {
-    refreshContent () {
-      this.$store.commit('setShowContent')
+    setScrollListener () {
+      if (this.lockContent.length) {
+        document.addEventListener('scroll', this.checkScroll)
+      }
+    },
+    checkScroll () {
+      let scrollTop = document.documentElement.scrollTop
+      let lockContent = this.lockContent
+      for (let i in lockContent) {
+        const dom = this.$refs['lock' + lockContent[i].lockId]
+        let lockTop = lockContent[i].lockTop
+        // 吸附效果实现
+        if ((lockContent[i].lockMoveTop || lockContent[i].lockMoveTopEnd) && scrollTop > lockContent[i].lockMoveTop) {
+          if (dom && dom[0]) {
+            dom[0].style.position = 'fixed'
+            dom[0].style.zIndex = '1000'
+            dom[0].style.top = lockContent[i].lockMoveTop - scrollTop + this.showObj.topHeight + 'px'
+            dom[0].style.background = '#ffffff'
+          }
+        } else {
+          if (scrollTop >= lockTop) {
+            if (dom && dom[0]) {
+              dom[0].style.position = 'fixed'
+              dom[0].style.zIndex = '1000'
+              dom[0].style.top = lockContent[i].stopPosition + 'px'
+              dom[0].style.background = '#ffffff'
+            }
+          }
+          if (scrollTop < lockTop) {
+            if (dom && dom[0]) {
+              dom[0].style.position = 'absolute'
+              dom[0].style.top = lockContent[i].moduleTop + 'px'
+              dom[0].style.zIndex = '1'
+            }
+          }
+        }
+      }
+    },
+    refreshPageStyle () {
+      let normalContent = this.showObj.normalContent
+      let lockContent = []
+      // 吸附参数设定
+      for (let i in normalContent) {
+        if (normalContent[i].lockPosition == 'lock') {
+          normalContent[i].lockId = Math.random()
+          normalContent[i].lockTop = normalContent[i].moduleTop - this.showObj.topHeight
+          normalContent[i].stopPosition = this.showObj.topHeight
+          lockContent.push(normalContent[i])
+        }
+      }
+      if (lockContent.length > 1) {
+        for (let i = 0; i < lockContent.length - 1; i++) {
+          lockContent[i].lockMoveTop = lockContent[i + 1].lockTop - lockContent[i].moduleHeight
+          lockContent[i].lockMoveTopEnd = lockContent[i + 1].lockTop
+        }
+      }
+      this.lockContent = lockContent
       if (this.showPage && this.showPage.style) {
         this.pageStyle = this.refreshBodyStyle(this.showPage.style)
       }
+      this.pageStyle.height = this.showObj.totalHeight + 'px'
+      document.documentElement.scrollTop = 0
     },
     refreshBodyStyle (style) {
       let bodyStyle = {}
@@ -98,15 +173,16 @@ const Index = {
           }
           break
         case 2:
-          this.$store.commit('setPageContent', action)
+          this.$store.dispatch('setPageContent', action)
+          this.refreshPageStyle()
           break
         case 3:
         case 5:
-          this.$store.commit('setPopContent', action)
+          this.$store.dispatch('setPopContent', action)
           break
         case 4:
           if (action.acFun && window.fc.userActions && window.fc.userActions[action.acFun]) {
-            window.fc.userActions[action.acFun](this)
+            window.fc.userActions[action.acFun](param, this)
           }
           break
       }

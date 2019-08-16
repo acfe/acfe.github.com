@@ -1,7 +1,7 @@
 /**
  * Created by 001264 on 2017/9/10.
  */
-import elementAc from '../element_ac'
+import elementAc from '../ac/element_ac'
 
 const MPop = {
   name: 'MPop',

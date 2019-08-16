@@ -1,7 +1,7 @@
 <template>
   <div class="FcSingleSelector clearFix" ref="FcSingleSelector">
-    <div class="mask" v-if="itemShow" @click="hideItem"></div>
-    <div class="inputBk">
+    <!-- <div class="mask" v-if="itemShow" @click="hideItem"></div> -->
+    <div class="inputBk" :data-list-content="listId">
       <input class="input" :placeholder="param.placeholder || ''" :value="param.option || param.value" :readonly="true" :style="param.inputStyle || {}" @click="show">
       <div class="icon" :class="{open: itemShow}"></div>
       <div class="itemList" v-if="itemShow" ref="selectorContent">

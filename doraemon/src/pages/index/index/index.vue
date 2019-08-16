@@ -118,7 +118,9 @@
                         :callback="orderSetterMoveCallback"
                       >
                         <div class="order-setter-item" v-for="(item, key) in setConfig.mainOrderSetterParam.content" :key="key" :slot="'s' + key">
-                          <Mimages v-if="item && item.tag == 'images'" :param="item" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
+                          <MImages v-if="item && item.tag == 'images'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
+                          <MMenus v-if="item && item.tag == 'menus'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
+                          <MGoods v-if="item && item.tag == 'goods'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
                         </div>
                       </OrderSetter>
                     </div>

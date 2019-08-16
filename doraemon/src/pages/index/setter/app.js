@@ -2,6 +2,8 @@
  * Created by 001264 on 2019/7/16.
  */
 import { mapState } from 'vuex'
+import PublicFunc from './public_func'
+import ModuleTheme from './module_theme'
 
 const Setter = {
   name: 'Setter',
@@ -19,7 +21,7 @@ const Setter = {
   created () {
     this.initList()
   },
-  methods: {
+  methods: Object.assign({
     refreshContent () {
       setTimeout(() => {
         this.callback && this.callback()
@@ -291,256 +293,570 @@ const Setter = {
       })
       this.setList = setList
     },
-    // module
+    // 设置模块内容
     setModuleContentList (setModule) {
       let setList = []
+      let addEmpty = false
+      setList.push(this.getTextareaParam(setModule, {
+        title: '模块名称',
+        tag: 'name'
+      }))
       switch (setModule.tag) {
         case 'images':
-          setList.push(this.getModuleNameSetterParam(setModule))
-          const listOrderSetterKey = 1
-          let imagesListEditContent = []
-          let imagesListContent = setModule.content
-          if (imagesListContent && imagesListContent.length) {
-            for (let i in imagesListContent) {
-              let contentObj = {
-                urlParam: {
-                  title: '图片地址',
-                  param: {
-                    value: imagesListContent[i].url || '',
-                    placeholder: '请输入图片地址',
-                    callback: function (param, acType) {
-                      if (acType == 'focusout') {
-                        imagesListContent[i].url = param.value
-                        this.refreshContent()
-                        this.setConfig.setterParam.imageOrderSetterKey = this.setList[listOrderSetterKey].orderSetterParam.self.editKey
-                        this.setConfig.setterParam.imageOrderSetterScrollTop = this.setList[listOrderSetterKey].orderSetterParam.self.scroll.scrollTop
-                        contentObj.uploadParam.value = param.value
-                      }
-                    }.bind(this)
+          setList.push(Object.assign(this.getDataSourceParam(setModule, 'imagesDatas'), { title: '图文数据源' }))
+          if (setModule.dataSourceId) {
+            let dataSource = this.contentConfig.dataSource || {}
+            let imagesDatas = dataSource.imagesDatas || []
+            let setSource
+            for (let i in imagesDatas) {
+              if (imagesDatas[i].value == setModule.dataSourceId) {
+                setSource = imagesDatas[i]
+              }
+            }
+            const refreshImagesContent = (setterContent) => {
+              if (!setterContent || !setterContent.length) {
+                setSource.data = []
+                this.refreshContent()
+                return false
+              }
+              let newImagesContent = []
+              for (let i in setterContent) {
+                newImagesContent.push({
+                  url: setterContent[i].urlParam.param.value,
+                  title: setterContent[i].titleParam.value,
+                  description: setterContent[i].descriptionParam.value,
+                  action: {
+                    acType: setterContent[i].acTypeParam.param.value,
+                    acUrl: setterContent[i].acUrlParam.param.value,
+                    acTarget: setterContent[i].acTargetParam.param.value,
+                    acFun: setterContent[i].acFunParam.param.value,
+                    pageName: setterContent[i].pagesParam.param.option,
+                    pageId: setterContent[i].pagesParam.param.value,
+                    popName: setterContent[i].popsParam.param.option,
+                    popId: setterContent[i].popsParam.param.value
                   }
-                },
-                titleParam: {
-                  title: '标题',
-                  param: {
-                    value: imagesListContent[i].title || '',
+                })
+              }
+              setSource.data = newImagesContent
+              this.refreshContent()
+            }
+            if (setSource) {
+              let setSourceData = setSource.data
+              let menuEditData = []
+              for (let d in setSourceData) {
+                menuEditData.push(Object.assign({
+                  titleParam: {
+                    title: '标题',
+                    value: setSourceData[d].title || '',
                     placeholder: '请输入标题',
                     callback: function (param, acType) {
                       if (acType == 'focusout') {
-                        imagesListContent[i].title = param.value
+                        setSource.data[d].title = param.value
                         this.refreshContent()
                       }
                     }.bind(this)
-                  }
-                },
-                descriptionParam: {
-                  title: '描述',
-                  param: {
-                    value: imagesListContent[i].description || '',
+                  },
+                  descriptionParam: {
+                    title: '描述',
+                    value: setSourceData[d].description || '',
                     placeholder: '请输入描述',
                     callback: function (param, acType) {
                       if (acType == 'focusout') {
-                        imagesListContent[i].description = param.value
+                        setSource.data[d].description = param.value
                         this.refreshContent()
                       }
                     }.bind(this)
                   }
-                },
-                linkParam: {
-                  title: '链接',
-                  param: {
-                    value: imagesListContent[i].link || '',
-                    placeholder: '请输入链接',
-                    callback: function (param, acType) {
-                      if (acType == 'focusout') {
-                        imagesListContent[i].link = param.value
-                        this.refreshContent()
-                      }
-                    }.bind(this)
-                  }
-                },
-                uploadParam: {
-                  value: imagesListContent[i].url || '',
-                  del: true,
-                  callback: function (type, param) {
-                    imagesListContent[i].url = param.value
+                }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d], () => {
+                  refreshImagesContent(imagesContentSetterParam.orderSetterParam.content)
+                })))
+              }
+              let imagesContentSetterParam = {
+                title: '设置图文内容',
+                type: 'contentSetter',
+                module: 'images',
+                orderSetterParam: {
+                  key: Math.random(),
+                  hideAdd: true,
+                  scrollId: 'contentSetter',
+                  borderStyle: '1px dashed #64B5F6',
+                  content: menuEditData,
+                  editKey: this.setConfig.setterParam.imagesContentSetterKey,
+                  scrollTop: this.setConfig.setterParam.imageContentSetterScrollTop || 0,
+                  addContent: function () {
+                    setSourceData.unshift({})
+                    this.setConfig.setterParam.imagesContentSetterKey = 0
+                    this.refreshSetter()
                     this.refreshContent()
-                    this.setConfig.setterParam.imageOrderSetterKey = this.setList[listOrderSetterKey].orderSetterParam.self.editKey
-                    this.setConfig.setterParam.imageOrderSetterScrollTop = this.setList[listOrderSetterKey].orderSetterParam.self.scroll.scrollTop
-                    contentObj.urlParam.param.value = param.value
                   }.bind(this),
-                  delCallback: function (type, param) {
-                    imagesListContent[i].url = param.value
-                    this.refreshContent()
-                    this.setConfig.setterParam.imageOrderSetterKey = this.setList[listOrderSetterKey].orderSetterParam.self.editKey
-                    this.setConfig.setterParam.imageOrderSetterScrollTop = this.setList[listOrderSetterKey].orderSetterParam.self.scroll.scrollTop
-                    contentObj.urlParam.param.value = param.value
+                  orderSetterEditContentCallback: function (selectedKey, target, top) {
+                    if (selectedKey !== undefined && selectedKey != 'move') {
+                      // refreshImagesContent(imagesContentSetterParam.orderSetterParam.content)
+                    }
+                  },
+                  orderSetterDelContentCallback: function (key) {
+                    key = key - 1 > 0 ? key - 1 : 0
+                    this.setConfig.setterParam.imagesContentSetterKey = key
+                    refreshImagesContent(imagesContentSetterParam.orderSetterParam.content)
+                    this.setConfig.setterParam.imageContentSetterScrollTop = imagesContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                    this.refreshSetter()
+                  }.bind(this),
+                  orderSetterMoveCallback: function (key) {
+                    this.setConfig.setterParam.imagesContentSetterKey = key
+                    refreshImagesContent(imagesContentSetterParam.orderSetterParam.content)
+                    this.setConfig.setterParam.imageContentSetterScrollTop = imagesContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                    this.refreshSetter()
                   }.bind(this)
                 }
               }
-              imagesListEditContent.push(contentObj)
+              setList.push(imagesContentSetterParam)
             }
+          } else {
+            addEmpty = true
           }
-          const refreshImagesListContent = (setterContent) => {
-            if (!setterContent || !setterContent.length) {
-              setModule.content = []
-              return false
-            }
-            let newImagesListContent = []
-            for (let i in setterContent) {
-              newImagesListContent.push({
-                url: setterContent[i].urlParam.param.value,
-                title: setterContent[i].titleParam.param.value,
-                description: setterContent[i].descriptionParam.param.value,
-                link: setterContent[i].linkParam.param.value
-              })
-            }
-            setModule.content = newImagesListContent
-            this.refreshContent()
-          }
-          setList.push({
-            title: '图文内容',
-            type: 'imagesModuleContent',
-            orderSetterParam: {
-              key: Math.random(),
-              hideAdd: true,
-              scrollId: 'imageSetterContent',
-              borderStyle: '1px dashed #64B5F6',
-              content: imagesListEditContent,
-              editKey: this.setConfig.setterParam.imageOrderSetterKey,
-              scrollTop: this.setConfig.setterParam.imageOrderSetterScrollTop || 0,
-              addContent: function () {
-                imagesListContent.unshift({})
-                this.refreshSetter()
-                this.refreshContent()
-              }.bind(this),
-              orderSetterEditContentCallback: function (selectedKey, target, top) {
-                if (selectedKey !== undefined && selectedKey != 'move') {
-                  refreshImagesListContent(this.setList[listOrderSetterKey].orderSetterParam.content)
-                }
-              }.bind(this),
-              orderSetterDelContentCallback: function (key) {
-                key = key - 1 > 0 ? key - 1 : 0
-                refreshImagesListContent(this.setList[listOrderSetterKey].orderSetterParam.content)
-                this.setConfig.setterParam.imageOrderSetterKey = key
-              }.bind(this),
-              orderSetterMoveCallback: function (key) {
-                refreshImagesListContent(this.setList[listOrderSetterKey].orderSetterParam.content)
-                this.setConfig.setterParam.imageOrderSetterKey = key
-              }.bind(this)
-            }
-          })
           break
+          // menus
+        case 'menus':
+          setList.push(Object.assign(this.getDataSourceParam(setModule, 'menusDatas'), { title: '菜单数据源' }))
+          if (setModule.dataSourceId) {
+            let dataSource = this.contentConfig.dataSource || {}
+            let menusDatas = dataSource.menusDatas || []
+            let setSource
+            for (let i in menusDatas) {
+              if (menusDatas[i].value == setModule.dataSourceId) {
+                setSource = menusDatas[i]
+              }
+            }
+            const refreshMenusContent = (setterContent) => {
+              if (!setterContent || !setterContent.length) {
+                setSource.data = []
+                this.refreshContent()
+                return false
+              }
+              let newMenusContent = []
+              for (let i in setterContent) {
+                newMenusContent.push({
+                  url: setterContent[i].urlParam.param.value,
+                  name: setterContent[i].nameParam.value,
+                  checkedId: setterContent[i].checkedId,
+                  action: {
+                    acType: setterContent[i].acTypeParam.param.value,
+                    acUrl: setterContent[i].acUrlParam.param.value,
+                    acTarget: setterContent[i].acTargetParam.param.value,
+                    acFun: setterContent[i].acFunParam.param.value,
+                    pageName: setterContent[i].pagesParam.param.option,
+                    pageId: setterContent[i].pagesParam.param.value,
+                    popName: setterContent[i].popsParam.param.option,
+                    popId: setterContent[i].popsParam.param.value
+                  }
+                })
+              }
+              setSource.data = newMenusContent
+              this.refreshContent()
+            }
+            if (setSource) {
+              let setSourceData = setSource.data
+              let menuEditData = []
+              for (let d in setSourceData) {
+                menuEditData.push(Object.assign({
+                  checkedId: setSourceData[d].checkedId,
+                  nameParam: {
+                    title: '菜单名称',
+                    value: setSourceData[d].name || '',
+                    placeholder: '请输入名称',
+                    callback: function (param, acType) {
+                      if (acType == 'focusout') {
+                        setSource.data[d].name = param.value
+                        this.refreshContent()
+                      }
+                    }.bind(this)
+                  }
+                }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d], () => {
+                  refreshMenusContent(menusContentSetterParam.orderSetterParam.content)
+                })))
+              }
+              let menusContentSetterParam = {
+                title: '设置菜单内容',
+                type: 'contentSetter',
+                module: 'menus',
+                checkedId: setSource.checkedId || 0,
+                changeCheckedId: function (checkedId) {
+                  setSource.checkedId = checkedId
+                  this.setConfig.setterParam.menuContentSetterScrollTop = menusContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                  this.refreshSetter()
+                }.bind(this),
+                orderSetterParam: {
+                  key: Math.random(),
+                  hideAdd: true,
+                  scrollId: 'contentSetter',
+                  borderStyle: '1px dashed #64B5F6',
+                  content: menuEditData,
+                  editKey: this.setConfig.setterParam.menuContentSetterKey,
+                  scrollTop: this.setConfig.setterParam.menuContentSetterScrollTop || 0,
+                  addContent: function () {
+                    setSourceData.push({
+                      checkedId: new Date().getTime()
+                    })
+                    this.setConfig.setterParam.menuContentSetterKey = setSourceData.length - 1
+                    this.refreshSetter()
+                    this.refreshContent()
+                  }.bind(this),
+                  orderSetterEditContentCallback: function (selectedKey, target, top) {
+                    if (selectedKey !== undefined && selectedKey != 'move') {
+                      // refreshMenusContent(menusContentSetterParam.orderSetterParam.content)
+                    }
+                  },
+                  orderSetterDelContentCallback: function (key) {
+                    key = key - 1 > 0 ? key - 1 : 0
+                    this.setConfig.setterParam.menuContentSetterKey = key
+                    refreshMenusContent(menusContentSetterParam.orderSetterParam.content)
+                    this.setConfig.setterParam.menuContentSetterScrollTop = menusContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                    this.refreshSetter()
+                  }.bind(this),
+                  orderSetterMoveCallback: function (key) {
+                    this.setConfig.setterParam.menuContentSetterKey = key
+                    refreshMenusContent(menusContentSetterParam.orderSetterParam.content)
+                    this.setConfig.setterParam.menuContentSetterScrollTop = menusContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                    this.refreshSetter()
+                  }.bind(this)
+                }
+              }
+              setList.push(menusContentSetterParam)
+            }
+          } else {
+            addEmpty = true
+          }
+          break
+        case 'goods':
+          setModule['dataType'] = setModule['dataType'] || 1
+          setList.push({
+            title: '内容类型',
+            type: 'radioTab',
+            param: {
+              value: setModule['dataType'],
+              data: [
+                {
+                  option: '自定义',
+                  value: 1
+                },
+                {
+                  option: '选择商品',
+                  value: 2
+                },
+                {
+                  option: '选择商品组',
+                  value: 3
+                }
+              ]
+            },
+            callback: function (param) {
+              setModule['dataType'] = param.value
+              this.refreshSetter()
+            }.bind(this)
+          })
+          switch (parseInt(setModule['dataType'])) {
+            case 1:
+              setList.push(Object.assign(this.getDataSourceParam(setModule, 'goodsDatas'), { title: '商品数据源' }))
+              if (setModule.dataSourceId) {
+                let dataSource = this.contentConfig.dataSource || {}
+                let goodsDatas = dataSource.goodsDatas || []
+                let setSource
+                for (let i in goodsDatas) {
+                  if (goodsDatas[i].value == setModule.dataSourceId) {
+                    setSource = goodsDatas[i]
+                  }
+                }
+                const refreshGoodsContent = (setterContent) => {
+                  if (!setterContent || !setterContent.length) {
+                    setSource.data = []
+                    this.refreshContent()
+                    return false
+                  }
+                  let newGoodsContent = []
+                  for (let i in setterContent) {
+                    newGoodsContent.push({
+                      url: setterContent[i].urlParam.param.value,
+                      name: setterContent[i].nameParam.value,
+                      description: setterContent[i].descriptionParam.value,
+                      salePrice: setterContent[i].salePriceParam.value,
+                      originPrice: setterContent[i].originPriceParam.value,
+                      action: {
+                        acType: setterContent[i].acTypeParam.param.value,
+                        acUrl: setterContent[i].acUrlParam.param.value,
+                        acTarget: setterContent[i].acTargetParam.param.value,
+                        acFun: setterContent[i].acFunParam.param.value,
+                        pageName: setterContent[i].pagesParam.param.option,
+                        pageId: setterContent[i].pagesParam.param.value,
+                        popName: setterContent[i].popsParam.param.option,
+                        popId: setterContent[i].popsParam.param.value
+                      }
+                    })
+                  }
+                  setSource.data = newGoodsContent
+                  this.refreshContent()
+                }
+                if (setSource) {
+                  let setSourceData = setSource.data
+                  let goodsEditData = []
+                  for (let d in setSourceData) {
+                    goodsEditData.push(Object.assign({
+                      nameParam: {
+                        title: '商品名称',
+                        value: setSourceData[d].name || '',
+                        placeholder: '请输入名称',
+                        callback: function (param, acType) {
+                          if (acType == 'focusout') {
+                            setSource.data[d].name = param.value
+                            this.refreshContent()
+                          }
+                        }.bind(this)
+                      },
+                      descriptionParam: {
+                        title: '商品描述',
+                        value: setSourceData[d].description || '',
+                        placeholder: '请输入商品描述',
+                        callback: function (param, acType) {
+                          if (acType == 'focusout') {
+                            setSource.data[d].description = param.value
+                            this.refreshContent()
+                          }
+                        }.bind(this)
+                      },
+                      salePriceParam: {
+                        title: '售价',
+                        value: setSourceData[d].salePrice || '',
+                        placeholder: '请输入商品售价',
+                        callback: function (param, acType) {
+                          if (acType == 'focusout') {
+                            setSource.data[d].salePrice = param.value
+                            this.refreshContent()
+                          }
+                        }.bind(this)
+                      },
+                      originPriceParam: {
+                        title: '原价',
+                        value: setSourceData[d].originPrice || '',
+                        placeholder: '请输入商品原价',
+                        callback: function (param, acType) {
+                          if (acType == 'focusout') {
+                            setSource.data[d].originPrice = param.value
+                            this.refreshContent()
+                          }
+                        }.bind(this)
+                      }
+                    }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d], () => {
+                      refreshGoodsContent(goodsContentSetterParam.orderSetterParam.content)
+                    })))
+                  }
+                  let goodsContentSetterParam = {
+                    title: '设置商品内容',
+                    type: 'contentSetter',
+                    module: 'goods',
+                    orderSetterParam: {
+                      key: Math.random(),
+                      hideAdd: true,
+                      scrollId: 'contentSetter',
+                      borderStyle: '1px dashed #64B5F6',
+                      content: goodsEditData,
+                      editKey: this.setConfig.setterParam.goodsContentSetterKey,
+                      scrollTop: this.setConfig.setterParam.goodsContentSetterScrollTop || 0,
+                      addContent: function () {
+                        setSourceData.push({})
+                        this.setConfig.setterParam.goodsContentSetterKey = setSourceData.length - 1
+                        this.refreshSetter()
+                        this.refreshContent()
+                      }.bind(this),
+                      orderSetterEditContentCallback: function (selectedKey, target, top) {
+                        if (selectedKey !== undefined && selectedKey != 'move') {
+                          // refreshGoodsContent(goodsContentSetterParam.orderSetterParam.content)
+                        }
+                      },
+                      orderSetterDelContentCallback: function (key) {
+                        key = key - 1 > 0 ? key - 1 : 0
+                        this.setConfig.setterParam.goodsContentSetterKey = key
+                        refreshGoodsContent(goodsContentSetterParam.orderSetterParam.content)
+                        this.setConfig.setterParam.goodsContentSetterScrollTop = goodsContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                        this.refreshSetter()
+                      }.bind(this),
+                      orderSetterMoveCallback: function (key) {
+                        this.setConfig.setterParam.goodsContentSetterKey = key
+                        refreshGoodsContent(goodsContentSetterParam.orderSetterParam.content)
+                        this.setConfig.setterParam.goodsContentSetterScrollTop = goodsContentSetterParam.orderSetterParam.self.scroll.scrollTop
+                        this.refreshSetter()
+                      }.bind(this)
+                    }
+                  }
+                  setList.push(goodsContentSetterParam)
+                }
+              } else {
+                addEmpty = true
+              }
+              break
+            default:
+              addEmpty = true
+              break
+          }
+          break
+      }
+      if (addEmpty) {
+        setList.push({
+          type: 'empty'
+        })
       }
       this.setList = setList
     },
+    // 设置模块样式
     setModuleStyleList (setModule) {
       const setList = []
-      let themeList
-      // lockPosition
-      setList.push(this.getModuleLockPositionParam(setModule))
+      let themeList = ModuleTheme[setModule.tag]
+      // 模块位置设置
+      setModule['lockPosition'] = setModule['lockPosition'] || 'normal'
+      setList.push(this.getRadioTabParam(setModule, {
+        title: '模块位置',
+        tag: 'lockPosition',
+        data: [
+          {
+            option: '正常',
+            value: 'normal'
+          },
+          {
+            option: '吸顶',
+            value: 'top'
+          },
+          {
+            option: '吸底',
+            value: 'bottom'
+          },
+          {
+            option: '吸附',
+            value: 'lock'
+          }
+        ]
+      }))
+      // 初始化属性
+      if (!setModule['themeInit']) {
+        setModule['themeInit'] = 1
+        setModule['theme'] = setModule['theme'] || 1
+        this.resetThemeParamsValue(setModule, themeList)
+      }
+      // 获取模块排版设置
+      setList.push(this.getThemeSetter(setModule, themeList))
+      // 获取模块内容样式配置
+      setList.push(this.getModuleContentStyleParam(setModule, themeList))
       switch (setModule.tag) {
         case 'images':
-          themeList = [
+          // 文字样式设置
+          if (setModule['theme'] != 3) {
+            setList.push(Object.assign(this.getFontStyleSetterParam(setModule.titleStyle), {
+              title: '标题文字样式'
+            }))
+            setList.push(Object.assign(this.getFontStyleSetterParam(setModule.descriptionStyle), {
+              title: '描述文字样式'
+            }))
+          }
+          break
+        case 'menus':
+          // 设置文字样式 选中样式 选中图标样式
+          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.nameStyle), {
+            title: '文字样式'
+          }))
+          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.nameCheckedStyle), {
+            title: '选中文字样式'
+          }))
+          if (setModule['theme'] == 1) {
+            setList.push(Object.assign(this.getMenuBarStyleSetterParam(setModule.checkedBarStyle), {
+              title: '选中浮标样式'
+            }))
+          }
+          break
+        case 'goods':
+          // 获取文字字段样式设置
+          let textStyleGroup = [
             {
-              option: '单图排版',
-              value: 1,
-              support: ['h5', 'wx', 'alipay'],
-              titleStyle: {
-                'font-size': 14,
-                'color': '#666666'
-              },
-              descriptionStyle: {
-                'font-size': 12,
-                'color': '#cccccc'
-              },
-              contentPaddingBottom: 10,
-              setEnabel: {
-                contentPaddingBottom: true
-              }
+              tag: 'nameStyle',
+              title: '名称样式'
             },
             {
-              option: '多列排版',
-              value: 2,
-              support: ['h5', 'wx', 'alipay'],
-              contentPaddingBottom: 10,
-              contentPaddingRight: 10,
-              columNum: 2,
-              setEnabel: {
-                contentPaddingBottom: true,
-                contentPaddingRight: true,
-                columNum: true
-              },
-              style: {
-                'padding-left': 10
-              }
+              tag: 'descriptionStyle',
+              showTag: 'showDescription',
+              title: '描述样式',
+              showTitle: '是否显示描述'
             },
             {
-              option: '轮播图',
-              value: 3,
-              support: ['h5', 'wx', 'alipay'],
-              loop: 1,
-              autoPlayTime: 5000,
-              showGuild: 1,
-              setEnabel: {
-                loop: true,
-                autoPlayTime: true,
-                showGuild: true
-              }
+              tag: 'salePriceStyle',
+              showTag: 'showSalePrice',
+              title: '售价样式',
+              showTitle: '是否显示售价'
             },
             {
-              option: '横向滚动',
-              value: 4,
-              support: ['h5', 'wx', 'alipay'],
-              contentPaddingRight: 10,
-              columNum: 3,
-              setEnabel: {
-                contentPaddingRight: true,
-                columNum: true
-              },
-              style: {
-                'padding-left': 10
-              }
+              tag: 'originPriceStyle',
+              showTag: 'showOriginPrice',
+              title: '原价样式',
+              showTitle: '是否显示原价'
             }
           ]
-          setModule['theme'] = setModule['theme'] || 1
-          // theme setter
-          setList.push(this.getThemeSetterParam(setModule, themeList))
-          // contentStyleSetter
-          this.setThemeDefaultFun(setModule, themeList, 'contentPaddingBottom')
-          this.setThemeDefaultFun(setModule, themeList, 'contentPaddingRight')
-          this.setThemeDefaultFun(setModule, themeList, 'columNum')
-          this.setThemeDefaultFun(setModule, themeList, 'loop')
-          this.setThemeDefaultFun(setModule, themeList, 'autoPlayTime')
-          this.setThemeDefaultFun(setModule, themeList, 'showGuild')
-          this.setThemeDefaultFun(setModule, themeList, 'imageRadius')
-          setList.push(this.getContentStyleSetterParam(setModule, themeList))
-          // titleStyle
-          this.setThemeDefaultFun(setModule, themeList, 'titleStyle', {})
-          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.titleStyle), {
-            title: '标题文字样式'
-          }))
-          // descriptionStyle
-          this.setThemeDefaultFun(setModule, themeList, 'descriptionStyle', {})
-          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.descriptionStyle), {
-            title: '描述文字样式'
+          const showData = [
+            {
+              option: '显示',
+              value: 1
+            },
+            {
+              option: '不显示',
+              value: 2
+            }
+          ]
+          for (let i in textStyleGroup) {
+            const textItem = textStyleGroup[i]
+            if (textItem.showTag) {
+              setList.push(this.getRadioTabParam(setModule, {
+                title: textItem.showTitle,
+                tag: textItem.showTag,
+                data: showData,
+                defaultValue: 1
+              }))
+            }
+            setList.push(Object.assign(this.getFontStyleSetterParam(setModule[textItem.tag]), {
+              title: textItem.title
+            }))
+          }
+          // 设置显示原价删除线
+          setList.push(this.getRadioTabParam(setModule.originPriceStyle, {
+            title: '原价显示删除线',
+            tag: 'text-decoration',
+            data: [
+              {
+                option: '不显示',
+                value: ''
+              },
+              {
+                option: '显示',
+                value: 'line-through'
+              }
+            ]
           }))
           break
       }
-      // height
-      this.setThemeDefaultFun(setModule, themeList, 'heightType')
-      this.setThemeDefaultFun(setModule, themeList, 'moduleHeight')
+      // 模块高度设置
       setList.push(this.getHeightSetterParam(setModule))
-      this.setThemeDefaultFun(setModule, themeList, 'style', (setModule.style || {}))
-      const setParam = setModule.style
-      setList.push(this.getPaddingSetterParam(setParam))
-      setList.push(this.getMarginSetterParam(setParam))
-      setList.push(this.getBackgroundSetterParam(setParam))
-      setList.push(this.getBorderSetterParam(setParam))
+      // 边距设置
+      setList.push(this.getMarginPaddingSetterParam(setModule.style, {
+        type: 'padding',
+        title: '内边距设置'
+      }))
+      setList.push(this.getMarginPaddingSetterParam(setModule.style, {
+        type: 'margin',
+        title: '外边距设置'
+      }))
+      // 背景设置
+      setList.push(this.getBackgroundSetterParam(setModule.style))
+      // 边框设置
+      setList.push(this.getBorderSetterParam(setModule.style))
       setList.push({
         type: 'empty'
       })
       this.setList = setList
     },
+    // 设置模块事件
     setModuleActionList (setModule) {
       let setList = []
       this.setList = setList
@@ -700,229 +1016,58 @@ const Setter = {
     },
     // setThemeDefaultFun
     setThemeDefaultFun (setModule, themeList, name, defaultValue = '') {
-      if (!setModule[name]) {
-        for (let i in themeList) {
-          if (themeList[i].value == setModule['theme'] && themeList[i][name]) {
-            setModule[name] = themeList[i][name]
-          }
-        }
-        if (!setModule[name]) {
-          setModule[name] = defaultValue
+      for (let i in themeList) {
+        if (themeList[i].value == setModule['theme'] && themeList[i][name]) {
+          setModule[name] = themeList[i][name]
         }
       }
+      if (!setModule[name] && defaultValue) {
+        setModule[name] = defaultValue
+      }
     },
-    // get imageSetter
-    getImageSetter (setModule, tag, title) {
-      let Obj = {
-        type: 'image',
-        title: title || '图片地址',
-        urlParam: {
-          value: setModule[tag] || '',
-          placeholder: '请输入' + (title || '请输入图片地址'),
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setModule[tag] = param.value
+    // getDataSourceParam
+    getDataSourceParam (setModule, dataKey) {
+      let dataSource = this.contentConfig.dataSource || {}
+      dataSource[dataKey] = dataSource[dataKey] || []
+      let dataSourceParam = {
+        title: '数据源',
+        type: 'dataSourceGroup',
+        param: {
+          value: setModule.dataSourceId || '',
+          data: dataSource[dataKey],
+          callback: function (param) {
+            setModule.dataSourceId = param.value
+            this.setConfig.setterParam.menuContentSetterKey = 'empty'
+            this.refreshSetter()
+            this.refreshContent()
+          }.bind(this)
+        },
+        showAdd: false,
+        addParam: {
+          nameParam: {
+            value: '',
+            placeholder: '请输入数据源名称'
+          },
+          saveCallback: function () {
+            if (dataSourceParam.addParam.nameParam.value) {
+              setModule.dataSourceId = new Date().getTime()
+              dataSource[dataKey].push({
+                option: dataSourceParam.addParam.nameParam.value,
+                value: setModule.dataSourceId,
+                data: []
+              })
+              this.contentConfig.dataSource = dataSource
+              this.setConfig.setterParam.menuContentSetterKey = 'empty'
+              this.refreshSetter()
               this.refreshContent()
-              Obj.uploadParam.value = param.value
             }
           }.bind(this)
         },
-        uploadParam: {
-          value: setModule[tag] || '',
-          del: true,
-          callback: function (type, param) {
-            setModule[tag] = param.value
-            this.refreshContent()
-            Obj.urlParam.value = param.value
-          }.bind(this),
-          delCallback: function (type, param) {
-            setModule[tag] = param.value
-            this.refreshContent()
-            Obj.urlParam.value = param.value
-          }.bind(this)
+        addCallback () {
+          dataSourceParam.showAdd = true
         }
       }
-      return Obj
-    },
-    // getActionSetterParam
-    getActionSetterParam (setModule) {
-      setModule.action = setModule.action || {}
-      const acTypeData = [
-        {
-          option: '请选择',
-          value: 0
-        },
-        {
-          option: '跳转链接',
-          value: 1
-        },
-        {
-          option: '跳转内页',
-          value: 2
-        },
-        {
-          option: '打开窗口',
-          value: 3
-        },
-        {
-          option: '执行事件',
-          value: 4
-        },
-        {
-          option: '关闭弹窗',
-          value: 5
-        }
-      ]
-      const acTypeObj = {
-        0: '请选择',
-        1: '跳转链接',
-        2: '跳转内页',
-        3: '打开窗口',
-        4: '执行事件',
-        5: '关闭弹窗'
-      }
-      let pages = this.contentConfig.pages
-      let pops = this.contentConfig.pops
-      let pagesData = []
-      for (let i in pages) {
-        pagesData.push({
-          option: pages[i].name,
-          value: pages[i].id
-        })
-      }
-      let popsData = []
-      for (let i in pops) {
-        popsData.push({
-          option: pops[i].name,
-          value: pops[i].id
-        })
-      }
-      return {
-        type: 'actionGroup',
-        pagesParam: {
-          title: '选择页面',
-          param: {
-            option: setModule.action['pageName'] || '请选择',
-            value: setModule.action['pageId'] || '',
-            data: pagesData,
-            callback: function (param) {
-              setModule.action['pageName'] = param.option
-              setModule.action['pageId'] = param.value
-            }
-          }
-        },
-        popsParam: {
-          title: '选择弹窗',
-          param: {
-            option: setModule.action['popName'] || '请选择',
-            value: setModule.action['popId'] || '',
-            data: popsData,
-            callback: function (param) {
-              setModule.action['popName'] = param.option
-              setModule.action['popId'] = param.value
-            }
-          }
-        },
-        acTypeParam: {
-          title: '事件类型',
-          type: 'singleSelector',
-          param: {
-            option: acTypeObj[setModule.action['acType']] || '请选择',
-            value: setModule.action['acType'] || 0,
-            data: acTypeData,
-            callback: function (param) {
-              setModule.action['acType'] = param.value
-            }
-          }
-        },
-        acUrlParam: {
-          title: '链接地址',
-          param: {
-            value: setModule.action['acUrl'] || '',
-            placeholder: '请输入链接地址',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setModule.action['acUrl'] = param.value
-              }
-            }
-          }
-        },
-        acTargetParam: {
-          title: '打开方式',
-          param: {
-            value: setModule.action['acTarget'] || '_self',
-            data: [
-              {
-                option: '本窗口',
-                value: '_self'
-              },
-              {
-                option: '新窗口',
-                value: '_blank'
-              }
-            ],
-            callback: function (param) {
-              setModule.action['acTarget'] = param.value
-            }
-          }
-        },
-        acFunParam: {
-          title: '事件名称',
-          param: {
-            value: setModule.action['acFun'] || '',
-            placeholder: '请输入事件名称',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setModule.action['acFun'] = param.value
-              }
-            }
-          }
-        }
-      }
-    },
-    // getModuleNameSetterParam
-    getModuleNameSetterParam (setModule) {
-      return {
-        title: '模块名称',
-        type: 'textarea',
-        param: {
-          value: setModule.name || '',
-          placeholder: '请输入模块名称'
-        },
-        callback: function (param, acType) {
-          setModule.name = param.value
-        }
-      }
-    },
-    // 获取风格列表
-    getThemeSetterParam (setModule, themeList) {
-      let Obj = {
-        title: '模块排版',
-        type: 'themeSelector',
-        param: {
-          value: setModule['theme'],
-          data: themeList
-        },
-        callback: function (param) {
-          setModule['theme'] = param.value
-          Obj.param.value = param.value
-          this.refreshContent()
-          setModule.style = param.style || {}
-          setModule.titleStyle = param.titleStyle || {}
-          setModule.descriptionStyle = param.descriptionStyle || {}
-          setModule.contentPaddingBottom = param.contentPaddingBottom || ''
-          setModule.contentPaddingRight = param.contentPaddingRight || ''
-          setModule.loop = param.loop || 1
-          setModule.autoPlayTime = param.autoPlayTime || 5000
-          setModule.showGuild = param.showGuild || 0
-          setModule.columNum = param.columNum || 0
-          setModule.imageRadius = param.imageRadius || ''
-          setModule.moduleHeight = param.moduleHeight || ''
-          setModule.heightType = param.heightType || ''
-          this.refreshSetter(true)
-        }.bind(this)
-      }
-      return Obj
+      return dataSourceParam
     },
     // 获取元素尺寸位置配置
     getSizePositionSetterParam (setParam, defaultWidth = 50) {
@@ -974,692 +1119,8 @@ const Setter = {
         }
       }
       return Obj
-    },
-    // 获取内容间距 内容图片圆角设置
-    getContentStyleSetterParam (setParam, themeList) {
-      const Obj = {
-        title: '内容设置',
-        type: 'contentStyle',
-        imageRadiusParam: {
-          value: setParam['imageRadius'] || '',
-          placeholder: '请输入图片圆角',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['imageRadius'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-      let setEnabel
-      for (let i in themeList) {
-        if (themeList[i].value == setParam['theme'] && themeList[i]['setEnabel']) {
-          setEnabel = themeList[i]['setEnabel']
-        }
-      }
-      if (setEnabel && setEnabel['contentPaddingBottom']) {
-        Obj.contentPaddingBottomParam = {
-          value: setParam['contentPaddingBottom'] || '',
-          placeholder: '请输入间距',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['contentPaddingBottom'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-      if (setEnabel && setEnabel['contentPaddingRight']) {
-        Obj.contentPaddingRightParam = {
-          value: setParam['contentPaddingRight'] || '',
-          placeholder: '请输入间距',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['contentPaddingRight'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-      if (setEnabel && setEnabel['columNum']) {
-        Obj.columNumParam = {
-          value: setParam['columNum'] || '',
-          placeholder: '每行显示数量',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['columNum'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-      if (setEnabel && setEnabel['autoPlayTime']) {
-        Obj.autoPlayTimeParam = {
-          value: setParam['autoPlayTime'] || '',
-          placeholder: '请输入毫秒数',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['autoPlayTime'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-      if (setEnabel && setEnabel['loop']) {
-        Obj.loopParam = {
-          value: setParam['loop'] || 1,
-          data: [
-            {
-              option: '循环',
-              value: 1
-            },
-            {
-              option: '不循环',
-              value: 0
-            }
-          ],
-          callback: function (param) {
-            setParam['loop'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        }
-      }
-      if (setEnabel && setEnabel['showGuild']) {
-        Obj.showGuildParam = {
-          value: setParam['showGuild'] || 1,
-          data: [
-            {
-              option: '显示',
-              value: 1
-            },
-            {
-              option: '不显示',
-              value: 0
-            }
-          ],
-          callback: function (param) {
-            setParam['showGuild'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        }
-      }
-      return Obj
-    },
-    // 获取模块高度设置
-    getHeightSetterParam (setParam) {
-      return {
-        title: '模块高度',
-        type: 'heightGroup',
-        typeParam: {
-          value: setParam['heightType'] || 'auto',
-          data: [
-            {
-              option: '自动',
-              value: 'auto'
-            },
-            {
-              option: '定高',
-              value: 'set'
-            },
-            {
-              option: '一屏',
-              value: 'screen'
-            }
-          ],
-          callback: function (param) {
-            setParam['heightType'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        },
-        overflowParam: {
-          value: setParam['overflow'] || '',
-          data: [
-            {
-              option: '滚动',
-              value: 'auto'
-            },
-            {
-              option: '不滚动',
-              value: ''
-            }
-          ],
-          callback: function (param) {
-            setParam['overflow'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        },
-        valueParam: {
-          value: setParam['moduleHeight'] || '',
-          placeholder: '请输入高度',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['moduleHeight'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-
-      }
-    },
-    // 获取模块位置设置
-    getModuleLockPositionParam (setParam) {
-      return {
-        title: '模块位置',
-        type: 'radioTab',
-        param: {
-          value: setParam['lockPosition'] || 'normal',
-          data: [
-            {
-              option: '正常',
-              value: 'normal'
-            },
-            {
-              option: '吸顶',
-              value: 'top'
-            },
-            {
-              option: '吸底',
-              value: 'bottom'
-            }
-          ]
-        },
-        callback: function (param) {
-          setParam['lockPosition'] = param.value
-          this.refreshContent()
-        }.bind(this)
-      }
-    },
-    // 获取文本样式设置
-    getFontStyleSetterParam (setParam) {
-      let fontWeightObj = {
-        normal: '正常',
-        bold: '粗体',
-        100: 100,
-        200: 200,
-        300: 300,
-        400: 400,
-        500: 500,
-        600: 600,
-        700: 700,
-        800: 800,
-        900: 900
-      }
-      let fontWeightData = [
-        {
-          option: '正常',
-          value: 'normal'
-        },
-        {
-          option: '粗体',
-          value: 'bold'
-        },
-        {
-          option: '100',
-          value: 100
-        },
-        {
-          option: '200',
-          value: 200
-        },
-        {
-          option: '300',
-          value: 300
-        },
-        {
-          option: '400',
-          value: 400
-        },
-        {
-          option: '500',
-          value: 500
-        },
-        {
-          option: '600',
-          value: 600
-        },
-        {
-          option: '700',
-          value: 700
-        },
-        {
-          option: '800',
-          value: 800
-        },
-        {
-          option: '900',
-          value: 900
-        }
-      ]
-      return {
-        title: '文字样式',
-        type: 'textStyle',
-        sizeParam: {
-          value: setParam['font-size'] || '',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['font-size'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        },
-        colorParam: {
-          value: setParam['color'] || '',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['color'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        },
-        weightParam: {
-          hideSelectedIcon: true,
-          value: setParam['font-weight'] || 'normal',
-          option: fontWeightObj[setParam['font-weight']] || '正常',
-          data: fontWeightData,
-          callback: function (param) {
-            setParam['font-weight'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        },
-        textAlignParam: {
-          value: setParam['text-align'] || 'left',
-          data: [
-            {
-              option: '靠左',
-              value: 'left'
-            },
-            {
-              option: '居中',
-              value: 'center'
-            },
-            {
-              option: '靠右',
-              value: 'right'
-            }
-          ],
-          callback: function (param) {
-            setParam['text-align'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        },
-        lineHeightParam: {
-          value: setParam['line-height'] || '',
-          placeholder: '请输入行高px',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['line-height'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        }
-      }
-    },
-    // 获取外边距配置
-    getMarginSetterParam (setParam) {
-      return {
-        title: '外边距设置',
-        type: 'marginGroup',
-        top: {
-          title: '上',
-          param: {
-            value: setParam['margin-top'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['margin-top'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        bottom: {
-          title: '下',
-          param: {
-            value: setParam['margin-bottom'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['margin-bottom'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        left: {
-          title: '左',
-          param: {
-            value: setParam['margin-left'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['margin-left'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        right: {
-          title: '右',
-          param: {
-            value: setParam['margin-right'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['margin-right'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        }
-      }
-    },
-    // 获取内边距配置
-    getPaddingSetterParam (setParam) {
-      return {
-        title: '内边距设置',
-        type: 'paddingGroup',
-        top: {
-          title: '上',
-          param: {
-            value: setParam['padding-top'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['padding-top'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        bottom: {
-          title: '下',
-          param: {
-            value: setParam['padding-bottom'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['padding-bottom'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        left: {
-          title: '左',
-          param: {
-            value: setParam['padding-left'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['padding-left'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        },
-        right: {
-          title: '右',
-          param: {
-            value: setParam['padding-right'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['padding-right'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          }
-        }
-      }
-    },
-    // 取边框设置配置
-    getBorderSetterParam (setParam) {
-      const borderStyleData = [
-        {
-          option: '请选择',
-          value: ''
-        },
-        {
-          option: '实线',
-          value: 'solid'
-        },
-        {
-          option: '虚线',
-          value: 'dashed'
-        },
-        {
-          option: '点',
-          value: 'dotted'
-        }
-      ]
-      const borderStyleObj = {
-        solid: '实线',
-        dashed: '虚线',
-        dotted: '点'
-      }
-      return {
-        title: '边框设置',
-        type: 'borderGroup',
-        top: {
-          title: '上',
-          sizeParam: {
-            value: setParam['border-top-width'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-top-width'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          colorParam: {
-            value: setParam['border-top-color'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-top-color'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          styleParam: {
-            hideSelectedIcon: true,
-            value: setParam['border-top-style'] || '',
-            option: borderStyleObj[setParam['border-top-style']] || '请选择',
-            data: borderStyleData,
-            callback: function (param) {
-              setParam['border-top-style'] = param.value
-              this.refreshContent()
-            }.bind(this)
-          }
-        },
-        bottom: {
-          title: '下',
-          sizeParam: {
-            value: setParam['border-bottom-width'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-bottom-width'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          colorParam: {
-            value: setParam['border-bottom-color'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-bottom-color'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          styleParam: {
-            hideSelectedIcon: true,
-            value: setParam['border-bottom-style'] || '',
-            option: borderStyleObj[setParam['border-bottom-style']] || '请选择',
-            data: borderStyleData,
-            callback: function (param) {
-              setParam['border-bottom-style'] = param.value
-              this.refreshContent()
-            }.bind(this)
-          }
-        },
-        left: {
-          title: '左',
-          sizeParam: {
-            value: setParam['border-left-width'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-left-width'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          colorParam: {
-            value: setParam['border-left-color'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-left-color'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          styleParam: {
-            hideSelectedIcon: true,
-            value: setParam['border-left-style'] || '',
-            option: borderStyleObj[setParam['border-left-style']] || '请选择',
-            data: borderStyleData,
-            callback: function (param) {
-              setParam['border-left-style'] = param.value
-              this.refreshContent()
-            }.bind(this)
-          }
-        },
-        right: {
-          title: '右',
-          sizeParam: {
-            value: setParam['border-right-width'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-right-width'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          colorParam: {
-            value: setParam['border-right-color'] || '',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['border-right-color'] = param.value
-                this.refreshContent()
-              }
-            }.bind(this)
-          },
-          styleParam: {
-            hideSelectedIcon: true,
-            value: setParam['border-right-style'] || '',
-            option: borderStyleObj[setParam['border-right-style']] || '请选择',
-            data: borderStyleData,
-            callback: function (param) {
-              setParam['border-right-style'] = param.value
-              this.refreshContent()
-            }.bind(this)
-          }
-        }
-      }
-    },
-    // 取背景设置配置
-    getBackgroundSetterParam (setParam) {
-      let Obj = {
-        title: '背景设置',
-        type: 'backgroundGroup',
-        backgroundColorParam: {
-          title: '背景颜色',
-          param: {
-            value: setParam['background-color'] || '',
-            placeholder: '请输入背景颜色'
-          },
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setParam['background-color'] = param.value
-              this.refreshContent()
-            }
-          }.bind(this)
-        },
-        backgroundImageParam: {
-          title: '背景图地址',
-          urlParam: {
-            value: setParam['background-image'] || '',
-            placeholder: '请输入图片地址',
-            callback: function (param, acType) {
-              if (acType == 'focusout') {
-                setParam['background-image'] = param.value
-                this.refreshContent()
-                Obj.backgroundImageParam.uploadParam.value = param.value
-              }
-            }.bind(this)
-          },
-          uploadParam: {
-            value: setParam['background-image'] || '',
-            del: true,
-            callback: function (type, param) {
-              setParam['background-image'] = param.value
-              this.refreshContent()
-              Obj.backgroundImageParam.urlParam.value = param.value
-            }.bind(this),
-            delCallback: function (type, param) {
-              setParam['background-image'] = param.value
-              this.refreshContent()
-              Obj.backgroundImageParam.urlParam.value = param.value
-            }.bind(this)
-          }
-        },
-        backgroundPositionParam: {
-          title: '背景位置',
-          param: {
-            value: setParam['background-position'] || 'top',
-            data: [
-              {
-                option: '居中',
-                value: 'center'
-              },
-              {
-                option: '顶部',
-                value: 'top'
-              },
-              {
-                option: '底部',
-                value: 'bottom'
-              }
-            ]
-          },
-          callback: function (param) {
-            setParam['background-position'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        },
-        backgroundRepeatParam: {
-          title: '背景重复',
-          param: {
-            value: setParam['background-repeat'] || 'repeat',
-            data: [
-              {
-                option: '不重复',
-                value: 'no-repeat'
-              },
-              {
-                option: '重复',
-                value: 'repeat'
-              },
-              {
-                option: '横向重复',
-                value: 'repeat-x'
-              },
-              {
-                option: '纵向重复',
-                value: 'repeat-y'
-              }
-            ]
-          },
-          callback: function (param) {
-            setParam['background-repeat'] = param.value
-            this.refreshContent()
-          }.bind(this)
-        }
-      }
-      return Obj
     }
-  }
+  }, PublicFunc)
 }
 
 export default Setter

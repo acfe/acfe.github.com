@@ -1,9 +1,9 @@
 <template>
   <FcModules :param="param" :elementRefreshCallback="elementRefreshCallback" :mid="mid" :isSet="isSet" :setConfig="setConfig" :acCallback="acCallback">
     <div class="m-images" :style="minHeightStyle">
-      <!-- theme2 -->
+      <!-- theme1 -->
       <div :class="'theme-' + theme" v-if="theme == 1">
-        <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in param.content" :key="key">
+        <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in content" :key="key" @click="acCallback(item)">
           <div class="image">
             <img :style="imageRadiusStyle" v-if="item.url" :src="item.url"/>
           </div>
@@ -15,10 +15,10 @@
       <div :class="'theme-' + theme" v-if="theme == 2">
         <div v-for="(item, key) in content" :key="key">
           <div class="image-table" v-if="key % columNum == 0">
-            <div class="image-cell" v-for="i in columNum" :key="i" :style="cellStyle">
+            <div class="image-cell" v-for="i in columNum" :key="i" :style="cellStyle" @click="acCallback(content[key + (i-1)])">
               <div v-if="content[key + (i-1)]" :style="contentPaddingStyle">
                 <div class="image">
-                  <img :style="imageRadiusStyle" v-if="content[key + (i-1)].url" :src="content[key + (i-1)].url"/>
+                  <img :style="imageStyle" v-if="content[key + (i-1)].url" :src="content[key + (i-1)].url"/>
                 </div>
                 <div class="title" :style="titleStyle" v-if="content[key + (i-1)].title">{{content[key + (i-1)].title}}</div>
                 <div class="description" :style="descriptionStyle" v-if="content[key + (i-1)].description">{{content[key + (i-1)].description}}</div>
@@ -36,17 +36,19 @@
             </div>
           </template>
           <template slot="s1" slot-scope="props">
-            <FcLazyImage :src="props.data.url" :param="{imageStyle: imageRadiusStyle}"/>
+            <div @click="acCallback(props.data)">
+              <FcLazyImage :src="props.data.url" :param="{imageStyle: imageRadiusStyle}"/>
+            </div>
           </template>
         </FcDomPlayer>
       </div>
       <!-- theme4 -->
-      <div :class="'theme-' + theme" v-if="theme == 4">
+      <div :class="'theme-' + theme" v-if="theme == 4" :style="hiddenStyle">
         <div class="image-table" :style="tableStyle">
-          <div class="image-cell" v-for="(item, key) in content" :key="key" :style="cellStyle">
+          <div class="image-cell" v-for="(item, key) in content" :key="key" :style="cellStyle" @click="acCallback(item)">
             <div v-if="item" :style="contentPaddingStyle">
               <div class="image">
-                <img :style="imageRadiusStyle" v-if="item.url" :src="item.url"/>
+                <img :style="imageStyle" v-if="item.url" :src="item.url"/>
               </div>
               <div class="title" :style="titleStyle" v-if="item.title">{{item.title}}</div>
               <div class="description" :style="descriptionStyle" v-if="item.description">{{item.description}}</div>

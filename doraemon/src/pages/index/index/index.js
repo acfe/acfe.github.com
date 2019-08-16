@@ -17,12 +17,16 @@ import Setter from '../setter'
 import FcDomPlayer from 'fcbox/player/dom'
 import FcLazyImage from 'fcbox/image/lazy'
 // modules
-import Mimages from '../../modules/images'
+import MImages from '../../modules/images'
+import MMenus from '../../modules/menus'
+import MGoods from '../../modules/goods'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
 import EText from '../../elements/text'
-Vue.use(Mimages)
+Vue.use(MImages)
+Vue.use(MMenus)
+Vue.use(MGoods)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
@@ -105,7 +109,7 @@ const Index = {
         var res = []
         for (var i = 0, len = _obj.length; i < len; i++) {
           var value = _obj[i]
-          if (isBaseDataType(value) && value !== '') {
+          if (isBaseDataType(value) && value !== '' && value !== '请选择') {
             res.push(value)
           } else if (judgeType(value) === 'object') {
             res.push(_cloneObj(value))
@@ -119,7 +123,7 @@ const Index = {
         var res = {}
         for (var attr in _obj) {
           var value = _obj[attr]
-          if (isBaseDataType(value) && value !== '') {
+          if (isBaseDataType(value) && value !== '' && value !== '请选择') {
             res[attr] = value
           } else if (judgeType(value) === 'object') {
             res[attr] = _cloneObj(value)
@@ -296,7 +300,8 @@ const Index = {
           this.contentConfig.pages[this.setConfig.setPageId].content.unshift({
             name: item.name,
             tag: item.tag,
-            content: []
+            content: [],
+            id: new Date().getTime()
           })
         } else {
           key = parseInt(this.setConfig.setModuleId)
@@ -310,7 +315,8 @@ const Index = {
           newArr.push({
             name: item.name,
             tag: item.tag,
-            content: []
+            content: [],
+            id: new Date().getTime()
           })
           for (let j = key + 1; j < content.length; j++) {
             if (content[j]) {

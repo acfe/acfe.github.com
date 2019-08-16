@@ -7,7 +7,8 @@ import Index from './index/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/play', component: Index }
+  { path: '/play', component: Index },
+  { path: '/play/:pageId', component: Index }
 ]
 
 const router = new VueRouter({

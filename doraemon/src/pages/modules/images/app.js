@@ -2,18 +2,21 @@
  * Created by 001264 on 2017/9/10.
  */
 import FcModules from '../module/app.vue'
+import formatAc from '../ac/format_style'
 
-const Mimages = {
+const MImages = {
   components: {
     FcModules
   },
-  name: 'Mimages',
+  name: 'MImages',
   data () {
     return {
       randKey: Math.random(),
       theme: 1,
       columNum: 2,
       content: [],
+      hiddenStyle: {},
+      imageStyle: {},
       cellStyle: {},
       tableStyle: {},
       titleStyle: {},
@@ -30,9 +33,20 @@ const Mimages = {
       }
     }
   },
-  props: ['param', 'elementRefreshCallback', 'isSet', 'setConfig', 'mid', 'acCallback'],
+  props: ['param', 'dataSource', 'elementRefreshCallback', 'isSet', 'setConfig', 'mid', 'acCallback'],
   created () {
     const param = this.param
+    let dataContent = []
+    let dataSource = this.dataSource || {}
+    let imagesDatas = dataSource.imagesDatas || []
+    for (let i in imagesDatas) {
+      if (imagesDatas[i].value == param.dataSourceId) {
+        dataContent = imagesDatas[i].data
+      }
+    }
+    if (this.isSet) {
+      this.hiddenStyle.overflow = 'hidden'
+    }
     if (param.theme) {
       this.theme = param.theme
     }
@@ -42,41 +56,44 @@ const Mimages = {
     if (param.descriptionStyle) {
       this.descriptionStyle = this.formatTextStyle(param.descriptionStyle)
     }
+    if (param.imageStyle) {
+      this.imageStyle = this.formatImageStyle(param.imageStyle)
+    }
     this.minHeightStyle['min-height'] = '34px'
-    const remStandar = 375
     param.imageRadius = param.imageRadius || 0
     switch (this.theme) {
       case 1:
         param.contentPaddingBottom = param.contentPaddingBottom || 10
         if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
-          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom) / remStandar) + 'rem'
+          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
         }
+        this.content = dataContent
         break
       case 2:
         param.contentPaddingBottom = param.contentPaddingBottom || 10
         param.contentPaddingRight = param.contentPaddingRight || 10
         this.columNum = parseInt(param.columNum, 10) || 2
-        for (let c in param.content) {
-          this.content.push(param.content[c])
+        for (let c in dataContent) {
+          this.content.push(dataContent[c])
         }
-        if (param.content.length < this.columNum) {
-          let add = this.columNum - param.content.length
+        if (dataContent.length < this.columNum) {
+          let add = this.columNum - dataContent.length
           for (let i = 0; i < add; i++) {
             this.content.push('')
           }
         }
         this.cellStyle.width = 100 / this.columNum + '%'
         if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
-          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom) / remStandar) + 'rem'
+          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
         }
         if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
-          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight) / remStandar) + 'rem'
+          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
         }
         break
       case 3:
         let data = []
-        for (let c in param.content) {
-          data.push(Object.assign(param.content[c], {
+        for (let c in dataContent) {
+          data.push(Object.assign(dataContent[c], {
             slot: 's1'
           }))
         }
@@ -99,21 +116,21 @@ const Mimages = {
       case 4:
         param.contentPaddingRight = param.contentPaddingRight || 10
         this.columNum = parseFloat(param.columNum, 10) || 2
-        for (let c in param.content) {
-          this.content.push(param.content[c])
+        for (let c in dataContent) {
+          this.content.push(dataContent[c])
         }
-        if (param.content.length < this.columNum) {
-          let add = this.columNum - param.content.length
+        if (dataContent.length < this.columNum) {
+          let add = this.columNum - dataContent.length
           for (let i = 0; i < add; i++) {
             this.content.push('')
           }
         }
-        let showNum = param.content.length > this.columNum ? param.content.length : this.columNum
+        let showNum = dataContent.length > this.columNum ? dataContent.length : this.columNum
         let tableWidth = (100 / this.columNum) * showNum
         this.cellStyle.width = 100 / showNum + '%'
         this.tableStyle.width = tableWidth + '%'
         if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
-          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight) / remStandar) + 'rem'
+          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
         }
         break
     }
@@ -121,28 +138,9 @@ const Mimages = {
       this.imageRadiusStyle['border-radius'] = param.imageRadius + 'px'
     }
   },
-  methods: {
-    formatTextStyle (style) {
-      let newStyle = {}
-      const remStandar = 375
-      for (let i in style) {
-        switch (i) {
-          case 'font-size':
-          case 'line-height':
-            if (style[i] || parseInt(style[i]) === 0) {
-              newStyle[i] = (parseInt(style[i]) / remStandar) + 'rem'
-            }
-            break
-          default:
-            if (style[i]) {
-              newStyle[i] = style[i]
-            }
-            break
-        }
-      }
-      return newStyle
-    }
-  }
+  methods: Object.assign({
+
+  }, formatAc)
 }
 
-export default Mimages
+export default MImages

@@ -25,11 +25,11 @@ const FcDomPlayer = {
     if (!dataLength) {
       return false
     }
+    this.dataLength = dataLength
     this.renderDataInit()
     this.Animation = new Animation()
     this.param.FcDomPlayer = this
     this.param.drag = this.param.drag === undefined ? true : this.param.drag
-    this.dataLength = dataLength
     this.param.initCallback && this.param.initCallback(this)
   },
   mounted () {

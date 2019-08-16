@@ -3,10 +3,10 @@
  */
 import App from './app.vue'
 
-const MImages = {
+const MMenus = {
   install: function (Vue) {
-    Vue.component('MImages', App)
+    Vue.component('MMenus', App)
   }
 }
 
-export default MImages
+export default MMenus

@@ -1,7 +1,7 @@
 /**
  * Created by 001264 on 2017/9/10.
  */
-import elementAc from '../element_ac'
+import elementAc from '../ac/element_ac'
 
 const FcModules = {
   name: 'FcModules',
@@ -15,7 +15,6 @@ const FcModules = {
   created () {
     const param = this.param
     this.moveParam = {}
-    const remStandar = 375
     let moudleStyle = {}
     switch (param.tag) {
       case 'images':
@@ -42,7 +41,7 @@ const FcModules = {
           case 'padding-top':
           case 'padding-bottom':
             if (param.style[i] || parseInt(param.style[i]) === 0) {
-              moudleStyle[i] = (parseInt(param.style[i]) / remStandar) + 'rem'
+              moudleStyle[i] = (parseInt(param.style[i])) + 'px'
             }
             break
           case 'border-top-width':
@@ -67,7 +66,7 @@ const FcModules = {
         }
       }
       if (param.heightType == 'set' && param.moduleHeight) {
-        moudleStyle['height'] = param.moduleHeight + 'px'
+        moudleStyle['height'] = param.moduleHeight / 375 + 'rem'
       } else if (param.heightType == 'screen') {
         let mh = this.isSet ? 667 : document.body.clientHeight
         moudleStyle['height'] = mh + 'px'
@@ -83,8 +82,12 @@ const FcModules = {
       this.$refs.fcModule.addEventListener('mousedown', this.mousedown)
       this.$refs.fcModule.addEventListener('mousemove', this.mousemove)
       this.$refs.fcModule.addEventListener('mouseup', this.mouseup)
+      setTimeout(() => {
+        if (this.$refs.fcModule) {
+          this.param.moduleHeight = this.$refs.fcModule.clientHeight
+        }
+      }, 500)
     }
-    this.param.moduleHeight = this.$refs.fcModule.clientHeight
   },
   methods: Object.assign({
 

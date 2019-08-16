@@ -7,7 +7,8 @@ const FcSingleSelector = {
   data () {
     return {
       itemShow: false,
-      Property: {}
+      Property: {},
+      listId: Math.random()
     }
   },
   props: ['param', 'callback'],
@@ -16,8 +17,30 @@ const FcSingleSelector = {
     if (this.param.tag) {
       window.FcSingleSelectors[this.param.tag] = this
     }
+    document.addEventListener('click', this.checkHide)
   },
   methods: {
+    getAcInfo (e, tag) {
+      let target = e.target
+      let loop = true
+      let dataKey
+      while (loop) {
+        loop = !!target.parentNode
+        loop = target.tagName == 'BODY' ? false : loop
+        dataKey = target.getAttribute(tag)
+        if (dataKey) {
+          loop = false
+          break
+        }
+        if (loop) {
+          target = target.parentNode
+        }
+      }
+      return {
+        dataKey,
+        target
+      }
+    },
     change (e) {
       const key = e.target.getAttribute('data-single-key')
       const param = this.param
@@ -46,6 +69,9 @@ const FcSingleSelector = {
         const itemList = this.$refs.itemList
         const selectorContent = this.$refs.selectorContent
         const selectorHeight = this.param.selectorHeight || 240
+        if (!itemList) {
+          return false
+        }
         itemList.style.overflowY = 'auto'
         if (itemList && this.param.data.length > 6) {
           selectorContent.style.height = selectorHeight + 2 + 'px'
@@ -63,7 +89,13 @@ const FcSingleSelector = {
         }
       })
     },
-    hideItem () {
+    checkHide (e) {
+      let ac = this.getAcInfo(e, 'data-list-content')
+      if (ac.dataKey != this.listId) {
+        this.itemShow = false
+      }
+    },
+    hideItem (e) {
       this.itemShow = false
     }
   }
