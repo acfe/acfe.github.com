@@ -73,14 +73,14 @@ Index.prototype = {
     link.rel = 'stylesheet'
     link.type = 'text/css'
     head.appendChild(link)
-    link.href = publicPath + 'css/' + name + '.css?0.769384476835616'
+    link.href = publicPath + 'css/' + name + '.css?0.962846396905723'
   },
 
   createJs: function (name, callback) {
     var head = document.getElementsByTagName('head')[0]
     var script = document.createElement('script')
     script.async = false
-    script.src = publicPath + 'js/' + name + '.js?0.769384476835616'
+    script.src = publicPath + 'js/' + name + '.js?0.962846396905723'
     head.appendChild(script)
     script.onload = function () {
       callback && callback()
