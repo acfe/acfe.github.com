@@ -13,6 +13,8 @@ const MGoods = {
     return {
       randKey: Math.random(),
       content: [],
+      hiddenStyle: {},
+      tableStyle: {},
       minHeightStyle: {},
       nameStyle: {},
       descriptionStyle: {},
@@ -30,6 +32,9 @@ const MGoods = {
   props: ['param', 'dataSource', 'elementRefreshCallback', 'isSet', 'setConfig', 'mid', 'acCallback'],
   created () {
     this.minHeightStyle['min-height'] = '34px'
+    if (this.isSet) {
+      this.hiddenStyle.overflow = 'hidden'
+    }
     const param = this.param
     if (param.theme) {
       this.theme = param.theme
@@ -50,9 +55,9 @@ const MGoods = {
     if (param.imageStyle) {
       this.imageStyle = this.formatImageStyle(param.imageStyle)
     }
+    let dataContent = []
     switch (param.dataType) {
       case 1:
-        let dataContent = []
         let dataSource = this.dataSource || {}
         let goodsDatas = dataSource.goodsDatas || []
         for (let i in goodsDatas) {
@@ -60,41 +65,61 @@ const MGoods = {
             dataContent = goodsDatas[i].data
           }
         }
-        switch (this.theme) {
-          case 1:
-            if (param.imageRadius) {
-              this.imageStyle['border-radius'] = param.imageRadius + 'px'
-            }
-            if (param.imageWidth) {
-              this.imageStyle['width'] = parseInt(param.imageWidth) / 375 + 'rem'
-            }
-            param.contentPaddingBottom = param.contentPaddingBottom || 10
-            if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
-              this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
-            }
-            this.content = dataContent
-            break
-          case 2:
-            param.contentPaddingBottom = param.contentPaddingBottom || 10
-            param.contentPaddingRight = param.contentPaddingRight || 10
-            this.columNum = parseInt(param.columNum, 10) || 2
-            for (let c in dataContent) {
-              this.content.push(dataContent[c])
-            }
-            if (dataContent.length < this.columNum) {
-              let add = this.columNum - dataContent.length
-              for (let i = 0; i < add; i++) {
-                this.content.push('')
-              }
-            }
-            this.cellStyle.width = 100 / this.columNum + '%'
-            if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
-              this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
-            }
-            if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
-              this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
-            }
-            break
+        break
+    }
+    switch (this.theme) {
+      case 1:
+        if (param.imageRadius) {
+          this.imageStyle['border-radius'] = param.imageRadius + 'px'
+        }
+        if (param.imageWidth) {
+          this.imageStyle['width'] = parseInt(param.imageWidth) / 375 + 'rem'
+        }
+        param.contentPaddingBottom = param.contentPaddingBottom || 10
+        if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
+          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
+        }
+        this.content = dataContent
+        break
+      case 2:
+        param.contentPaddingBottom = param.contentPaddingBottom || 10
+        param.contentPaddingRight = param.contentPaddingRight || 10
+        this.columNum = parseInt(param.columNum, 10) || 2
+        for (let c in dataContent) {
+          this.content.push(dataContent[c])
+        }
+        if (dataContent.length < this.columNum) {
+          let add = this.columNum - dataContent.length
+          for (let i = 0; i < add; i++) {
+            this.content.push('')
+          }
+        }
+        this.cellStyle.width = 100 / this.columNum + '%'
+        if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
+          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
+        }
+        if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
+          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
+        }
+        break
+      case 4:
+        param.contentPaddingRight = param.contentPaddingRight || 10
+        this.columNum = parseFloat(param.columNum, 10) || 2
+        for (let c in dataContent) {
+          this.content.push(dataContent[c])
+        }
+        if (dataContent.length < this.columNum) {
+          let add = this.columNum - dataContent.length
+          for (let i = 0; i < add; i++) {
+            this.content.push('')
+          }
+        }
+        let showNum = dataContent.length > this.columNum ? dataContent.length : this.columNum
+        let tableWidth = (100 / this.columNum) * showNum
+        this.cellStyle.width = 100 / showNum + '%'
+        this.tableStyle.width = tableWidth + '%'
+        if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
+          this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
         }
         break
     }

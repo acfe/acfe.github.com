@@ -3,6 +3,9 @@
  */
 import elementAc from '../ac/element_ac'
 
+let keyType = 'pos'
+let keyAddSize = 1
+
 const FcModules = {
   name: 'FcModules',
   data () {
@@ -87,6 +90,53 @@ const FcModules = {
           this.param.moduleHeight = this.$refs.fcModule.clientHeight
         }
       }, 500)
+      // 键盘事件
+      let keyObj = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+      }
+      document.onkeydown = (e) => {
+        switch (e.keyCode) {
+          case 16:
+            keyAddSize = 10
+            break
+          case 17:
+            keyType = 'size'
+            break
+        }
+      }
+      document.onkeyup = (e) => {
+        switch (e.keyCode) {
+          case 16:
+            keyAddSize = 1
+            break
+          case 17:
+            keyType = 'pos'
+            break
+          case 37:
+          case 38:
+          case 39:
+          case 40:
+            if (keyType == 'size') {
+              this.keySetElementSize(keyObj[e.keyCode], keyAddSize)
+            } else {
+              this.keySetElementPos(keyObj[e.keyCode], keyAddSize)
+            }
+            break
+          case 89:
+            if (keyType == 'size') {
+              this.elementRefreshCallback('ahead')
+            }
+            break
+          case 90:
+            if (keyType == 'size') {
+              this.elementRefreshCallback('undo')
+            }
+            break
+        }
+      }
     }
   },
   methods: Object.assign({

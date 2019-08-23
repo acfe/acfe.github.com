@@ -26,6 +26,69 @@
         </div>
       </div>
 
+      <!-- radioTab -->
+      <div class="tb-cell h10" v-if="item.type == 'radioTab'">
+        <div class="radio-tab-group">
+          <div class="sub-title">{{item.title}}</div>
+          <div class="radio-tab-area clear-fix">
+            <FcRadioTab :param="item.param" :callback="item.callback"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- sliderGroup -->
+      <div class="tb-cell h10" v-if="item.type == 'sliderGroup'">
+        <div class="input-group">
+          <div class="input-title">{{item.title}}</div>
+          <div class="input-content">
+            <div class="max-200">
+              <FcTextarea :param="item.textParam.param" :callback="item.textParam.callback"/>
+            </div>
+          </div>
+          <div class="input-content w120">
+            <FcSlider :param="item.sliderParam.param" :callback="item.sliderParam.callback"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- 页面模板列表 -->
+      <div class="tb-cell h10" v-if="item.type == 'pageThemeList'">
+        <div class="page-theme-list">
+          <div class="sub-title">页面风格选择</div>
+          <div v-for="(item, key) in pageThemeDatas" :key="key">
+            <div class="image-table" v-if="key % 2 == 0">
+              <div class="image-cell" v-for="i in 2" :key="i" @click="changePageTheme(pageThemeDatas[key + (i-1)])">
+                <div v-if="pageThemeDatas[key + (i-1)]">
+                  <div class="image">
+                    <img v-if="pageThemeDatas[key + (i-1)].url" :src="pageThemeDatas[key + (i-1)].url"/>
+                  </div>
+                  <div class="title" v-if="pageThemeDatas[key + (i-1)].title">{{pageThemeDatas[key + (i-1)].title}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 图标列表 -->
+      <div class="tb-cell h10" v-if="item.type == 'iconList'">
+        <div class="page-theme-list">
+          <div class="sub-title">选择图标</div>
+          <div v-for="(item, key) in iconDatas" :key="key">
+            <div class="image-table" v-if="key % 4 == 0">
+              <div class="image-cell image-cell-icon" v-for="i in 4" :key="i" @click="changeIcon(iconDatas[key + (i-1)])">
+                <div v-if="iconDatas[key + (i-1)]">
+                  <div class="icon-content">
+                    <div v-html="iconDatas[key + (i-1)].data" v-if="iconDatas[key + (i-1)].data"></div>
+                  </div>
+                  <div class="title" v-if="iconDatas[key + (i-1)].title">{{iconDatas[key + (i-1)].title}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 图片内容设置 -->
       <div class="tb-cell h10" v-if="item.type == 'image'">
         <div class="upload-area">
@@ -43,17 +106,7 @@
         </div>
       </div>
 
-      <!-- radioTab -->
-      <div class="tb-cell h10" v-if="item.type == 'radioTab'">
-        <div class="radio-tab-group">
-          <div class="sub-title">{{item.title}}</div>
-          <div class="radio-tab-area clear-fix">
-            <FcRadioTab :param="item.param" :callback="item.callback"/>
-          </div>
-        </div>
-      </div>
-
-      <!-- dataSourceGroup -->
+      <!-- 数据源选择 -->
       <div class="tb-cell h10" v-if="item.type == 'dataSourceGroup'">
         <div class="radio-tab-group">
           <div class="sub-title">{{item.title}}</div>
@@ -77,14 +130,18 @@
         </div>
       </div>
 
-      <!-- contentSetter -->
+      <!-- 模块内容设置 -->
       <div class="tb-cell" v-if="item.type == 'contentSetter'">
         <div class="images-module-content">
           <div class="tb-row">
             <div class="tb-cell h10"></div>
           </div>
           <div class="images-module-content-title">
-            <div class="content-tilte-cell">{{item.title}}</div>
+            <div class="content-tilte-cell">
+              <div class="title-control-cion edit-icon" v-if="item.contentListType != 'edit'" @click="item.changeContentListType('edit')"></div>
+              <div class="title-control-cion list-icon" v-if="item.contentListType == 'edit'" @click="item.changeContentListType('list')"></div>
+              {{item.title}}
+            </div>
           </div>
           <div class="tb-row">
             <div class="tb-cell h10"></div>
@@ -103,104 +160,121 @@
                   :callback="item.orderSetterParam.orderSetterMoveCallback"
                 >
                   <div class="order-setter-item" v-for="(item2, key2) in item.orderSetterParam.content" :key="key2" :slot="'s' + key2">
-                    <div class="h10"></div>
-                    <div class="upload-area" v-if="item2.uploadParam">
-                      <div class="upload-cell">
-                        <FcSingleUpload :param="item2.uploadParam" :delCallback="item2.uploadParam.delCallback" :callback="item2.uploadParam.callback"/>
+                    <div v-if="item2.contentListType != 'list'">
+                      <div class="content-item-control-icon">
+                        <div class="item-control-cion list-icon" @click="item.changeItemContentListType('list', key2)"></div>
                       </div>
-                    </div>
-                    <div class="input-group" v-if="item2.urlParam">
-                      <div class="input-title">{{item2.urlParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.urlParam.param" :callback="item2.urlParam.callback"/>
+                      <div class="h10"></div>
+                      <div class="upload-area" v-if="item2.uploadParam">
+                        <div class="upload-cell">
+                          <FcSingleUpload :param="item2.uploadParam" :delCallback="item2.uploadParam.delCallback" :callback="item2.uploadParam.callback"/>
                         </div>
                       </div>
-                    </div>
-                    <div class="input-group" v-if="item2.nameParam">
-                      <div class="input-title">{{item2.nameParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.nameParam" :callback="item2.nameParam.callback"/>
-                        </div>
-                      </div>
-                      <div class="input-content select-text" v-if="item.module == 'menus'" :class="{'select-text-checked': item.checkedId == item2.checkedId}" @click="item.changeCheckedId(item2.checkedId)">默认选中</div>
-                    </div>
-                    <div class="input-group" v-if="item2.titleParam">
-                      <div class="input-title">{{item2.titleParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.titleParam" :callback="item2.titleParam.callback"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group" v-if="item2.descriptionParam">
-                      <div class="input-title">{{item2.descriptionParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.descriptionParam" :callback="item2.descriptionParam.callback"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group" v-if="item2.salePriceParam">
-                      <div class="input-title">{{item2.salePriceParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.salePriceParam" :callback="item2.salePriceParam.callback"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="input-group" v-if="item2.originPriceParam">
-                      <div class="input-title">{{item2.originPriceParam.title}}</div>
-                      <div class="input-content">
-                        <div class="max-200">
-                          <FcTextarea :param="item2.originPriceParam" :callback="item2.originPriceParam.callback"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="ac-group" v-if="item2.acTypeParam">
-                      <div class="input-group">
-                        <div class="input-title lh34">{{item2.acTypeParam.title}}</div>
-                        <div class="input-content">
-                          <FcSingleSelector :param="item2.acTypeParam.param" :callback="item2.acTypeParam.param.callback"/>
-                        </div>
-                      </div>
-                      <div class="input-group" v-if="item2.acTypeParam.param.value == 1">
-                        <div class="input-title">{{item2.acUrlParam.title}}</div>
+                      <div class="input-group" v-if="item2.urlParam">
+                        <div class="input-title">{{item2.urlParam.title}}</div>
                         <div class="input-content">
                           <div class="max-200">
-                            <FcTextarea :param="item2.acUrlParam.param" :callback="item2.acUrlParam.param.callback"/>
+                            <FcTextarea :param="item2.urlParam.param" :callback="item2.urlParam.callback"/>
                           </div>
                         </div>
                       </div>
-                      <div class="input-group" v-if="item2.acTypeParam.param.value == 1">
-                        <div class="input-title lh34">{{item2.acTargetParam.title}}</div>
-                        <div class="input-content">
-                          <FcRadioTab :param="item2.acTargetParam.param" :callback="item2.acTargetParam.param.callback"/>
-                        </div>
-                      </div>
-                      <div class="input-group" v-if="item2.acTypeParam.param.value == 2">
-                        <div class="input-title lh34">{{item2.pagesParam.title}}</div>
-                        <div class="input-content">
-                          <FcSingleSelector :param="item2.pagesParam.param" :callback="item2.pagesParam.param.callback"/>
-                        </div>
-                      </div>
-                      <div class="input-group" v-if="item2.acTypeParam.param.value == 3 || item2.acTypeParam.param.value == 5">
-                        <div class="input-title lh34">{{item2.popsParam.title}}</div>
-                        <div class="input-content">
-                          <FcSingleSelector :param="item2.popsParam.param" :callback="item2.popsParam.param.callback"/>
-                        </div>
-                      </div>
-                      <div class="input-group" v-if="item2.acTypeParam.param.value == 4">
-                        <div class="input-title">{{item2.acFunParam.title}}</div>
+                      <div class="input-group" v-if="item2.nameParam">
+                        <div class="input-title">{{item2.nameParam.title}}</div>
                         <div class="input-content">
                           <div class="max-200">
-                            <FcTextarea :param="item2.acFunParam.param" :callback="item2.acFunParam.param.callback"/>
+                            <FcTextarea :param="item2.nameParam.param" :callback="item2.nameParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-content select-text" v-if="item.module == 'menus'" :class="{'select-text-checked': item.checkedId == item2.checkedId}" @click="item.changeCheckedId(item2.checkedId)">默认选中</div>
+                      </div>
+                      <div class="input-group" v-if="item2.titleParam">
+                        <div class="input-title">{{item2.titleParam.title}}</div>
+                        <div class="input-content">
+                          <div class="max-200">
+                            <FcTextarea :param="item2.titleParam.param" :callback="item2.titleParam.callback"/>
                           </div>
                         </div>
                       </div>
+                      <div class="input-group" v-if="item2.descriptionParam">
+                        <div class="input-title">{{item2.descriptionParam.title}}</div>
+                        <div class="input-content">
+                          <div class="max-200">
+                            <FcTextarea :param="item2.descriptionParam.param" :callback="item2.descriptionParam.callback"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-group" v-if="item2.salePriceParam">
+                        <div class="input-title">{{item2.salePriceParam.title}}</div>
+                        <div class="input-content">
+                          <div class="max-200">
+                            <FcTextarea :param="item2.salePriceParam.param" :callback="item2.salePriceParam.callback"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-group" v-if="item2.originPriceParam">
+                        <div class="input-title">{{item2.originPriceParam.title}}</div>
+                        <div class="input-content">
+                          <div class="max-200">
+                            <FcTextarea :param="item2.originPriceParam.param" :callback="item2.originPriceParam.callback"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ac-group" v-if="item2.acTypeParam">
+                        <div class="input-group">
+                          <div class="input-title lh34">{{item2.acTypeParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.acTypeParam" :callback="item2.acTypeParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 1">
+                          <div class="input-title">{{item2.acUrlParam.title}}</div>
+                          <div class="input-content">
+                            <div class="max-200">
+                              <FcTextarea :param="item2.acUrlParam.param" :callback="item2.acUrlParam.callback"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 1">
+                          <div class="input-title lh34">{{item2.acTargetParam.title}}</div>
+                          <div class="input-content">
+                            <FcRadioTab :param="item2.acTargetParam.param" :callback="item2.acTargetParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 2">
+                          <div class="input-title lh34">{{item2.pagesParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.pagesParam" :callback="item2.pagesParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 3 || item2.acTypeParam.value == 5">
+                          <div class="input-title lh34">{{item2.popsParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.popsParam" :callback="item2.popsParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 4">
+                          <div class="input-title">{{item2.acFunParam.title}}</div>
+                          <div class="input-content">
+                            <div class="max-200">
+                              <FcTextarea :param="item2.acFunParam.param" :callback="item2.acFunParam.param.callback"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="h10"></div>
                     </div>
-                    <div class="h10"></div>
+                    <div v-if="item2.contentListType == 'list'">
+                      <div class="order-list-group">
+                        <div class="order-list-image content-item-control-icon">
+                          <img :src="item2.urlParam.param.value" v-if="item2.urlParam && item2.urlParam.param.value">
+                          <div class="item-control-cion edit-icon" @click="item.changeItemContentListType('edit', key2)"></div>
+                        </div>
+                        <div class="order-list-text-cell">
+                          <div class="order-list-text" v-if="item2.titleParam && item2.titleParam.param.value && !item2.nameParam">{{item2.titleParam.param.value}}</div>
+                          <div class="order-list-text" v-if="item2.nameParam && item2.nameParam.param.value">{{item2.nameParam.param.value}}</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </OrderSetter>
               </div>
@@ -209,57 +283,42 @@
         </div>
       </div>
 
-      <!-- sliderGroup -->
-      <div class="tb-cell h10" v-if="item.type == 'sliderGroup'">
-        <div class="input-group">
-          <div class="input-title">{{item.title}}</div>
-          <div class="input-content">
-            <div class="max-200">
-              <FcTextarea :param="item.textParam.param" :callback="item.textParam.callback"/>
-            </div>
-          </div>
-          <div class="input-content w120">
-            <FcSlider :param="item.sliderParam.param" :callback="item.sliderParam.callback"/>
-          </div>
-        </div>
-      </div>
-
-      <!-- actionGroup -->
+      <!-- 事件设置 -->
 
       <div class="tb-cell h10" v-if="item.type == 'actionGroup'">
         <div class="input-group">
           <div class="input-title lh34">{{item.acTypeParam.title}}</div>
           <div class="input-content">
-            <FcSingleSelector :param="item.acTypeParam.param" :callback="item.acTypeParam.param.callback"/>
+            <FcSingleSelector :param="item.acTypeParam" :callback="item.acTypeParam.callback"/>
           </div>
         </div>
-        <div class="input-group" v-if="item.acTypeParam.param.value == 1">
+        <div class="input-group" v-if="item.acTypeParam.value == 1">
           <div class="input-title">{{item.acUrlParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
-              <FcTextarea :param="item.acUrlParam.param" :callback="item.acUrlParam.param.callback"/>
+              <FcTextarea :param="item.acUrlParam.param" :callback="item.acUrlParam.callback"/>
             </div>
           </div>
         </div>
-        <div class="input-group" v-if="item.acTypeParam.param.value == 1">
+        <div class="input-group" v-if="item.acTypeParam.value == 1">
           <div class="input-title lh34">{{item.acTargetParam.title}}</div>
           <div class="input-content">
-            <FcRadioTab :param="item.acTargetParam.param" :callback="item.acTargetParam.param.callback"/>
+            <FcRadioTab :param="item.acTargetParam.param" :callback="item.acTargetParam.callback"/>
           </div>
         </div>
-        <div class="input-group" v-if="item.acTypeParam.param.value == 2">
+        <div class="input-group" v-if="item.acTypeParam.value == 2">
           <div class="input-title lh34">{{item.pagesParam.title}}</div>
           <div class="input-content">
-            <FcSingleSelector :param="item.pagesParam.param" :callback="item.pagesParam.param.callback"/>
+            <FcSingleSelector :param="item.pagesParam" :callback="item.pagesParam.callback"/>
           </div>
         </div>
-        <div class="input-group" v-if="item.acTypeParam.param.value == 3 || item.acTypeParam.param.value == 5">
+        <div class="input-group" v-if="item.acTypeParam.value == 3 || item.acTypeParam.value == 5">
           <div class="input-title lh34">{{item.popsParam.title}}</div>
           <div class="input-content">
-            <FcSingleSelector :param="item.popsParam.param" :callback="item.popsParam.param.callback"/>
+            <FcSingleSelector :param="item.popsParam" :callback="item.popsParam.callback"/>
           </div>
         </div>
-        <div class="input-group" v-if="item.acTypeParam.param.value == 4">
+        <div class="input-group" v-if="item.acTypeParam.value == 4">
           <div class="input-title">{{item.acFunParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
@@ -269,13 +328,13 @@
         </div>
       </div>
 
-      <!-- sizePositionGroup -->
+      <!-- 元素尺寸位置配置 -->
       <div class="tb-cell h10" v-if="item.type == 'sizePositionGroup'">
         <div class="input-group">
           <div class="input-title">{{item.widthParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
-              <FcTextarea :param="item.widthParam" :callback="item.widthParam.callback"/>
+              <FcTextarea :param="item.widthParam.param" :callback="item.widthParam.callback"/>
             </div>
           </div>
         </div>
@@ -283,7 +342,7 @@
           <div class="input-title">{{item.heightParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
-              <FcTextarea :param="item.heightParam" :callback="item.heightParam.callback"/>
+              <FcTextarea :param="item.heightParam.param" :callback="item.heightParam.callback"/>
             </div>
           </div>
         </div>
@@ -291,7 +350,7 @@
           <div class="input-title">{{item.leftParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
-              <FcTextarea :param="item.leftParam" :callback="item.leftParam.callback"/>
+              <FcTextarea :param="item.leftParam.param" :callback="item.leftParam.callback"/>
             </div>
           </div>
         </div>
@@ -299,7 +358,7 @@
           <div class="input-title">{{item.topParam.title}}</div>
           <div class="input-content">
             <div class="max-200">
-              <FcTextarea :param="item.topParam" :callback="item.topParam.callback"/>
+              <FcTextarea :param="item.topParam.param" :callback="item.topParam.callback"/>
             </div>
           </div>
         </div>

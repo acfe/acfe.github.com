@@ -23,12 +23,14 @@ import MGoods from '../../modules/goods'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
+import EIcon from '../../elements/icon'
 import EText from '../../elements/text'
 Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
 Vue.use(MPop)
 Vue.use(EImage)
+Vue.use(EIcon)
 Vue.use(EText)
 // components
 Vue.use(FcInput)
@@ -48,6 +50,8 @@ const Index = {
   name: 'Index',
   data () {
     return {
+      showAhead: false,
+      showUndo: false,
       previewPopParam: {
         show: false,
         maskClose: true
@@ -79,12 +83,16 @@ const Index = {
     this.setSetter('page')
   },
   mounted () {
+    if (sessionStorage.getItem('configContentCatch')) {
+      this.$store.state.contentConfig = JSON.parse(sessionStorage.getItem('configContentCatch'))
+    }
     this.refreshContent()
     this.refreshPageList()
   },
   methods: {
     save () {
       console.log(this.trimObjBlank(this.contentConfig))
+      console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.pages[this.setConfig.setPageId])))
     },
     preview () {
       localStorage.setItem('previewData', JSON.stringify(this.trimObjBlank(this.contentConfig)))
@@ -194,11 +202,25 @@ const Index = {
       this.setSetter('pop', this.setConfig.setPopId)
       this.refreshContent()
     },
-    refreshContent () {
+    refreshContent (type) {
+      // 元素窗口滚动位置
+      if (this.setConfig.elementWindowSetterParam.self) {
+        this.setConfig.elementWindowSetterParam.scrollTop = this.setConfig.elementWindowSetterParam.self.scroll.scrollTop
+      }
+      if (this.setConfig.popElementWindowSetterParam.self) {
+        this.setConfig.popElementWindowSetterParam.scrollTop = this.setConfig.popElementWindowSetterParam.self.scroll.scrollTop
+      }
+      if (this.setConfig.moduleWindowSetterParam.self) {
+        this.setConfig.moduleWindowSetterParam.scrollTop = this.setConfig.moduleWindowSetterParam.self.scroll.scrollTop
+      }
       if (this.setConfig.setType == 'pop' || this.setConfig.setType == 'popElement') {
         this.popContentKey = Math.random()
       } else {
-        this.setConfig.mainOrderSetterParam.content = this.contentConfig.pages[this.setConfig.setPageId] ? this.contentConfig.pages[this.setConfig.setPageId].content : []
+        let mainContent = this.contentConfig.pages[this.setConfig.setPageId] ? this.contentConfig.pages[this.setConfig.setPageId].content : []
+        this.setConfig.mainOrderSetterParam.content = mainContent
+        // 同步模块窗口数据
+        this.setConfig.moduleWindowSetterParam.content = mainContent
+        this.setConfig.moduleWindowSetterParam.key = Math.random()
         if (document.getElementById('mainSetter')) {
           this.setConfig.mainOrderSetterParam.scrollTop = document.getElementById('mainSetter').scrollTop
         }
@@ -215,6 +237,64 @@ const Index = {
         if (this.setConfig.setType == 'body') {
           this.bodyStyle = this.refreshBodyStyle(this.contentConfig.body.style)
         }
+      }
+      // history
+      window.fc.historyArr = window.fc.historyArr || []
+      window.fc.historyKey = window.fc.historyKey || 0
+      if (JSON.stringify(this.contentConfig) != window.fc.historyArr[window.fc.historyKey]) {
+        if (type != 'refreshHistory') {
+          this.setHistory()
+          this.checkHistoryBtnShow()
+        }
+      }
+    },
+    checkHistoryBtnShow () {
+      if (window.fc.historyArr.length && window.fc.historyKey) {
+        this.showUndo = true
+      } else {
+        this.showUndo = false
+      }
+      if (window.fc.historyArr.length && window.fc.historyKey < window.fc.historyArr.length - 1) {
+        this.showAhead = true
+      } else {
+        this.showAhead = false
+      }
+    },
+    setHistory () {
+      const contentConfigCatch = JSON.stringify(this.contentConfig)
+      window.fc.historyArr.push(contentConfigCatch)
+      sessionStorage.setItem('configContentCatch', contentConfigCatch)
+      if (window.fc.historyArr.length > 10) {
+        window.fc.historyArr.shift()
+      }
+      window.fc.historyKey = window.fc.historyArr.length - 1
+    },
+    historyUndo () {
+      if (!this.showUndo) {
+        return false
+      }
+      window.fc.historyKey--
+      window.fc.historyKey = window.fc.historyKey > 0 ? window.fc.historyKey : 0
+      if (window.fc.historyArr[window.fc.historyKey]) {
+        this.$store.state.contentConfig = JSON.parse(window.fc.historyArr[window.fc.historyKey])
+        this.refreshContent('refreshHistory')
+        this.refreshPageList()
+        this.refreshSetter()
+        this.checkHistoryBtnShow()
+      }
+    },
+    historyAhead () {
+      if (!this.showAhead) {
+        return false
+      }
+      window.fc.historyKey++
+      window.fc.historyKey = window.fc.historyKey < window.fc.historyArr.length ? window.fc.historyKey : window.fc.historyArr.length - 1
+      if (window.fc.historyArr[window.fc.historyKey]) {
+        this.$store.state.contentConfig = JSON.parse(window.fc.historyArr[window.fc.historyKey])
+        this.refreshContent('refreshHistory')
+        this.refreshPageList()
+        this.refreshSetter()
+        this.checkHistoryBtnShow()
       }
     },
     refreshBodyStyle (style) {
@@ -247,7 +327,6 @@ const Index = {
       return bodyStyle
     },
     refreshPageList () {
-      this.setSetter('page')
       this.setConfig.pageListOrderSetterParam.content = this.contentConfig.pages
       if (document.getElementById('pageListOrderSetter')) {
         this.setConfig.pageListOrderSetterParam.scrollTop = document.getElementById('pageListOrderSetter').scrollTop
@@ -264,6 +343,7 @@ const Index = {
         id: new Date().getTime()
       })
       this.setConfig.setPageId = 0
+      this.setSetter('page')
       this.refreshPageList()
       this.refreshContent()
     },
@@ -279,18 +359,24 @@ const Index = {
       this.refreshContent()
     },
     delPop (key) {
-      const content = this.contentConfig.pops
-      const newContent = []
-      for (var i in content) {
-        if (i != key) {
-          newContent.push(content[i])
+      window.fc.Dialog.show({
+        text: '确定删除弹窗吗？',
+        clearText: '取消',
+        confirmCallback: () => {
+          const content = this.contentConfig.pops
+          const newContent = []
+          for (var i in content) {
+            if (i != key) {
+              newContent.push(content[i])
+            }
+          }
+          this.contentConfig.pops = newContent
+          this.setSetter('pop', this.setConfig.setPopId)
+          setTimeout(() => {
+            this.setConfig.setPopId = (parseInt(key) - 1) > 0 ? (parseInt(key) - 1) : 0
+            this.refreshContent()
+          })
         }
-      }
-      this.contentConfig.pops = newContent
-      this.setSetter('pop', this.setConfig.setPopId)
-      setTimeout(() => {
-        this.setConfig.setPopId = (parseInt(key) - 1) > 0 ? (parseInt(key) - 1) : 0
-        this.refreshContent()
       })
     },
     addModule (item) {
@@ -339,11 +425,11 @@ const Index = {
         case 'element':
           const content = this.contentConfig.pages[this.setConfig.setPageId].content[this.setConfig.setModuleId]
           content.elements = content.elements || []
-          content.elements.push({
+          content.elements.unshift({
             name: item.name,
             tag: item.tag
           })
-          this.setConfig.setElementId = content.elements.length - 1
+          this.setConfig.setElementId = 0
           this.setSetter('element', this.setConfig.setModuleId, this.setConfig.setElementId)
           this.refreshSetter()
           this.refreshContent()
@@ -356,11 +442,11 @@ const Index = {
         case 'popElement':
           const content = this.contentConfig.pops[this.setConfig.setPopId]
           content.elements = content.elements || []
-          content.elements.push({
+          content.elements.unshift({
             name: item.name,
             tag: item.tag
           })
-          this.setConfig.setElementId = content.elements.length - 1
+          this.setConfig.setElementId = 0
           this.setSetter('popElement', this.setConfig.setPopId, this.setConfig.setElementId)
           this.refreshSetter()
           this.refreshContent()
@@ -381,6 +467,7 @@ const Index = {
           this.setConfig.setModuleId = moduleId
           this.setConfig.setterParam.imageOrderSetterKey = undefined
           this.setConfig.editTabParam.data[2].show = true
+          this.setConfig.setterParam.moduleContentSetterScrollTop = 0
           this.refreshElementWindow()
           break
         case 'element':
@@ -416,30 +503,117 @@ const Index = {
       this.setConfig.setterParam.key = Math.random()
     },
     elementRefreshCallback (elmentKey, moduleId, type) {
+      if (elmentKey == 'keyAc') {
+        this.refreshContent()
+        this.refreshSetter()
+        return false
+      }
+      if (elmentKey == 'undo') {
+        this.historyUndo()
+        return false
+      }
+      if (elmentKey == 'ahead') {
+        this.historyAhead()
+        return false
+      }
+      this.setElementWinScrollTop(parseInt(elmentKey) || 0)
       this.setSetter('element', moduleId, elmentKey)
       if (type == 'up' && this.setConfig.mainOrderSetterParam.self.editKey != this.setConfig.setModuleId) {
         this.refreshContent()
       }
     },
+    elementLock (item) {
+      item.lock = !item.lock
+    },
     /* orderSetter callback */
     popElementRefreshCallback (elmentKey, moduleId, type) {
+      if (elmentKey == 'keyAc') {
+        this.refreshContent()
+        this.refreshSetter()
+        return false
+      }
+      this.setPopElementWinScrollTop(parseInt(elmentKey) || 0)
       this.setSetter('popElement', this.setConfig.setPopId, elmentKey)
+    },
+    setElementWinScrollTop (key) {
+      if (!this.setConfig.elementWindowSetterParam.self) {
+        return false
+      }
+      this.setConfig.elementWindowSetterParam.scrollTop = (key / this.setConfig.elementWindowSetterParam.content.length) * this.setConfig.elementWindowSetterParam.self.scroll.scrollHeight
+      this.setConfig.elementWindowSetterParam.self.scroll.scrollTop = this.setConfig.elementWindowSetterParam.scrollTop
+    },
+    setPopElementWinScrollTop (key) {
+      if (!this.setConfig.popElementWindowSetterParam.self) {
+        return false
+      }
+      this.setConfig.popElementWindowSetterParam.scrollTop = (key / this.setConfig.popElementWindowSetterParam.content.length) * this.setConfig.popElementWindowSetterParam.self.scroll.scrollHeight
+      this.setConfig.popElementWindowSetterParam.self.scroll.scrollTop = this.setConfig.popElementWindowSetterParam.scrollTop
     },
     orderSetterEditContentCallback (selectedKey, target, top) {
       if (selectedKey !== undefined && selectedKey != 'move') {
         this.setSetter('module', selectedKey)
+        this.setConfig.moduleWindowSetterParam.editKey = selectedKey
+        this.setConfig.moduleWindowSetterParam.key = Math.random()
+        this.setModuleWinScrollTop(selectedKey)
       }
     },
     orderSetterDelContentCallback (key) {
       this.contentConfig.pages[this.setConfig.setPageId].content = this.setConfig.mainOrderSetterParam.content
       key = key - 1 > 0 ? key - 1 : 0
+      this.setConfig.moduleWindowSetterParam.editKey = key
+      this.setModuleWinScrollTop(key)
       this.setSetter('module', key)
       this.refreshContent()
     },
     orderSetterMoveCallback (key) {
       this.contentConfig.pages[this.setConfig.setPageId].content = this.setConfig.mainOrderSetterParam.content
+      this.setConfig.moduleWindowSetterParam.editKey = key
+      this.setModuleWinScrollTop(key)
       this.refreshContent()
       this.setSetter('module', key)
+    },
+    setModuleWinScrollTop (key) {
+      this.setConfig.moduleWindowSetterParam.scrollTop = (key / this.setConfig.moduleWindowSetterParam.content.length) * this.setConfig.moduleWindowSetterParam.self.scroll.scrollHeight
+      this.setConfig.moduleWindowSetterParam.self.scroll.scrollTop = this.setConfig.moduleWindowSetterParam.scrollTop
+    },
+    moduleSetterEditContentCallback (selectedKey, target, top) {
+      if (selectedKey !== undefined && selectedKey != 'move') {
+        this.setConfig.moduleWindowSetterParam.editKey = selectedKey
+        this.setMainModuleScrollTop(selectedKey)
+        this.setSetter('module', selectedKey)
+        this.refreshContent()
+      }
+    },
+    moduleSetterDelContentCallback (key) {
+      window.fc.Dialog.show({
+        text: '确定删除模块吗？',
+        clearText: '取消',
+        confirmCallback: () => {
+          this.setConfig.moduleWindowSetterParam.self.delOrderIcon(key)
+          this.contentConfig.pages[this.setConfig.setPageId].content = this.setConfig.moduleWindowSetterParam.content
+          key = key - 1 > 0 ? key - 1 : 0
+          this.setConfig.moduleWindowSetterParam.editKey = key
+          this.setMainModuleScrollTop(key)
+          this.setSetter('module', key)
+          this.refreshContent()
+        }
+      })
+    },
+    moduleSetterMoveCallback (key) {
+      this.contentConfig.pages[this.setConfig.setPageId].content = this.setConfig.moduleWindowSetterParam.content
+      this.setConfig.moduleWindowSetterParam.editKey = key
+      this.setMainModuleScrollTop(key)
+      this.setSetter('module', key)
+      this.refreshContent()
+    },
+    setMainModuleScrollTop (key) {
+      let content = this.setConfig.mainOrderSetterParam.content
+      let scrollTop = 0
+      for (let i = 0; i < key; i++) {
+        scrollTop += content[i].moduleHeight
+      }
+      this.setConfig.mainOrderSetterParam.scrollTop = scrollTop
+      this.setConfig.mainOrderSetterParam.self.scroll.scrollTop = scrollTop
     },
     // page order setter callback
     pageListOrderSetterEditContentCallback (selectedKey, target, top) {
@@ -450,9 +624,9 @@ const Index = {
     pageListOrderSetterDelContentCallback (key) {
       this.contentConfig.pages = this.setConfig.pageListOrderSetterParam.content
       this.setConfig.setPageId = key - 1 > 0 ? key - 1 : 0
-      this.refreshPageList()
       this.setConfig.mainOrderSetterParam.self.editKey = 'empty'
       this.setSetter('page')
+      this.refreshPageList()
       this.refreshContent()
     },
     pageListOrderSetterMoveCallback (key) {

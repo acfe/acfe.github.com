@@ -86,7 +86,9 @@ export default {
       callback: function (acParam, acType) {
         if (acType == 'focusout') {
           setModule[param.tag] = acParam.value
-          this.refreshContent()
+          if (!param.static) {
+            this.refreshContent()
+          }
           param.callback && param.callback(acParam)
         }
       }.bind(this)
@@ -96,6 +98,7 @@ export default {
   // 获取selector组件设置
   getSelectorParam (setParam, param) {
     let Obj = {
+      title: param.title,
       hideSelectedIcon: true,
       value: setParam[param.tag] || (param.defaultValue || ''),
       option: param.optionObj[setParam[param.tag]] || (param.defaultOption || '请选择'),
@@ -110,12 +113,13 @@ export default {
   },
   // 获取滑块组件设置
   getSliderParam (setParam, param) {
+    let defaultValue = (param.defaultValue || param.defaultValue === 0 ? param.defaultValue : 100)
     let slParam = {
       type: 'sliderGroup',
       title: param.title,
       textParam: {
         param: {
-          value: setParam[param.tag] || (param.defaultValue || 100)
+          value: setParam[param.tag] || defaultValue
         },
         callback: function (acParam, acType) {
           if (acType == 'focusout') {
@@ -129,7 +133,7 @@ export default {
         param: {
           min: param.min || 0,
           max: param.max || 100,
-          value: parseInt(setParam[param.tag]) || (param.defaultValue || 100)
+          value: parseInt(setParam[param.tag]) || defaultValue
         },
         callback: function (acParam) {
           setParam[param.tag] = acParam.value
@@ -227,7 +231,7 @@ export default {
     return Obj
   },
   // 事件设置
-  getActionSetterParam (setModule, refeshCallback) {
+  getActionSetterParam (setModule) {
     setModule.action = setModule.action || {}
     const acTypeData = [
       {
@@ -266,106 +270,72 @@ export default {
     let pages = this.contentConfig.pages
     let pops = this.contentConfig.pops
     let pagesData = []
+    let pagesNames = {}
     for (let i in pages) {
       pagesData.push({
         option: pages[i].name,
         value: pages[i].id
       })
+      pagesNames[pages[i].id] = pages[i].name
     }
     let popsData = []
+    let popsNames = {}
     for (let i in pops) {
       popsData.push({
         option: pops[i].name,
         value: pops[i].id
       })
+      popsNames[pops[i].id] = pops[i].name
     }
     return {
       type: 'actionGroup',
-      pagesParam: {
+      pagesParam: this.getSelectorParam(setModule.action, {
         title: '选择页面',
-        param: {
-          option: setModule.action['pageName'] || '请选择',
-          value: setModule.action['pageId'] || '',
-          data: pagesData,
-          callback: function (param) {
-            setModule.action['pageName'] = param.option
-            setModule.action['pageId'] = param.value
-            refeshCallback && refeshCallback()
-          }
-        }
-      },
-      popsParam: {
+        tag: 'pageId',
+        defaultOption: '请选择',
+        optionObj: pagesNames,
+        data: pagesData
+      }),
+      popsParam: this.getSelectorParam(setModule.action, {
         title: '选择弹窗',
-        param: {
-          option: setModule.action['popName'] || '请选择',
-          value: setModule.action['popId'] || '',
-          data: popsData,
-          callback: function (param) {
-            setModule.action['popName'] = param.option
-            setModule.action['popId'] = param.value
-            refeshCallback && refeshCallback()
-          }
-        }
-      },
-      acTypeParam: {
+        tag: 'popId',
+        defaultOption: '请选择',
+        optionObj: popsNames,
+        data: popsData
+      }),
+      acTypeParam: this.getSelectorParam(setModule.action, {
         title: '事件类型',
-        type: 'singleSelector',
-        param: {
-          option: acTypeObj[setModule.action['acType']] || '请选择',
-          value: setModule.action['acType'] || 0,
-          data: acTypeData,
-          callback: function (param) {
-            setModule.action['acType'] = param.value
-            refeshCallback && refeshCallback()
-          }
-        }
-      },
-      acUrlParam: {
+        tag: 'acType',
+        defaultOption: '请选择',
+        defaultValue: 0,
+        optionObj: acTypeObj,
+        data: acTypeData
+      }),
+      acUrlParam: this.getTextareaParam(setModule.action, {
         title: '链接地址',
-        param: {
-          value: setModule.action['acUrl'] || '',
-          placeholder: '请输入链接地址',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setModule.action['acUrl'] = param.value
-              refeshCallback && refeshCallback()
-            }
-          }
-        }
-      },
-      acTargetParam: {
+        placeholder: '请输入链接地址',
+        tag: 'acUrl'
+      }),
+      acTargetParam: this.getRadioTabParam(setModule.action, {
         title: '打开方式',
-        param: {
-          value: setModule.action['acTarget'] || '_self',
-          data: [
-            {
-              option: '本窗口',
-              value: '_self'
-            },
-            {
-              option: '新窗口',
-              value: '_blank'
-            }
-          ],
-          callback: function (param) {
-            setModule.action['acTarget'] = param.value
-            refeshCallback && refeshCallback()
+        tag: 'acTarget',
+        defaultValue: '_self',
+        data: [
+          {
+            option: '本窗口',
+            value: '_self'
+          },
+          {
+            option: '新窗口',
+            value: '_blank'
           }
-        }
-      },
-      acFunParam: {
+        ]
+      }),
+      acFunParam: this.getTextareaParam(setModule.action, {
         title: '事件名称',
-        param: {
-          value: setModule.action['acFun'] || '',
-          placeholder: '请输入事件名称',
-          callback: function (param, acType) {
-            if (acType == 'focusout') {
-              setModule.action['acFun'] = param.value
-              refeshCallback && refeshCallback()
-            }
-          }
-        }
-      }
+        placeholder: '请输入事件名称',
+        tag: 'acFun'
+      })
     }
   },
   // 获取图片内容设置

@@ -9,14 +9,18 @@ import FcLazyImage from 'fcbox/image/lazy'
 // modules
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
+import MGoods from '../../modules/goods'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
+import EIcon from '../../elements/icon'
 import EText from '../../elements/text'
 Vue.use(MImages)
 Vue.use(MMenus)
+Vue.use(MGoods)
 Vue.use(MPop)
 Vue.use(EImage)
+Vue.use(EIcon)
 Vue.use(EText)
 Vue.use(FcDomPlayer)
 Vue.use(FcLazyImage)

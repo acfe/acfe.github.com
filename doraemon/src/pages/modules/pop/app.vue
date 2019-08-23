@@ -5,6 +5,7 @@
       <div v-for="(item, key) in param.elements" :key="key">
         <EImage v-if="item.tag == 'image'" :param="item" :eid="key" mid="pop" :isSet="isSet" :setConfig="setConfig" :zIndex="param.elements.length - key" :acCallback="acCallback"/>
         <EText v-if="item.tag == 'text'" :param="item" :eid="key" mid="pop" :isSet="isSet" :setConfig="setConfig" :zIndex="param.elements.length - key" :acCallback="acCallback"/>
+        <EIcon v-if="item.tag == 'icon'" :param="item" :eid="key" mid="pop" :isSet="isSet" :setConfig="setConfig" :zIndex="param.elements.length - key" :acCallback="acCallback"/>
       </div>
     </div>
     </div>  

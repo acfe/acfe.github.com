@@ -46,6 +46,19 @@ const OrderSetter = {
       })
     },
     delOrderIcon (key) {
+      if (this.param.delTip) {
+        window.fc.Dialog.show({
+          text: this.param.delTip,
+          clearText: '取消',
+          confirmCallback: () => {
+            this.delContent(key)
+          }
+        })
+      } else {
+        this.delContent(key)
+      }
+    },
+    delContent (key) {
       const doms = this.scroll.getElementsByClassName('selectedBorder')
       if (doms && doms.length) {
         for (let i = 0; i < doms.length; i++) {

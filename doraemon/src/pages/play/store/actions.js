@@ -28,10 +28,9 @@ module.exports = {
     let normalHeight = 0
     let bottomHeight = 0
     for (let i in showContent) {
-      let moduleHeight = showContent[i].moduleHeight || 0
-      if (showContent[i].heightType != 'set' && showContent[i].heightType != 'auto') {
-        moduleHeight = moduleHeight / 375 * (document.body.clientWidth || document.documentElement.clientWidth)
-      } else if (showContent[i].heightType == 'set') {
+      showContent[i].moduleHeightSource = showContent[i].moduleHeightSource || showContent[i].moduleHeight
+      let moduleHeight = showContent[i].moduleHeightSource || 0
+      if (showContent[i].heightType == 'set') {
         if (showContent[i].style && showContent[i].style['paddding-top']) {
           moduleHeight += parseInt(showContent[i].style['paddding-top'])
         }
@@ -39,6 +38,7 @@ module.exports = {
           moduleHeight += parseInt(showContent[i].style['paddding-bottom'])
         }
       }
+      moduleHeight = moduleHeight / 375 * (document.body.clientWidth || document.documentElement.clientWidth)
       totalHeight += moduleHeight
       showContent[i].moduleHeight = moduleHeight
       switch (showContent[i].lockPosition) {

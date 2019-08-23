@@ -11,7 +11,7 @@
             <div class="goods-name" :style="nameStyle" v-if="item.name">{{item.name}}</div>
             <div class="good-description" :style="descriptionStyle" v-if="item.description && param.showDescription != 2">{{item.description}}</div>
             <div class="price-group"  :style="priceAlignStyle">
-              <div class="sale-price" :style="salePriceStyle" v-if="item.salePrice && param.showSalePrice != 2">&yen;{{item.salePrice}}</div>
+              <div class="sale-price" :style="salePriceStyle" v-if="item.salePrice && param.showSalePrice != 2"><span class="sale-price-tag">&yen;</span>{{item.salePrice}}</div>
               <div class="origin-price" :style="originPriceStyle" v-if="item.originPrice && param.showOriginPrice != 2">&yen;{{item.originPrice}}</div>
             </div>
             <div class="buy-icon">
@@ -35,6 +35,24 @@
                   <div class="sale-price" :style="salePriceStyle" v-if="content[key + (i-1)].salePrice && param.showSalePrice != 2">&yen;{{content[key + (i-1)].salePrice}}</div>
                   <div class="origin-price" :style="originPriceStyle" v-if="content[key + (i-1)].originPrice && param.showOriginPrice != 2">&yen;{{content[key + (i-1)].originPrice}}</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- theme4 -->
+      <div :class="'theme-' + theme" v-if="theme == 4" :style="hiddenStyle">
+        <div class="image-table" :style="tableStyle">
+          <div class="image-cell" v-for="(item, key) in content" :key="key" :style="cellStyle" @click="acCallback(item)">
+            <div v-if="item" :style="contentPaddingStyle">
+              <div class="image">
+                <img :style="imageStyle" v-if="item.url" :src="item.url"/>
+              </div>
+              <div class="name" :style="nameStyle" v-if="item.name">{{item.name}}</div>
+              <div class="description" :style="descriptionStyle" v-if="item.description">{{item.description}}</div>
+              <div class="price-group" :style="priceAlignStyle">
+                <div class="sale-price" :style="salePriceStyle" v-if="item.salePrice && param.showSalePrice != 2">&yen;{{item.salePrice}}</div>
+                <div class="origin-price" :style="originPriceStyle" v-if="item.originPrice && param.showOriginPrice != 2">&yen;{{item.originPrice}}</div>
               </div>
             </div>
           </div>

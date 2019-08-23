@@ -15,6 +15,20 @@
             <div class="button-item"><FcButton :param="{theme: 'blue', type: 'border'}" text="预览" :callback="preview"/></div>
             <div class="button-item"><FcButton :param="{theme: 'blue'}" text="保存" :callback="save"/></div>
           </div>
+          <div class="control-area">
+            <div class="control-item" @click="historyUndo">
+              <div class="item-icon-area">
+                <div class="item-icon undo-icon" :class="{'undo-icon-checked': showUndo}"></div>
+              </div>
+              <div class="item-text">撤销</div>
+            </div>
+            <div class="control-item" @click="historyAhead">
+              <div class="item-icon-area">
+                <div class="item-icon ahead-icon" :class="{'ahead-icon-checked': showAhead}"></div>
+              </div>
+              <div class="item-text">恢复</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="frame-body">
@@ -51,7 +65,7 @@
                         >
                           <div class="order-setter-item" v-for="(item, key) in setConfig.pageListOrderSetterParam.content" :key="key" :slot="'s' + key">
                             <div class="page-item">
-                              <div class="page-snapshot"></div>
+                              <!-- <div class="page-snapshot"></div> -->
                               <div class="page-name">{{item.name}}</div>
                             </div>
                           </div>
@@ -60,7 +74,7 @@
                       <!-- pop list -->
                       <div class="page-list" v-if="setConfig.leftTabParam.value == 1">
                         <div class="page-item mtb20" v-for="(item, key) in contentConfig.pops" :key="key" :class="{'page-item-checked': key == setConfig.setPopId}" @click="changePop(key)">
-                          <div class="page-snapshot"></div>
+                          <!-- <div class="page-snapshot"></div> -->
                           <div class="page-name">{{item.name}}</div>
                           <div class="del-icon" v-if="key == setConfig.setPopId" @click="delPop(key)"></div>
                         </div>
@@ -71,7 +85,7 @@
               </div>
               <!-- main-content -->
               <div class="main-content">
-                <div class="element-window" v-if="setConfig.showElementWindow">
+                <div class="element-window" :class="{'module-window': setConfig.setType == 'popElement' || setConfig.setType == 'pop'}" v-if="setConfig.showElementWindow">
                   <div class="element-window-title">
                     元素图层
                   </div>
@@ -86,7 +100,8 @@
                       <div class="order-setter-item" v-for="(item, key) in setConfig.elementWindowSetterParam.content" :key="key" :slot="'s' + key">
                         <div class="element-window-item">
                           <div class="element-window-item-title">{{item.name}}</div>
-                          <div class="element-window-del-icon" @click="elementSetterDelContentCallback(key)"></div>
+                          <div class="element-window-del-icon" @click="elementSetterDelContentCallback(key)" v-if="key == setConfig.elementWindowSetterParam.editKey"></div>
+                          <div class="element-window-unlock-icon" :class="{'element-window-lock-icon': item.lock}" @click="elementLock(item)" v-if="key == setConfig.elementWindowSetterParam.editKey"></div>
                         </div>
                       </div>
                     </OrderSetter>
@@ -101,7 +116,29 @@
                       <div class="order-setter-item" v-for="(item, key) in setConfig.popElementWindowSetterParam.content" :key="key" :slot="'s' + key">
                         <div class="element-window-item">
                           <div class="element-window-item-title">{{item.name}}</div>
-                          <div class="element-window-del-icon" @click="popElementSetterDelContentCallback(key)"></div>
+                          <div class="element-window-del-icon" @click="popElementSetterDelContentCallback(key)" v-if="key == setConfig.popElementWindowSetterParam.editKey"></div>
+                          <div class="element-window-unlock-icon" :class="{'element-window-lock-icon': item.lock}" @click="elementLock(item)" v-if="key == setConfig.popElementWindowSetterParam.editKey"></div>
+                        </div>
+                      </div>
+                    </OrderSetter>
+                  </div>
+                </div>
+                <!-- 模块图层 -->
+                <div class="element-window module-window" v-if="setConfig.setType != 'pop' && setConfig.setType != 'popElement'">
+                  <div class="element-window-title">
+                    模块图层
+                  </div>
+                  <div class="element-window-content" id="moduleWindow">
+                    <OrderSetter
+                      :param="setConfig.moduleWindowSetterParam"
+                      :key="setConfig.moduleWindowSetterParam.key"
+                      :editCallback="moduleSetterEditContentCallback"
+                      :callback="moduleSetterMoveCallback"
+                    >
+                      <div class="order-setter-item" v-for="(item, key) in setConfig.moduleWindowSetterParam.content" :key="key" :slot="'s' + key">
+                        <div class="element-window-item">
+                          <div class="element-window-item-title">{{item.name}}</div>
+                          <div class="element-window-del-icon" @click="moduleSetterDelContentCallback(key)" v-if="key == setConfig.moduleWindowSetterParam.editKey"></div>
                         </div>
                       </div>
                     </OrderSetter>

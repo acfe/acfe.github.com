@@ -1,12 +1,79 @@
+let setElement
+let self
+
 export default {
+  keySetElementSize (type, size) {
+    if (!setElement) {
+      return false
+    }
+    switch (this.setConfig.setType) {
+      case 'element':
+      case 'popElement':
+        switch (type) {
+          case 'left':
+            setElement.style.width -= size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'right':
+            setElement.style.width += size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'up':
+            setElement.style.height -= size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'down':
+            setElement.style.height += size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+        }
+        break
+    }
+  },
+  keySetElementPos (type, size) {
+    if (!setElement) {
+      return false
+    }
+    switch (this.setConfig.setType) {
+      case 'element':
+      case 'popElement':
+        switch (type) {
+          case 'left':
+            setElement.style.left -= size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'right':
+            setElement.style.left += size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'up':
+            setElement.style.top -= size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+          case 'down':
+            setElement.style.top += size
+            self.elementRefreshCallback && self.elementRefreshCallback('keyAc')
+            break
+        }
+        break
+    }
+  },
   mousedown (e) {
     this.acInfo = this.getAcInfo(e, 'data-eid')
     if (this.acInfo.dataKey === undefined || this.acInfo.dataKey === null) {
       return false
     }
-    e.stopPropagation()
+    setElement = false
+    setElement = this.param.elements[this.acInfo.dataKey]
     this.target = this.acInfo.target
     let target = this.target
+    self = this
+    const lock = target.getAttribute('data-lock')
+    if (lock == 1) {
+      this.elementCallback(e)
+      return false
+    }
+    e.stopPropagation()
     this.selectedKey = this.acInfo.dataKey
     const element = this.param.elements[this.selectedKey]
     element.style = element.style || {}
@@ -19,12 +86,13 @@ export default {
     let sL = /rem/.test(target.style.left) ? Math.round(parseFloat(target.style.left) * 375) : parseInt(target.style.left)
     this.elementCallback(e)
     this.sizeSetKey = target.getAttribute('data-set-size')
+    this.setTag = target.getAttribute('data-set-tag')
     if (this.sizeSetKey) {
       target = target.parentNode.parentNode
       sT = /rem/.test(target.style.top) ? Math.round(parseFloat(target.style.top) * 375) : parseInt(target.style.top)
       sL = /rem/.test(target.style.left) ? Math.round(parseFloat(target.style.left) * 375) : parseInt(target.style.left)
-      param.sW = target.clientWidth
-      param.sH = target.clientHeight
+      param.sW = /rem/.test(target.style.width) ? Math.round(parseFloat(target.style.width) * 375) : parseInt(target.style.width) || target.clientWidth
+      param.sH = /rem/.test(target.style.height) ? Math.round(parseFloat(target.style.height) * 375) : parseInt(target.style.height) || target.clientHeight
       param.sZ = element.style.rotateZ || 0
       if (param.sZ) {
         let r = target.clientHeight / 2
@@ -65,12 +133,20 @@ export default {
             setTarget.style.width = width + 'px'
             left = param.sL + changeX
             setTarget.style.left = left + 'px'
+            if (this.setTag == 'icon') {
+              setTarget.style.height = width + 'px'
+              this.resetSvgSize(setTarget, width)
+            }
           }
           break
         case 'right':
           width = param.sW + changeX
           if (width > 10) {
             setTarget.style.width = width + 'px'
+            if (this.setTag == 'icon') {
+              setTarget.style.height = width + 'px'
+              this.resetSvgSize(setTarget, width)
+            }
           }
           break
         case 'top':
@@ -79,12 +155,20 @@ export default {
             top = param.sT + changeY
             setTarget.style.top = top + 'px'
             setTarget.style.height = height + 'px'
+            if (this.setTag == 'icon') {
+              setTarget.style.width = height + 'px'
+              this.resetSvgSize(setTarget, height)
+            }
           }
           break
         case 'bottom':
           height = param.sH + changeY
           if (height > 10) {
             setTarget.style.height = height + 'px'
+            if (this.setTag == 'icon') {
+              setTarget.style.width = height + 'px'
+              this.resetSvgSize(setTarget, height)
+            }
           }
           break
         case 'rotate':
@@ -133,8 +217,8 @@ export default {
     }
     const element = param.elements[this.selectedKey]
     element.style = element.style || {}
-    element.style.width = target.clientWidth
-    element.style.height = target.clientHeight
+    element.style.width = /rem/.test(target.style.width) ? Math.round(parseFloat(target.style.width) * 375) : parseInt(target.style.width)
+    element.style.height = /rem/.test(target.style.height) ? Math.round(parseFloat(target.style.height) * 375) : parseInt(target.style.height)
     element.style.top = /rem/.test(target.style.top) ? Math.round(parseFloat(target.style.top) * 375) : parseInt(target.style.top)
     element.style.left = /rem/.test(target.style.left) ? Math.round(parseFloat(target.style.left) * 375) : parseInt(target.style.left)
   },
@@ -157,6 +241,18 @@ export default {
     return {
       dataKey,
       target
+    }
+  },
+  resetSvgSize (setTarget, width) {
+    if (!setTarget.childNodes[0] || !setTarget.childNodes[0].innerHTML) {
+      return false
+    }
+    let html = setTarget.childNodes[0].innerHTML
+    if (html.match(/<svg.*><\/svg>/) && html.match(/<svg.*><\/svg>/)[0]) {
+      let svgMatch = html.match(/<svg.*><\/svg>/)[0]
+      svgMatch = svgMatch.replace(/width=".*?"/, 'width="' + width + '"')
+      svgMatch = svgMatch.replace(/height=".*?"/, 'height="' + width + '"')
+      setTarget.childNodes[0].innerHTML = html.replace(/<svg.*><\/svg>/, svgMatch)
     }
   }
 }

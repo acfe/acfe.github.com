@@ -7,7 +7,6 @@ const FcEelement = {
   data () {
     return {
       randKey: Math.random(),
-      elementStyle: {},
       setterStyle: {},
       clickCallback: () => {}
     }
@@ -20,11 +19,7 @@ const FcEelement = {
     const param = this.param
     this.setConfig = this.setConfig || {}
     const remStandar = 375
-    if (this.isSet) {
-      this.elementStyle['user-select'] = 'none'
-    }
     param.style = param.style || {}
-    let elementStyle = {}
     let setterStyle = {}
     let defaultWidth
     switch (param.tag) {
@@ -34,22 +29,33 @@ const FcEelement = {
       case 'text':
         defaultWidth = 200
         break
+      case 'icon':
+        defaultWidth = 50
+        break
     }
     param.style.width = parseInt(param.style.width, 10) || defaultWidth
     for (let i in param.style) {
       switch (i) {
+        case 'padding-left':
+        case 'padding-right':
+        case 'padding-top':
+        case 'padding-bottom':
+          if (param.style[i] || parseInt(param.style[i]) === 0) {
+            setterStyle[i] = (parseInt(param.style[i])) + 'px'
+          }
+          break
         case 'border-top-width':
         case 'border-bottom-width':
         case 'border-left-width':
         case 'border-right-width':
           if (param.style[i] || parseInt(param.style[i]) === 0) {
-            elementStyle[i] = (parseInt(param.style[i])) + 'px'
+            setterStyle[i] = (parseInt(param.style[i])) + 'px'
           }
           break
         case 'background-image':
           if (param.style[i]) {
-            elementStyle[i] = 'url(' + param.style[i] + ')'
-            elementStyle['background-size'] = '100% auto'
+            setterStyle[i] = 'url(' + param.style[i] + ')'
+            setterStyle['background-size'] = '100% auto'
           }
           break
         case 'width':
@@ -79,23 +85,25 @@ const FcEelement = {
           break
         case 'opacity':
           if (param.style[i]) {
-            elementStyle[i] = parseInt(param.style[i]) / 100
+            setterStyle[i] = parseInt(param.style[i]) / 100
           }
           break
         default:
           if (param.style[i]) {
-            elementStyle[i] = param.style[i]
+            setterStyle[i] = param.style[i]
           }
           break
       }
     }
     if (param.imageRadius) {
-      this.elementStyle['border-radius'] = param.imageRadius + 'px'
+      this.setterStyle['border-radius'] = param.imageRadius + 'px'
     }
-    this.elementStyle['z-index'] = this.zIndex || 0
     this.setterStyle['z-index'] = this.zIndex || 0
-    this.elementStyle = Object.assign({}, this.elementStyle, elementStyle)
+    this.setterStyle['z-index'] = this.zIndex || 0
     this.setterStyle = Object.assign({}, this.setterStyle, setterStyle)
+  },
+  mounted () {
+
   },
   methods: {
 

@@ -58,12 +58,13 @@
           color: #666;
           font-size: 12/@rem;
           box-sizing: border-box;
-          padding-right: 20/@rem; 
+          padding-right: 20/@rem;
+          line-height: 20/@rem;
         }
         .price-group {
           position: absolute;
           left: 0;
-          bottom: 5/@rem;
+          bottom: 0;
           width: 100%;
           .sale-price-tag {
             display: inline-block;
@@ -85,7 +86,7 @@
         .buy-icon {
           position: absolute;
           right: 0;
-          bottom: 5/@rem;
+          bottom: 0;
           img {
             width: 36/@rem;
           }
@@ -94,7 +95,7 @@
     }
   }
   // theme2
-  .theme-2 {
+  .theme-2, .theme-4 {
     .image-table {
       display: table;
       width: 100%;
@@ -110,15 +111,31 @@
           }
         }
         .name {
+          margin-top: 5/@rem;
           font-size: 14px;
           color: #666666;
           text-align: left;
+          display: -webkit-box;
+          white-space: normal;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+          -webkit-line-clamp: 2;
+          line-height: 16/@rem;
         }
         .description {
-          padding: 0 10px 5/@rem 10/@rem;
           font-size: 12/@rem;
           color: #cccccc;
           text-align: left;
+          display: -webkit-box;
+          white-space: normal;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+          -webkit-line-clamp: 1;
+          line-height: 16/@rem;
         }
         .price-group {
           .sale-price-tag {
@@ -140,5 +157,11 @@
         }
       }
     }
+  }
+  // .theme4
+  .theme-4 {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 }

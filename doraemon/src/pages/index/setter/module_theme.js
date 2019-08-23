@@ -7,11 +7,13 @@ export default {
       support: ['h5', 'wx', 'alipay'],
       titleStyle: {
         'font-size': 14,
-        'color': '#666666'
+        'color': '#666666',
+        'line-height': 16
       },
       descriptionStyle: {
         'font-size': 12,
-        'color': '#cccccc'
+        'color': '#cccccc',
+        'line-height': 16
       },
       contentPaddingBottom: 10,
       setEnabelList: [
@@ -43,11 +45,13 @@ export default {
       columNum: 2,
       titleStyle: {
         'font-size': 14,
-        'color': '#666666'
+        'color': '#666666',
+        'line-height': 16
       },
       descriptionStyle: {
         'font-size': 12,
-        'color': '#cccccc'
+        'color': '#cccccc',
+        'line-height': 16
       },
       setEnabelList: [
         {
@@ -169,11 +173,13 @@ export default {
       columNum: 3,
       titleStyle: {
         'font-size': 14,
-        'color': '#666666'
+        'color': '#666666',
+        'line-height': 16
       },
       descriptionStyle: {
         'font-size': 12,
-        'color': '#cccccc'
+        'color': '#cccccc',
+        'line-height': 16
       },
       setEnabelList: [
         {
@@ -215,7 +221,8 @@ export default {
         'align': 'center'
       },
       style: {
-        'padding-left': 10
+        'padding-left': 10,
+        'padding-bottom': 10
       }
     }
   ],
@@ -335,12 +342,14 @@ export default {
       nameStyle: {
         'font-size': 14,
         'color': '#333333',
-        'text-align': 'left'
+        'text-align': 'left',
+        'line-height': 16
       },
       descriptionStyle: {
         'font-size': 12,
         'color': '#666666',
-        'text-align': 'left'
+        'text-align': 'left',
+        'line-height': 16
       },
       salePriceStyle: {
         'font-size': 12,
@@ -392,12 +401,14 @@ export default {
       nameStyle: {
         'font-size': 14,
         'color': '#333333',
-        'text-align': 'left'
+        'text-align': 'left',
+        'line-height': 16
       },
       descriptionStyle: {
         'font-size': 12,
         'color': '#666666',
-        'text-align': 'left'
+        'text-align': 'left',
+        'line-height': 16
       },
       salePriceStyle: {
         'font-size': 12,
@@ -412,6 +423,8 @@ export default {
       showSalePrice: 1,
       showDescription: 2,
       showOriginPrice: 2,
+      columNum: 2,
+      contentPaddingRight: 10,
       imageStyle: {
         'width': '',
         'height': '',
@@ -453,6 +466,66 @@ export default {
       ],
       style: {
         'padding-left': 10
+      }
+    },
+    {
+      option: '横向滚动',
+      value: 4,
+      support: ['h5', 'wx', 'alipay'],
+      contentPaddingRight: 10,
+      columNum: 3,
+      titleStyle: {
+        'font-size': 14,
+        'color': '#666666',
+        'line-height': 16
+      },
+      descriptionStyle: {
+        'font-size': 12,
+        'color': '#cccccc',
+        'line-height': 16
+      },
+      setEnabelList: [
+        {
+          type: 'textarea',
+          param: {
+            tag: 'imageRadius',
+            title: '图片圆角px',
+            placeholder: '请输入图片圆角'
+          }
+        },
+        {
+          type: 'textarea',
+          param: {
+            tag: 'contentPaddingRight',
+            title: '列间距px',
+            placeholder: '请输入列间距'
+          }
+        },
+        {
+          type: 'textarea',
+          param: {
+            tag: 'columNum',
+            title: '每行显示数量',
+            placeholder: '请输入数量'
+          }
+        },
+        {
+          type: 'imageSizeStyle',
+          param: {
+            tag: 'imageStyle',
+            title: '内容图片样式'
+          }
+        }
+      ],
+      imageStyle: {
+        'width': '',
+        'height': '',
+        'border-radius': 0,
+        'align': 'center'
+      },
+      style: {
+        'padding-left': 10,
+        'padding-bottom': 10
       }
     }
   ]

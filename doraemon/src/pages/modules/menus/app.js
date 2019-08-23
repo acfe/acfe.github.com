@@ -44,6 +44,33 @@ const MMenus = {
     }
     if (param.theme) {
       this.theme = param.theme
+    } else {
+      Object.assign(this.param, {
+        contentPaddingRight: 0,
+        columNum: 4,
+        moduleHeight: 45,
+        heightType: 'set',
+        nameStyle: {
+          'font-size': 14,
+          'color': '#666666',
+          'text-align': 'center',
+          'line-height': 26
+        },
+        nameCheckedStyle: {
+          'color': '#2979FF',
+          'text-align': 'center',
+          'line-height': 26
+        },
+        checkedBarStyle: {
+          'background': '#2979FF',
+          'width': 50,
+          'height': 3,
+          'top': 36,
+          'border-radius': 3,
+          'align': 'center'
+        },
+        style: {}
+      })
     }
     if (param.nameStyle) {
       this.nameStyle = this.formatTextStyle(param.nameStyle)
