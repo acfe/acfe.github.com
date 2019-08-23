@@ -93,8 +93,8 @@ const Index = {
   },
   methods: {
     save () {
-      console.log(this.trimObjBlank(this.contentConfig))
-      console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.pages[this.setConfig.setPageId])))
+      console.log(this.trimObjBlank(this.contentConfig.dataSource))
+      // console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.pages[this.setConfig.setPageId])))
     },
     preview () {
       localStorage.setItem('previewData', JSON.stringify(this.trimObjBlank(this.contentConfig)))

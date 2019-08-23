@@ -192,6 +192,23 @@ const Setter = {
         clearText: '取消',
         confirmCallback: () => {
           this.contentConfig.pages[this.setConfig.setPageId] = JSON.parse(param.data)
+          let dataSource = this.contentConfig.dataSource
+          let themeDataSource = JSON.parse(param.dataSource)
+          for (let moduleDatas in themeDataSource) {
+            if (dataSource[moduleDatas]) {
+              let dataSourceObj = {}
+              for (let d in dataSource[moduleDatas]) {
+                dataSourceObj[dataSource[moduleDatas][d].value] = true
+              }
+              for (let t in themeDataSource[moduleDatas]) {
+                if (!dataSourceObj[themeDataSource[moduleDatas][t].value]) {
+                  dataSource[moduleDatas].push(themeDataSource[moduleDatas][t])
+                }
+              }
+            } else {
+              dataSource[moduleDatas] = themeDataSource[moduleDatas]
+            }
+          }
           this.refreshContent()
           this.refreshSetter()
         }
