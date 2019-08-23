@@ -12,7 +12,7 @@ const port = '3000'
 const envConfig = {
   test: {
     distPath: 'test',
-    publicPath: '/',
+    publicPath: '/dora/',
     apiHost: ''
   },
   online: {

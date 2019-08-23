@@ -2,6 +2,7 @@
 /**
  * Created by 001264 on 2019/7/8.
  */
+import envConfig from 'src/common/js/env.config'
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import FcInput from 'fcbox/form/input'
@@ -50,6 +51,7 @@ const Index = {
   name: 'Index',
   data () {
     return {
+      envConfig,
       showAhead: false,
       showUndo: false,
       previewPopParam: {
