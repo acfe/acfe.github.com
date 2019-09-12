@@ -3,9 +3,10 @@
  */
 import { mapState } from 'vuex'
 import PublicFunc from './public_func'
-import ModuleTheme from './module_theme'
-import pageThemeDatas from './page_theme'
-import iconDatas from './icon_datas'
+import ModuleTheme from '../store/config/module_theme_set'
+import ElementTheme from '../store/config/element_theme_set'
+import pageThemeDatas from '../store/config/page_theme'
+import iconDatas from '../store/config/icon_datas'
 
 const Setter = {
   name: 'Setter',
@@ -226,6 +227,21 @@ const Setter = {
         tag: 'name',
         static: 1
       }))
+      setList.push(this.getRadioTabParam(pageContent, {
+        title: '是否作为Tab页',
+        tag: 'isTab',
+        defaultValue: 0,
+        data: [
+          {
+            option: '是',
+            value: 1
+          },
+          {
+            option: '否',
+            value: 0
+          }
+        ]
+      }))
       // 页面风格列表
       setList.push({
         type: 'pageThemeList'
@@ -317,7 +333,7 @@ const Setter = {
               pushData[setParams[s]] = setterContent[i]['contentListType']
               break
             default:
-              pushData[setParams[s]] = setterContent[i][setParams[s] + 'Param'].param.value
+              pushData[setParams[s]] = setterContent[i][setParams[s] + 'Param'].param ? setterContent[i][setParams[s] + 'Param'].param.value : setterContent[i][setParams[s] + 'Param'].value
               break
           }
         }
@@ -342,6 +358,7 @@ const Setter = {
         }.bind(this),
         changeItemContentListType: function (type, key) {
           param.setSource.data[key].contentListType = type
+          this.setConfig.setterParam.moduleContentSetterScrollTop = moduleContentSetterParam.orderSetterParam.self.scroll.scrollTop
           this.refreshSetter(true)
         }.bind(this),
         orderSetterParam: {
@@ -350,7 +367,7 @@ const Setter = {
           scrollId: 'contentSetter',
           borderStyle: '1px dashed #64B5F6',
           content: param.moduleEditData,
-          editKey: this.setConfig.setterParam.moduleContentSetterKey || 'empty',
+          editKey: this.setConfig.setterParam.moduleContentSetterKey || this.setConfig.setterParam.moduleContentSetterKey === 0 ? this.setConfig.setterParam.moduleContentSetterKey : 'empty',
           scrollTop: this.setConfig.setterParam.moduleContentSetterScrollTop || 0,
           addContent: function () {
             param.setSource.data.push({})
@@ -377,18 +394,21 @@ const Setter = {
           }.bind(this)
         }
       }
-      if (param.tag == 'menus') {
+      if (param.tag == 'menus' || param.tag == 'tab') {
         moduleContentSetterParam.checkedId = param.setSource.checkedId || 0
-        moduleContentSetterParam.changeCheckedId = function (checkedId) {
+        moduleContentSetterParam.changeCheckedId = function (checkedId, key) {
           param.setSource.checkedId = checkedId
+          this.setConfig.setterParam.moduleContentSetterKey = key
           this.setConfig.setterParam.moduleContentSetterScrollTop = moduleContentSetterParam.orderSetterParam.self.scroll.scrollTop
           this.refreshSetter()
           this.refreshContent()
         }.bind(this)
         moduleContentSetterParam.orderSetterParam.addContent = function () {
+          let checkedId = new Date().getTime()
           param.setSource.data.push({
-            checkedId: new Date().getTime()
+            checkedId
           })
+          param.setSource.checkedId = param.setSource.checkedId || checkedId
           this.setConfig.setterParam.moduleContentSetterKey = param.setSource.data.length - 1
           this.setConfig.setterParam.moduleContentSetterScrollTop = moduleContentSetterParam.orderSetterParam.self.scroll.scrollHeight
           this.refreshSetter()
@@ -405,163 +425,46 @@ const Setter = {
         title: '模块名称',
         tag: 'name'
       }))
+      let setSource
       switch (setModule.tag) {
         case 'images':
-          setList.push(Object.assign(this.getDataSourceParam(setModule, 'imagesDatas'), { title: '图文数据源' }))
-          if (setModule.dataSourceId) {
-            let dataSource = this.contentConfig.dataSource || {}
-            let imagesDatas = dataSource.imagesDatas || []
-            let setSource
-            for (let i in imagesDatas) {
-              if (imagesDatas[i].value == setModule.dataSourceId) {
-                setSource = imagesDatas[i]
-              }
-            }
-            if (setSource) {
-              let setSourceData = setSource.data
-              let moduleEditData = []
-              for (let d in setSourceData) {
-                moduleEditData.push(Object.assign({
-                  contentListType: setSource.data[d].contentListType,
-                  titleParam: this.getTextareaParam(setSource.data[d], {
-                    title: '标题',
-                    placeholder: '请输入标题',
-                    tag: 'title'
-                  }),
-                  descriptionParam: this.getTextareaParam(setSource.data[d], {
-                    title: '描述',
-                    placeholder: '请输入描述',
-                    tag: 'description'
-                  })
-                }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
-              }
-              const setParams = ['url', 'title', 'description', 'contentListType']
-              setList.push(this.getModuleContentSetterParam({
-                title: '设置图文内容',
-                tag: 'images',
-                setSource,
-                moduleEditData,
-                setParams
-              }))
-            }
-          } else {
-            addEmpty = true
-          }
-          break
-          // menus
-        case 'menus':
-          setList.push(Object.assign(this.getDataSourceParam(setModule, 'menusDatas'), { title: '菜单数据源' }))
-          if (setModule.dataSourceId) {
-            let dataSource = this.contentConfig.dataSource || {}
-            let menusDatas = dataSource.menusDatas || []
-            let setSource
-            for (let i in menusDatas) {
-              if (menusDatas[i].value == setModule.dataSourceId) {
-                setSource = menusDatas[i]
-              }
-            }
-            if (setSource) {
-              let setSourceData = setSource.data
-              let moduleEditData = []
-              for (let d in setSourceData) {
-                moduleEditData.push(Object.assign({
-                  contentListType: setSource.data[d].contentListType,
-                  checkedId: setSourceData[d].checkedId,
-                  nameParam: this.getTextareaParam(setSource.data[d], {
-                    title: '菜单名称',
-                    placeholder: '请输入名称',
-                    tag: 'name'
-                  })
-                }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
-              }
-              let setParams = ['url', 'name', 'checkedId', 'contentListType']
-              setList.push(this.getModuleContentSetterParam({
-                title: '设置菜单内容',
-                tag: 'menus',
-                setSource,
-                moduleEditData,
-                setParams
-              }))
-            }
-          } else {
-            addEmpty = true
-          }
-          break
-        case 'goods':
-          setModule['dataType'] = setModule['dataType'] || 1
+          setModule['dataType'] = setModule['dataType'] || 0
           setList.push({
-            title: '内容类型',
+            title: '数据类型',
             type: 'radioTab',
             param: {
               value: setModule['dataType'],
               data: [
                 {
-                  option: '自定义',
+                  option: '独立数据',
+                  value: 0
+                },
+                {
+                  option: '数据源',
                   value: 1
-                },
-                {
-                  option: '选择商品',
-                  value: 2
-                },
-                {
-                  option: '选择商品组',
-                  value: 3
                 }
               ]
             },
             callback: function (param) {
               setModule['dataType'] = param.value
               this.refreshSetter()
+              this.refreshContent()
             }.bind(this)
           })
           switch (parseInt(setModule['dataType'])) {
+            case 0:
+              setModule.singleDatas = setModule.singleDatas || { data: [] }
+              setSource = setModule.singleDatas
+              break
             case 1:
-              setList.push(Object.assign(this.getDataSourceParam(setModule, 'goodsDatas'), { title: '商品数据源' }))
+              setList.push(Object.assign(this.getDataSourceParam(setModule, 'imagesDatas'), { title: '图文数据源' }))
               if (setModule.dataSourceId) {
                 let dataSource = this.contentConfig.dataSource || {}
-                let goodsDatas = dataSource.goodsDatas || []
-                let setSource
-                for (let i in goodsDatas) {
-                  if (goodsDatas[i].value == setModule.dataSourceId) {
-                    setSource = goodsDatas[i]
+                let imagesDatas = dataSource.imagesDatas || []
+                for (let i in imagesDatas) {
+                  if (imagesDatas[i].value == setModule.dataSourceId) {
+                    setSource = imagesDatas[i]
                   }
-                }
-                if (setSource) {
-                  let setSourceData = setSource.data
-                  let moduleEditData = []
-                  for (let d in setSourceData) {
-                    moduleEditData.push(Object.assign({
-                      contentListType: setSource.data[d].contentListType,
-                      nameParam: this.getTextareaParam(setSource.data[d], {
-                        title: '商品名称',
-                        placeholder: '请输入名称',
-                        tag: 'name'
-                      }),
-                      descriptionParam: this.getTextareaParam(setSource.data[d], {
-                        title: '商品描述',
-                        placeholder: '请输入商品描述',
-                        tag: 'description'
-                      }),
-                      salePriceParam: this.getTextareaParam(setSource.data[d], {
-                        title: '售价',
-                        placeholder: '请输入商品售价',
-                        tag: 'salePrice'
-                      }),
-                      originPriceParam: this.getTextareaParam(setSource.data[d], {
-                        title: '原价',
-                        placeholder: '请输入商品原价',
-                        tag: 'originPrice'
-                      })
-                    }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
-                  }
-                  let setParams = ['url', 'name', 'description', 'salePrice', 'originPrice', 'contentListType']
-                  setList.push(this.getModuleContentSetterParam({
-                    title: '设置商品内容',
-                    tag: 'goods',
-                    setSource,
-                    moduleEditData,
-                    setParams
-                  }))
                 }
               } else {
                 addEmpty = true
@@ -570,6 +473,246 @@ const Setter = {
             default:
               addEmpty = true
               break
+          }
+          if (setSource) {
+            let setSourceData = setSource.data
+            let moduleEditData = []
+            for (let d in setSourceData) {
+              moduleEditData.push(Object.assign({
+                contentListType: setSource.data[d].contentListType,
+                titleParam: this.getTextareaParam(setSource.data[d], {
+                  title: '标题',
+                  placeholder: '请输入标题',
+                  tag: 'title'
+                }),
+                descriptionParam: this.getTextareaParam(setSource.data[d], {
+                  title: '描述',
+                  placeholder: '请输入描述',
+                  tag: 'description'
+                })
+              }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
+            }
+            const setParams = ['url', 'title', 'description', 'contentListType']
+            setList.push(this.getModuleContentSetterParam({
+              title: '设置图文内容',
+              tag: 'images',
+              setSource,
+              moduleEditData,
+              setParams
+            }))
+          }
+          break
+        // menus
+        case 'menus':
+          setModule['dataType'] = setModule['dataType'] || 0
+          setList.push({
+            title: '数据类型',
+            type: 'radioTab',
+            param: {
+              value: setModule['dataType'],
+              data: [
+                {
+                  option: '独立数据',
+                  value: 0
+                },
+                {
+                  option: '数据源',
+                  value: 1
+                }
+              ]
+            },
+            callback: function (param) {
+              setModule['dataType'] = param.value
+              this.refreshSetter()
+              this.refreshContent()
+            }.bind(this)
+          })
+          switch (parseInt(setModule['dataType'])) {
+            case 0:
+              setModule.singleDatas = setModule.singleDatas || { data: [] }
+              setSource = setModule.singleDatas
+              break
+            case 1:
+              setList.push(Object.assign(this.getDataSourceParam(setModule, 'menusDatas'), { title: '菜单数据源' }))
+              if (setModule.dataSourceId) {
+                let dataSource = this.contentConfig.dataSource || {}
+                let menusDatas = dataSource.menusDatas || []
+                for (let i in menusDatas) {
+                  if (menusDatas[i].value == setModule.dataSourceId) {
+                    setSource = menusDatas[i]
+                  }
+                }
+              } else {
+                addEmpty = true
+              }
+              break
+            default:
+              addEmpty = true
+              break
+          }
+          if (setSource) {
+            let setSourceData = setSource.data
+            let moduleEditData = []
+            for (let d in setSourceData) {
+              moduleEditData.push(Object.assign({
+                contentListType: setSource.data[d].contentListType,
+                checkedId: setSourceData[d].checkedId,
+                nameParam: this.getTextareaParam(setSource.data[d], {
+                  title: '菜单名称',
+                  placeholder: '请输入名称',
+                  tag: 'name'
+                })
+              }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
+            }
+            let setParams = ['url', 'name', 'checkedId', 'contentListType']
+            setList.push(this.getModuleContentSetterParam({
+              title: '设置菜单内容',
+              tag: 'menus',
+              setSource,
+              moduleEditData,
+              setParams
+            }))
+          }
+          break
+        case 'goods':
+          setModule['dataType'] = setModule['dataType'] || 0
+          setList.push({
+            title: '数据类型',
+            type: 'radioTab',
+            param: {
+              value: setModule['dataType'],
+              data: [
+                {
+                  option: '独立数据',
+                  value: 0
+                },
+                {
+                  option: '数据源',
+                  value: 1
+                }
+                // {
+                //   option: '选择商品',
+                //   value: 2
+                // },
+                // {
+                //   option: '选择商品组',
+                //   value: 3
+                // }
+              ]
+            },
+            callback: function (param) {
+              setModule['dataType'] = param.value
+              this.refreshSetter()
+              this.refreshContent()
+            }.bind(this)
+          })
+          switch (parseInt(setModule['dataType'])) {
+            case 0:
+              setModule.singleDatas = setModule.singleDatas || { data: [] }
+              setSource = setModule.singleDatas
+              break
+            case 1:
+              setList.push(Object.assign(this.getDataSourceParam(setModule, 'goodsDatas'), { title: '商品数据源' }))
+              if (setModule.dataSourceId) {
+                let dataSource = this.contentConfig.dataSource || {}
+                let goodsDatas = dataSource.goodsDatas || []
+                for (let i in goodsDatas) {
+                  if (goodsDatas[i].value == setModule.dataSourceId) {
+                    setSource = goodsDatas[i]
+                  }
+                }
+              } else {
+                addEmpty = true
+              }
+              break
+            default:
+              addEmpty = true
+              break
+          }
+          // 数据源配置设置
+          if (setSource) {
+            let setSourceData = setSource.data
+            let moduleEditData = []
+            for (let d in setSourceData) {
+              moduleEditData.push(Object.assign({
+                contentListType: setSource.data[d].contentListType,
+                nameParam: this.getTextareaParam(setSource.data[d], {
+                  title: '商品名称',
+                  placeholder: '请输入名称',
+                  tag: 'name'
+                }),
+                descriptionParam: this.getTextareaParam(setSource.data[d], {
+                  title: '商品描述',
+                  placeholder: '请输入商品描述',
+                  tag: 'description'
+                }),
+                salePriceParam: this.getTextareaParam(setSource.data[d], {
+                  title: '售价',
+                  placeholder: '请输入商品售价',
+                  tag: 'salePrice'
+                }),
+                originPriceParam: this.getTextareaParam(setSource.data[d], {
+                  title: '原价',
+                  placeholder: '请输入商品原价',
+                  tag: 'originPrice'
+                })
+              }, this.getImageSetter(setSourceData[d], 'url', '图片地址'), this.getActionSetterParam(setSourceData[d])))
+            }
+            let setParams = ['url', 'name', 'description', 'salePrice', 'originPrice', 'contentListType']
+            setList.push(this.getModuleContentSetterParam({
+              title: '设置商品内容',
+              tag: 'goods',
+              setSource,
+              moduleEditData,
+              setParams
+            }))
+          }
+          break
+        // tab
+        case 'tab':
+          setModule.singleDatas = setModule.singleDatas || { data: [] }
+          setSource = setModule.singleDatas
+          if (setSource) {
+            let setSourceData = setSource.data
+            let moduleEditData = []
+            let pages = this.contentConfig.pages
+            let pagesData = []
+            let pagesNames = {}
+            for (let i in pages) {
+              if (pages[i].isTab && pages[i].id) {
+                pagesData.push({
+                  option: pages[i].name,
+                  value: pages[i].id
+                })
+                pagesNames[pages[i].id] = pages[i].name
+              }
+            }
+            for (let d in setSourceData) {
+              moduleEditData.push(Object.assign({
+                contentListType: setSource.data[d].contentListType,
+                checkedId: setSourceData[d].checkedId,
+                nameParam: this.getTextareaParam(setSource.data[d], {
+                  title: 'tab名',
+                  placeholder: '请输入名称',
+                  tag: 'name'
+                }),
+                tabPageIdParam: this.getSelectorParam(setSource.data[d], {
+                  title: '关联页面',
+                  tag: 'tabPageId',
+                  defaultOption: '请选择',
+                  optionObj: pagesNames,
+                  data: pagesData
+                })
+              }))
+            }
+            let setParams = ['name', 'tabPageId', 'checkedId', 'contentListType']
+            setList.push(this.getModuleContentSetterParam({
+              title: '设置tab项',
+              tag: 'tab',
+              setSource,
+              moduleEditData,
+              setParams
+            }))
           }
           break
       }
@@ -583,31 +726,36 @@ const Setter = {
     // 设置模块样式
     setModuleStyleList (setModule) {
       const setList = []
-      let themeList = ModuleTheme[setModule.tag]
+      let themeList
+      if (ModuleTheme[setModule.tag]) {
+        themeList = JSON.parse(JSON.stringify(ModuleTheme[setModule.tag]))
+      }
       // 模块位置设置
       setModule['lockPosition'] = setModule['lockPosition'] || 'normal'
-      setList.push(this.getRadioTabParam(setModule, {
-        title: '模块位置',
-        tag: 'lockPosition',
-        data: [
-          {
-            option: '正常',
-            value: 'normal'
-          },
-          {
-            option: '吸顶',
-            value: 'top'
-          },
-          {
-            option: '吸底',
-            value: 'bottom'
-          },
-          {
-            option: '吸附',
-            value: 'lock'
-          }
-        ]
-      }))
+      if (setModule.tag != 'tab') {
+        setList.push(this.getRadioTabParam(setModule, {
+          title: '模块位置',
+          tag: 'lockPosition',
+          data: [
+            {
+              option: '正常',
+              value: 'normal'
+            },
+            {
+              option: '吸顶',
+              value: 'top'
+            },
+            {
+              option: '吸底',
+              value: 'bottom'
+            },
+            {
+              option: '吸附',
+              value: 'lock'
+            }
+          ]
+        }))
+      }
       // 初始化属性
       if (!setModule['themeInit']) {
         setModule['themeInit'] = 1
@@ -615,19 +763,50 @@ const Setter = {
         this.resetThemeParamsValue(setModule, themeList)
         this.refreshContent()
       }
+      // 模块高度设置
+      setList.push(this.getHeightSetterParam(setModule))
       // 获取模块排版设置
-      setList.push(this.getThemeSetter(setModule, themeList))
+      // setList.push(this.getThemeSetter(setModule, themeList))
       // 获取模块内容样式配置
-      setList.push(this.getModuleContentStyleParam(setModule, themeList))
+      if (this.getModuleContentStyleParam(setModule, themeList).setList) {
+        setList.push(this.getModuleContentStyleParam(setModule, themeList))
+      }
       switch (setModule.tag) {
         case 'images':
-          // 文字样式设置
+          setList.push(Object.assign(this.getBorderSetterParam(setModule.imageStyle), {
+            title: '图片边框设置'
+          }))
+          setList.push(this.getMarginPaddingSetterParam(setModule.imageStyle, {
+            type: 'padding',
+            title: '图片间距设置'
+          }))
+          setList.push(this.getBorderRadiusSetterParam(setModule.imageStyle, {
+            title: '图片圆角设置'
+          }))
           if (setModule['theme'] != 3) {
+            // 文字样式设置
             setList.push(Object.assign(this.getFontStyleSetterParam(setModule.titleStyle), {
               title: '标题文字样式'
             }))
+            setList.push(this.getMarginPaddingSetterParam(setModule.titleStyle, {
+              type: 'padding',
+              title: '标题间距设置'
+            }))
             setList.push(Object.assign(this.getFontStyleSetterParam(setModule.descriptionStyle), {
               title: '描述文字样式'
+            }))
+            setList.push(this.getMarginPaddingSetterParam(setModule.descriptionStyle, {
+              type: 'padding',
+              title: '描述间距设置'
+            }))
+            // 列表项样式设置
+            setModule.itemStyle = setModule.itemStyle || {}
+            setList.push(this.getMarginPaddingSetterParam(setModule.itemStyle, {
+              type: 'padding',
+              title: '列表项间距设置'
+            }))
+            setList.push(Object.assign(this.getBorderSetterParam(setModule.itemStyle), {
+              title: '列表项边框设置'
             }))
           }
           break
@@ -646,29 +825,45 @@ const Setter = {
           }
           break
         case 'goods':
+          setModule.imageStyle = setModule.imageStyle || {}
+          // 图片样式设置
+          setList.push(Object.assign(this.getBorderSetterParam(setModule.imageStyle), {
+            title: '图片边框设置'
+          }))
+          setList.push(this.getMarginPaddingSetterParam(setModule.imageStyle, {
+            type: 'padding',
+            title: '图片间距设置'
+          }))
+          setList.push(this.getBorderRadiusSetterParam(setModule.imageStyle, {
+            title: '图片圆角设置'
+          }))
           // 获取文字字段样式设置
           let textStyleGroup = [
             {
               tag: 'nameStyle',
-              title: '名称样式'
+              title: '名称样式',
+              paddingTitle: '名称间距设置'
             },
             {
               tag: 'descriptionStyle',
               showTag: 'showDescription',
               title: '描述样式',
-              showTitle: '是否显示描述'
+              showTitle: '是否显示描述',
+              paddingTitle: '描述间距设置'
             },
             {
               tag: 'salePriceStyle',
               showTag: 'showSalePrice',
               title: '售价样式',
-              showTitle: '是否显示售价'
+              showTitle: '是否显示售价',
+              paddingTitle: '售价间距设置'
             },
             {
               tag: 'originPriceStyle',
               showTag: 'showOriginPrice',
               title: '原价样式',
-              showTitle: '是否显示原价'
+              showTitle: '是否显示原价',
+              paddingTitle: '原价间距设置'
             }
           ]
           const showData = [
@@ -694,6 +889,12 @@ const Setter = {
             setList.push(Object.assign(this.getFontStyleSetterParam(setModule[textItem.tag]), {
               title: textItem.title
             }))
+            if (textItem.paddingTitle) {
+              setList.push(this.getMarginPaddingSetterParam(setModule[textItem.tag], {
+                type: 'padding',
+                title: textItem.paddingTitle
+              }))
+            }
           }
           // 设置显示原价删除线
           setList.push(this.getRadioTabParam(setModule.originPriceStyle, {
@@ -710,23 +911,37 @@ const Setter = {
               }
             ]
           }))
+          // 列表项样式设置
+          setModule.itemStyle = setModule.itemStyle || {}
+          setList.push(this.getMarginPaddingSetterParam(setModule.itemStyle, {
+            type: 'padding',
+            title: '列表项间距设置'
+          }))
+          setList.push(Object.assign(this.getBorderSetterParam(setModule.itemStyle), {
+            title: '列表项边框设置'
+          }))
+          setList.push(Object.assign(this.getBackgroundSetterParam(setModule.itemStyle), {
+            title: '列表项背景设置'
+          }))
           break
       }
-      // 模块高度设置
-      setList.push(this.getHeightSetterParam(setModule))
-      // 边距设置
+      // 模块边距设置
       setList.push(this.getMarginPaddingSetterParam(setModule.style, {
         type: 'padding',
-        title: '内边距设置'
+        title: '模块内边距设置'
       }))
       setList.push(this.getMarginPaddingSetterParam(setModule.style, {
         type: 'margin',
-        title: '外边距设置'
+        title: '模块外边距设置'
       }))
       // 背景设置
-      setList.push(this.getBackgroundSetterParam(setModule.style))
+      setList.push(Object.assign(this.getBackgroundSetterParam(setModule.style), {
+        title: '模块背景设置'
+      }))
       // 边框设置
-      setList.push(this.getBorderSetterParam(setModule.style))
+      setList.push(Object.assign(this.getBorderSetterParam(setModule.style), {
+        title: '模块边框设置'
+      }))
       setList.push({
         type: 'empty'
       })
@@ -752,6 +967,7 @@ const Setter = {
           break
         case 'text':
           setList.push(this.getTextareaParam(setModule, {
+            richText: true,
             title: '文字内容',
             placeholder: '请输入文字内容',
             tag: 'text'
@@ -768,6 +984,19 @@ const Setter = {
             type: 'iconList'
           })
           break
+        case 'search':
+          setList.push(this.getRadioTabParam(setModule, {
+            title: '搜索内容',
+            tag: 'seachContnet',
+            defaultValue: setModule['seachContnet'] || 'goods',
+            data: [
+              {
+                option: '商品',
+                value: 'goods'
+              }
+            ]
+          }))
+          break
       }
       setList.push({
         type: 'empty'
@@ -776,24 +1005,21 @@ const Setter = {
     },
     // 设置元素样式
     setElementStyleList (setModule) {
-      let defaultWidth = 50
       let setList = []
-      setModule.style = setModule.style || {}
-      switch (setModule.tag) {
-        case 'text':
-          defaultWidth = 200
-          setModule.style.width = setModule.style.width || 200
-          setModule.style.height = setModule.style.height || 30
-          break
-        case 'image':
-        case 'icon':
-          setModule.style.width = setModule.style.width || 50
-          setModule.style.height = setModule.style.height || 50
-          break
+      let themeList
+      if (ElementTheme[setModule.tag]) {
+        themeList = JSON.parse(JSON.stringify(ElementTheme[setModule.tag]))
       }
-      setModule.textStyle = setModule.textStyle || {}
+      // 初始化属性
+      if (!setModule['themeInit'] && themeList) {
+        setModule['themeInit'] = 1
+        setModule['theme'] = setModule['theme'] || 1
+        this.resetThemeParamsValue(setModule, themeList)
+        this.refreshContent()
+      }
+      setModule.style = setModule.style || {}
       const setParam = setModule.style
-      setList.push(this.getSizePositionSetterParam(setParam, defaultWidth))
+      setList.push(this.getSizePositionSetterParam(setParam))
       setList.push(this.getTextareaParam(setModule, {
         title: '圆角px',
         placeholder: '请输入圆角',
@@ -809,8 +1035,17 @@ const Setter = {
         title: '透明度',
         tag: 'opacity'
       }))
+      if (themeList) {
+      // 获取元素风格设置
+        setList.push(this.getElementThemeSetter(setModule, themeList))
+        // 获取元素内容样式配置
+        setList.push(Object.assign(this.getModuleContentStyleParam(setModule, themeList), {
+          title: '元素内容样式'
+        }))
+      }
       switch (setModule.tag) {
         case 'text':
+          setModule.textStyle = setModule.textStyle || {}
           setList.push(this.getFontStyleSetterParam(setModule.textStyle))
           break
         case 'icon':
@@ -819,6 +1054,16 @@ const Setter = {
             placeholder: '请输入颜色',
             tag: 'color',
             defaultValue: '#cdcdcd'
+          }))
+          break
+        case 'search':
+          setModule.inputTextStyle = setModule.inputTextStyle || {}
+          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.inputTextStyle), {
+            title: '输入文字样式'
+          }))
+          setModule.searchTextStyle = setModule.searchTextStyle || {}
+          setList.push(Object.assign(this.getFontStyleSetterParam(setModule.searchTextStyle), {
+            title: '按钮文字样式'
           }))
           break
       }
@@ -902,7 +1147,7 @@ const Setter = {
       return dataSourceParam
     },
     // 获取元素尺寸位置配置
-    getSizePositionSetterParam (setParam, defaultWidth = 50) {
+    getSizePositionSetterParam (setParam) {
       const Obj = {
         type: 'sizePositionGroup',
         widthParam: this.getTextareaParam(setParam, {

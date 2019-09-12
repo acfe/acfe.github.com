@@ -31,6 +31,7 @@ const envConfig = {
 const pages = {
   polyfill: 'polyfill',
   index: 'index',
+  setter: 'setter',
   play: 'play'
 }
 const entry = {}

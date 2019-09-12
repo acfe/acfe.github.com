@@ -18,7 +18,7 @@ let setGroup = [
 ]
 
 export default {
-  // 获取样式模板排版配置
+  // 获取模块样式模板排版配置
   getThemeSetter (setModule, themeList) {
     let themeObj = {
       title: '模块排版',
@@ -30,6 +30,25 @@ export default {
       callback: function (param) {
         setModule['theme'] = param.value
         setModule['heightType'] = param.heightType || 'auto'
+        themeObj.param.value = param.value
+        this.resetThemeParamsValue(setModule, themeList)
+        this.refreshContent()
+        this.refreshSetter(true)
+      }.bind(this)
+    }
+    return themeObj
+  },
+  // 获取元素风格配置
+  getElementThemeSetter (setModule, themeList) {
+    let themeObj = {
+      title: '元素风格',
+      type: 'themeSelector',
+      param: {
+        value: setModule['theme'],
+        data: themeList
+      },
+      callback: function (param) {
+        setModule['theme'] = param.value
         themeObj.param.value = param.value
         this.resetThemeParamsValue(setModule, themeList)
         this.refreshContent()
@@ -92,6 +111,15 @@ export default {
           param.callback && param.callback(acParam)
         }
       }.bind(this)
+    }
+    if (param.richText) {
+      Obj.richText = true
+      Obj.showRichText = () => {
+        this.setConfig.richEditor.txt.html(Obj.param.value)
+        this.setConfig.showEditor = true
+        this.setConfig.editorModule = setModule
+        this.setConfig.editorTag = param.tag
+      }
     }
     return Obj
   },
@@ -251,12 +279,20 @@ export default {
         value: 3
       },
       {
-        option: '执行事件',
-        value: 4
-      },
-      {
         option: '关闭弹窗',
         value: 5
+      },
+      {
+        option: 'tab切换',
+        value: 7
+      },
+      {
+        option: '返回顶部',
+        value: 6
+      },
+      {
+        option: '执行事件',
+        value: 4
       }
     ]
     const acTypeObj = {
@@ -265,18 +301,22 @@ export default {
       2: '跳转内页',
       3: '打开窗口',
       4: '执行事件',
-      5: '关闭弹窗'
+      5: '关闭弹窗',
+      6: '返回顶部',
+      7: 'tab切换'
     }
     let pages = this.contentConfig.pages
     let pops = this.contentConfig.pops
     let pagesData = []
     let pagesNames = {}
     for (let i in pages) {
-      pagesData.push({
-        option: pages[i].name,
-        value: pages[i].id
-      })
-      pagesNames[pages[i].id] = pages[i].name
+      if (!pages[i].isTab) {
+        pagesData.push({
+          option: pages[i].name,
+          value: pages[i].id
+        })
+        pagesNames[pages[i].id] = pages[i].name
+      }
     }
     let popsData = []
     let popsNames = {}
@@ -287,7 +327,45 @@ export default {
       })
       popsNames[pops[i].id] = pops[i].name
     }
-    return {
+    // tabs
+    let tabsData = []
+    let tabNames = {}
+    let tabContent = []
+    let showPageContent
+    for (let p in this.contentConfig.pages) {
+      showPageContent = this.contentConfig.pages[p].content
+      for (let i in showPageContent) {
+        if (showPageContent[i].tag == 'tab') {
+          tabsData.push({
+            option: showPageContent[i].name,
+            value: showPageContent[i].id
+          })
+          tabNames[showPageContent[i].id] = showPageContent[i].name
+        }
+      }
+      let tabId = setModule.action.tabId
+      if (tabsData.length && !tabId) {
+        tabId = tabsData[0].value
+        setModule.action.tabId = tabId
+      }
+      for (let i in showPageContent) {
+        if (showPageContent[i].tag == 'tab' && showPageContent[i].id == tabId && showPageContent[i].singleDatas) {
+          tabContent = showPageContent[i].singleDatas.data
+        }
+      }
+    }
+    let tabItemData = []
+    let tabItemNames = {}
+    if (tabContent && tabContent.length) {
+      for (let i in tabContent) {
+        tabItemData.push({
+          option: tabContent[i].name || '第' + (parseInt(i) + 1) + '项',
+          value: tabContent[i].checkedId
+        })
+        tabItemNames[tabContent[i].checkedId] = tabContent[i].name
+      }
+    }
+    let Obj = {
       type: 'actionGroup',
       pagesParam: this.getSelectorParam(setModule.action, {
         title: '选择页面',
@@ -335,8 +413,31 @@ export default {
         title: '事件名称',
         placeholder: '请输入事件名称',
         tag: 'acFun'
+      }),
+      tabParam: this.getSelectorParam(setModule.action, {
+        title: '选择tab',
+        tag: 'tabId',
+        defaultOption: '请选择tab',
+        optionObj: tabNames,
+        data: tabsData,
+        callback: () => {
+          if (document.getElementById('contentSetter')) {
+            this.setConfig.setterParam.moduleContentSetterScrollTop = document.getElementById('contentSetter').scrollTop
+          }
+          this.refreshSetter(true)
+        }
       })
     }
+    if (tabItemData.length) {
+      Obj.tabItemParam = this.getSelectorParam(setModule.action, {
+        title: '选择tab项',
+        tag: 'tabItemId',
+        defaultOption: '请选择tab项',
+        optionObj: tabItemNames,
+        data: tabItemData
+      })
+    }
+    return Obj
   },
   // 获取图片内容设置
   getImageSetter (setModule, tag, title) {
@@ -488,6 +589,30 @@ export default {
         tag: param.type + '-' + setGroup[i].key
       })
     }
+    return Obj
+  },
+  // 获取圆角设置
+  getBorderRadiusSetterParam (setParam, param) {
+    const Obj = {
+      title: param.title,
+      type: 'borderRadiusGroup'
+    }
+    Obj['border-top-left-radius'] = this.getTextareaParam(setParam, {
+      title: '左上px',
+      tag: 'border-top-left-radius'
+    })
+    Obj['border-top-right-radius'] = this.getTextareaParam(setParam, {
+      title: '右上px',
+      tag: 'border-top-right-radius'
+    })
+    Obj['border-bottom-left-radius'] = this.getTextareaParam(setParam, {
+      title: '左下px',
+      tag: 'border-bottom-left-radius'
+    })
+    Obj['border-bottom-right-radius'] = this.getTextareaParam(setParam, {
+      title: '右下px',
+      tag: 'border-bottom-right-radius'
+    })
     return Obj
   },
   // 获取模块高度设置

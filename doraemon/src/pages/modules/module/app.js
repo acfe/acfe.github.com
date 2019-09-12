@@ -69,10 +69,15 @@ const FcModules = {
         }
       }
       if (param.heightType == 'set' && param.moduleHeight) {
-        moudleStyle['height'] = param.moduleHeight / 375 + 'rem'
+        moudleStyle['height'] = param.moduleHeight + 'px'
+        if (this.setConfig.isTabModule) {
+          moudleStyle['height'] = param.moduleHeight / 375 + 'rem'
+        }
       } else if (param.heightType == 'screen') {
         let mh = this.isSet ? 667 : document.body.clientHeight
         moudleStyle['height'] = mh + 'px'
+      } else {
+        this.param.heightType = 'auto'
       }
       if (param.overflow) {
         moudleStyle['overflow'] = param.overflow
@@ -81,15 +86,15 @@ const FcModules = {
     }
   },
   mounted () {
+    setTimeout(() => {
+      if (this.$refs.fcModule && this.param.heightType == 'auto') {
+        this.param.moduleHeight = this.$refs.fcModule.clientHeight
+      }
+    })
     if (this.isSet) {
       this.$refs.fcModule.addEventListener('mousedown', this.mousedown)
       this.$refs.fcModule.addEventListener('mousemove', this.mousemove)
       this.$refs.fcModule.addEventListener('mouseup', this.mouseup)
-      setTimeout(() => {
-        if (this.$refs.fcModule) {
-          this.param.moduleHeight = this.$refs.fcModule.clientHeight
-        }
-      }, 500)
       // 键盘事件
       let keyObj = {
         37: 'left',

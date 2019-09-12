@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 预览弹窗 -->
     <FcPop :param="previewPopParam">
       <div class="preview-pop">
         <div class="preview-title">预览</div>
@@ -8,6 +9,15 @@
         </div>
       </div>
     </FcPop>
+    <!-- 富文本弹窗 -->
+    <div class="rich-editor-content" :style="{display: setConfig.showEditor ? 'block' : 'none'}">
+      <div class="editor-mask" @click="closeEditorPop"></div>
+      <div class="editor-content">
+        <div class="editor-content-title">编辑文字</div>
+        <div class="editor-tools" id="richEditorTools"></div>
+        <div class="editor-body" id="richEditor"></div>
+      </div>
+    </div>
     <div class="index" ref="index">
       <div class="frame-header">
         <div class="header-content">
@@ -158,6 +168,7 @@
                           <MImages v-if="item && item.tag == 'images'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
                           <MMenus v-if="item && item.tag == 'menus'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
                           <MGoods v-if="item && item.tag == 'goods'" :param="item" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
+                          <MTab v-if="item && item.tag == 'tab'" :param="item" :pages="contentConfig.pages" :dataSource="contentConfig.dataSource" :mid="key" :isSet="1" :elementRefreshCallback="elementRefreshCallback" :setConfig="setConfig"/>
                         </div>
                       </OrderSetter>
                     </div>
@@ -179,31 +190,32 @@
                   </div>
                 </div>
                 <div class="menu-content">
-                  <div class="menu-tab" v-if="setConfig.editTabParam.value == 0 || setConfig.editTabParam.value == 3">
-                    <div class="menu-tab-cell">
-                      <div class="edit-tab-menu">
-                        <div v-for="i in 4" :key="i" :class="{'edit-tab-menu-item': (setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show), 'edit-tab-menu-item-blank': !(setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show), 'edit-tab-menu-item-checked': setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].value == setConfig.rightTabParam.value}">
-                          <div class="edit-tab-menu-item-content" @click="changeTabValue(setConfig.rightTabParam, (i - 1), changeSetTab)" v-if="setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show">{{setConfig.rightTabParam.data[i - 1].option}}</div>
+                  <div class="menu-table">
+                    <div class="menu-tab" v-if="setConfig.editTabParam.value == 0 || setConfig.editTabParam.value == 3">
+                      <div class="menu-tab-cell">
+                        <div class="edit-tab-menu">
+                          <div v-for="i in 4" :key="i" :class="{'edit-tab-menu-item': (setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show), 'edit-tab-menu-item-blank': !(setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show), 'edit-tab-menu-item-checked': setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].value == setConfig.rightTabParam.value}">
+                            <div class="edit-tab-menu-item-content" @click="changeTabValue(setConfig.rightTabParam, (i - 1), changeSetTab)" v-if="setConfig.rightTabParam.data[i - 1] && setConfig.rightTabParam.data[i - 1].show">{{setConfig.rightTabParam.data[i - 1].option}}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="channel-support"  v-if="checkChannelSupport(setConfig)">
+                  <!-- <div class="channel-support"  v-if="checkChannelSupport(setConfig)">
                     <div class="channel-support-item" v-for="(item, key) in setConfig.channels" :key="key">
                       <div class="channel-support-item-bar" :class="item.tag + '-bg'"></div>
                       <div class="channel-support-item-text">{{item.name}}</div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="menu-content">
                     <div class="menu-content-cell">
-                      <!-- right menu content -->
+                      <!-- right menu content module list -->
                       <div class="module-list" v-if="setConfig.editTabParam.value == 1">
                         <div v-for="(item, key) in setConfig.moduleListParam" :key="key">
                           <div class="module-list-table" v-if="key % 3 == 0">
                             <div class="module-list-cell" v-for="i in 3" :key="i">
-                              <div v-if="setConfig.moduleListParam[key + (i-1)]" @click="addModule(setConfig.moduleListParam[key + (i-1)])">
+                              <div v-if="setConfig.moduleListParam[key + (i-1)]" :class="{'module-list-checked': setConfig.setModuleTag == setConfig.moduleListParam[key + (i-1)].tag}" @click="changeSetModule(setConfig.moduleListParam[key + (i-1)])">
                                 <div class="moudle-list-image">
-                                  <div class="img"></div>
                                   <div class="support-bars-table">
                                     <div class="support-bars-cell" v-for="(items, keys) in setConfig.moduleListParam[key + (i-1)].support" :key="keys" :class="items + '-bg'"></div>
                                   </div>
@@ -213,15 +225,25 @@
                             </div>
                           </div>
                         </div>
+                        <!-- module-theme-list -->
+                        <div class="module-theme-list" v-if="setConfig.setModuleList && setConfig.setModuleList.length">
+                          <div class="module-theme-list-item" v-for="(item, key) in setConfig.setModuleList" :key="key" @click="addModule(item)">
+                            <div class="module-theme-list-item-image">
+                              <img :src="item.url" v-if="item.url"/>
+                            </div>
+                            <div class="module-theme-list-item-text">
+                              {{item.title}}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <!-- element list -->
                       <div class="module-list" v-if="setConfig.editTabParam.value == 2 && setConfig.leftTabParam.value == 0">
                         <div v-for="(item, key) in setConfig.elementListParam" :key="key">
                           <div class="module-list-table" v-if="key % 3 == 0">
                             <div class="module-list-cell" v-for="i in 3" :key="i">
-                              <div v-if="setConfig.elementListParam[key + (i-1)]" @click="addElement(setConfig.elementListParam[key + (i-1)])">
+                              <div v-if="setConfig.elementListParam[key + (i-1)]" :class="{'module-list-checked': setConfig.setElementTag == setConfig.elementListParam[key + (i-1)].tag}" @click="changeSetElement(setConfig.elementListParam[key + (i-1)])">
                                 <div class="moudle-list-image">
-                                  <div class="img"></div>
                                   <div class="support-bars-table">
                                     <div class="support-bars-cell" v-for="(items, keys) in setConfig.elementListParam[key + (i-1)].support" :key="keys" :class="items + '-bg'"></div>
                                   </div>
@@ -231,21 +253,44 @@
                             </div>
                           </div>
                         </div>
+                        <!-- element-theme-list -->
+                        <div class="module-theme-list" v-if="setConfig.setElementList && setConfig.setElementList.length">
+                          <div class="module-theme-list-item" v-for="(item, key) in setConfig.setElementList" :key="key" :class="{'item-icon': item.config.elements[0].svgContent, 'item-icon-side': (key + 1) % 4 == 0}"  @click="addElement(item)">
+                            <div class="module-theme-list-item-image" v-if="item.url">
+                              <img :src="item.url"/>
+                            </div>
+                            <div v-html="item.config.elements[0].svgContent" v-if="item.config.elements[0].svgContent"></div>
+                            <div class="module-theme-list-item-text" :style="item.textStyle || {}" v-if="item.title">
+                              {{item.title}}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <!-- pop element -->
                       <div class="module-list" v-if="setConfig.editTabParam.value == 2 && setConfig.leftTabParam.value == 1">
                         <div v-for="(item, key) in setConfig.elementListParam" :key="key">
                           <div class="module-list-table" v-if="key % 3 == 0">
                             <div class="module-list-cell" v-for="i in 3" :key="i">
-                              <div v-if="setConfig.elementListParam[key + (i-1)]" @click="addPopElement(setConfig.elementListParam[key + (i-1)])">
+                              <div v-if="setConfig.elementListParam[key + (i-1)]" :class="{'module-list-checked': setConfig.setElementTag == setConfig.elementListParam[key + (i-1)].tag}" @click="changeSetElement(setConfig.elementListParam[key + (i-1)])">
                                 <div class="moudle-list-image">
-                                  <div class="img"></div>
                                   <div class="support-bars-table">
                                     <div class="support-bars-cell" v-for="(items, keys) in setConfig.elementListParam[key + (i-1)].support" :key="keys" :class="items + '-bg'"></div>
                                   </div>
                                 </div>
                                 <div class="moudle-list-title">{{setConfig.elementListParam[key + (i-1)].name}}</div>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- element-theme-list -->
+                        <div class="module-theme-list" v-if="setConfig.setElementList && setConfig.setElementList.length">
+                          <div class="module-theme-list-item" v-for="(item, key) in setConfig.setElementList" :key="key" :class="{'item-icon': item.config.elements[0].svgContent, 'item-icon-side': (key + 1) % 4 == 0}"  @click="addPopElement(item)">
+                            <div class="module-theme-list-item-image" v-if="item.url">
+                              <img :src="item.url"/>
+                            </div>
+                            <div v-html="item.config.elements[0].svgContent" v-if="item.config.elements[0].svgContent"></div>
+                            <div class="module-theme-list-item-text" :style="item.textStyle || {}" v-if="item.title">
+                              {{item.title}}
                             </div>
                           </div>
                         </div>
@@ -259,6 +304,24 @@
                 </div>
               </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <!-- 设置弹窗 -->
+    <div class="setter-pop">
+      <div class="setter-pop-title">
+        <div class="setter-pop-title-item setter-pop-title-item-checked">模块设置</div>
+        <div class="setter-pop-title-item">插入元素</div>
+        <div class="close-icon"></div>
+      </div>
+      <!-- tab 菜单 -->
+      <div class="setter-pop-tab">
+        <div class="setter-pop-tab-item setter-pop-tab-item-checked">内容</div>
+        <div class="setter-pop-tab-item">样式</div>
+      </div>
+      <div class="setter-pop-content">
+        <div class="setter-content" id="setterContent" v-if="setConfig.editTabParam.value == 0 || setConfig.editTabParam.value == 3" :key="setConfig.setterParam.key">
+          <Setter :callback="refreshContent"/>
         </div>
       </div>
     </div>

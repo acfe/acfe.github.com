@@ -100,10 +100,23 @@ const FcEelement = {
     }
     this.setterStyle['z-index'] = this.zIndex || 0
     this.setterStyle['z-index'] = this.zIndex || 0
+    if (param.elementStyle) {
+      Object.assign(setterStyle, param.elementStyle)
+    }
     this.setterStyle = Object.assign({}, this.setterStyle, setterStyle)
   },
   mounted () {
-
+    const param = this.param
+    if (!this.isSet && param.action && param.action.acType == 6) {
+      this.$refs.element.style.display = 'none'
+      document.onscroll = () => {
+        if (document.documentElement.scrollTop > document.documentElement.clientHeight) {
+          this.$refs.element.style.display = 'block'
+        } else {
+          this.$refs.element.style.display = 'none'
+        }
+      }
+    }
   },
   methods: {
 

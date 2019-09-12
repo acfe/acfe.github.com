@@ -10,18 +10,23 @@ import FcLazyImage from 'fcbox/image/lazy'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
 import MGoods from '../../modules/goods'
+import MTab from '../../modules/tab'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
 import EIcon from '../../elements/icon'
 import EText from '../../elements/text'
+import ESearch from '../../elements/search'
+import Animation from 'fcbox/utils/animation'
 Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
+Vue.use(MTab)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EIcon)
 Vue.use(EText)
+Vue.use(ESearch)
 Vue.use(FcDomPlayer)
 Vue.use(FcLazyImage)
 
@@ -29,15 +34,36 @@ const Index = {
   name: 'Index',
   data () {
     return {
+      tabItems: {},
       bodyStyle: {},
       pageStyle: {},
-      setModuleStyle (item) {
+      setAbsoluteModuleStyle (item) {
         let style = {}
+        if (item.moduleHeight) {
+          style.height = item.moduleHeight + 'px'
+        }
         if (item.moduleTop || item.moduleTop === 0) {
           style.top = item.moduleTop + 'px'
         }
         if (item.moduleBottom || item.moduleBottom === 0) {
           style.bottom = item.moduleBottom + 'px'
+        }
+        return style
+      },
+      setRelativeModuleStyle (item) {
+        let style = {}
+        if (item.moduleHeight && item.lockPosition == 'lock') {
+          style.height = item.moduleHeight + 'px'
+        }
+        return style
+      },
+      setRelativeBodyModuleStyle (showObj) {
+        let style = {}
+        if (showObj.topHeight) {
+          style['padding-top'] = showObj.topHeight + 'px'
+        }
+        if (showObj.bottomHeight) {
+          style['padding-bottom'] = showObj.bottomHeight + 'px'
         }
         return style
       }
@@ -52,6 +78,7 @@ const Index = {
     pageKey: state => state.pageKey
   }),
   created () {
+    this.Animation = new Animation()
     if (localStorage.getItem('previewData')) {
       Object.assign(this.contentConfig, JSON.parse(localStorage.getItem('previewData')))
     }
@@ -104,15 +131,15 @@ const Index = {
           }
           if (scrollTop < lockTop) {
             if (dom && dom[0]) {
-              dom[0].style.position = 'absolute'
-              dom[0].style.top = lockContent[i].moduleTop + 'px'
-              dom[0].style.zIndex = '1'
+              dom[0].style.position = 'relative'
+              dom[0].style.top = 0
+              dom[0].style.zIndex = 0
             }
           }
         }
       }
     },
-    refreshPageStyle () {
+    refreshPageStyle (lockScrollPos) {
       let normalContent = this.showObj.normalContent
       let lockContent = []
       // 吸附参数设定
@@ -134,8 +161,9 @@ const Index = {
       if (this.showPage && this.showPage.style) {
         this.pageStyle = this.refreshBodyStyle(this.showPage.style)
       }
-      this.pageStyle.height = this.showObj.totalHeight + 'px'
-      document.documentElement.scrollTop = 0
+      if (!lockScrollPos) {
+        document.documentElement.scrollTop = 0
+      }
     },
     refreshBodyStyle (style) {
       let bodyStyle = {}
@@ -187,6 +215,46 @@ const Index = {
         case 4:
           if (action.acFun && window.fc.userActions && window.fc.userActions[action.acFun]) {
             window.fc.userActions[action.acFun](param, this)
+          }
+          break
+        case 6:
+          if (this.animating) {
+            return false
+          }
+          const tween = this.Animation.tween.Cubic.easeOut
+          const that = this
+          this.animating = true
+          this.Animation.play({
+            aStart: document.documentElement.scrollTop,
+            aEnd: 0,
+            tEnd: 24,
+            tween,
+            handle (num) {
+              document.documentElement.scrollTop = parseInt(num)
+            },
+            finish () {
+              that.animating = false
+            }
+          })
+          break
+        case 7:
+          let showPageContent
+          let tabId = action.tabId
+          for (let p in this.contentConfig.pages) {
+            showPageContent = this.contentConfig.pages[p].content
+            for (let i in showPageContent) {
+              if (showPageContent[i].id == tabId && showPageContent[i].singleDatas) {
+                showPageContent[i].singleDatas.checkedId = action.tabItemId
+                if (this.tabItems[showPageContent[i].id]) {
+                  this.tabItems[showPageContent[i].id].refreshContent()
+                }
+                setTimeout(() => {
+                  this.$store.dispatch('formatContent')
+                  this.refreshPageStyle(true)
+                }, 100)
+                break
+              }
+            }
           }
           break
       }

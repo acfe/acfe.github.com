@@ -53,7 +53,7 @@ Index.prototype = {
       } else {
         this.contentJsInit(show)
       }
-    }.bind(this), 500)
+    }.bind(this))
   },
 
   contentJsInit: function (show) {

@@ -27,7 +27,9 @@ const FcSingleSelector = {
       while (loop) {
         loop = !!target.parentNode
         loop = target.tagName == 'BODY' ? false : loop
-        dataKey = target.getAttribute(tag)
+        if (target && target.getAttribute) {
+          dataKey = target.getAttribute(tag)
+        }
         if (dataKey) {
           loop = false
           break

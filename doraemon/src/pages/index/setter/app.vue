@@ -13,6 +13,7 @@
               <FcTextarea :param="item.param" :callback="item.callback"/>
             </div>
           </div>
+          <div class="input-content rich-text" v-if="item.richText" @click="item.showRichText"></div>
         </div>
       </div>
 
@@ -54,7 +55,7 @@
       <!-- 页面模板列表 -->
       <div class="tb-cell h10" v-if="item.type == 'pageThemeList'">
         <div class="page-theme-list">
-          <div class="sub-title">页面风格选择</div>
+          <div class="sub-title">页面模板</div>
           <div v-for="(item, key) in pageThemeDatas" :key="key">
             <div class="image-table" v-if="key % 2 == 0">
               <div class="image-cell" v-for="i in 2" :key="i" @click="changePageTheme(pageThemeDatas[key + (i-1)])">
@@ -185,13 +186,23 @@
                             <FcTextarea :param="item2.nameParam.param" :callback="item2.nameParam.callback"/>
                           </div>
                         </div>
-                        <div class="input-content select-text" v-if="item.module == 'menus'" :class="{'select-text-checked': item.checkedId == item2.checkedId}" @click="item.changeCheckedId(item2.checkedId)">默认选中</div>
+                        <div class="input-content select-text" v-if="item.module == 'menus' || item.module == 'tab'" :class="{'select-text-checked': item.checkedId == item2.checkedId}" @click="item.changeCheckedId(item2.checkedId, key2)">
+                          {{item.module == 'tab'? '显示内容' : '默认选中'}}
+                        </div>
                       </div>
                       <div class="input-group" v-if="item2.titleParam">
                         <div class="input-title">{{item2.titleParam.title}}</div>
                         <div class="input-content">
                           <div class="max-200">
                             <FcTextarea :param="item2.titleParam.param" :callback="item2.titleParam.callback"/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ac-group" v-if="item2.tabPageIdParam" :style="{'z-index': item.orderSetterParam.content.length - key2 + 1000}">
+                        <div class="input-group">
+                          <div class="input-title lh34">{{item2.tabPageIdParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.tabPageIdParam" :callback="item2.tabPageIdParam.callback"/>
                           </div>
                         </div>
                       </div>
@@ -219,7 +230,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="ac-group" v-if="item2.acTypeParam">
+                      <div class="ac-group" v-if="item2.acTypeParam" :style="{'z-index': item.orderSetterParam.content.length - key2 + 1000}">
                         <div class="input-group">
                           <div class="input-title lh34">{{item2.acTypeParam.title}}</div>
                           <div class="input-content">
@@ -258,6 +269,18 @@
                             <div class="max-200">
                               <FcTextarea :param="item2.acFunParam.param" :callback="item2.acFunParam.param.callback"/>
                             </div>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 7">
+                          <div class="input-title lh34">{{item2.tabParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.tabParam" :callback="item2.tabParam.callback"/>
+                          </div>
+                        </div>
+                        <div class="input-group" v-if="item2.acTypeParam.value == 7 && item2.tabItemParam">
+                          <div class="input-title lh34">{{item2.tabItemParam.title}}</div>
+                          <div class="input-content">
+                            <FcSingleSelector :param="item2.tabItemParam" :callback="item2.tabItemParam.callback"/>
                           </div>
                         </div>
                       </div>
@@ -324,6 +347,18 @@
             <div class="max-200">
               <FcTextarea :param="item.acFunParam.param" :callback="item.acFunParam.param.callback"/>
             </div>
+          </div>
+        </div>
+        <div class="input-group" v-if="item.acTypeParam.value == 7">
+          <div class="input-title lh34">{{item.tabParam.title}}</div>
+          <div class="input-content">
+            <FcSingleSelector :param="item.tabParam" :callback="item.tabParam.callback"/>
+          </div>
+        </div>
+        <div class="input-group" v-if="item.acTypeParam.value == 7 && item.tabItemParam">
+          <div class="input-title lh34">{{item.tabItemParam.title}}</div>
+          <div class="input-content">
+            <FcSingleSelector :param="item.tabItemParam" :callback="item.tabItemParam.callback"/>
           </div>
         </div>
       </div>
@@ -578,6 +613,26 @@
         </div>  
       </div>
 
+      <!-- 圆角设置 -->
+      <div class="tb-cell h10" v-if="item.type == 'borderRadiusGroup'">
+        <div class="margin-group">
+          <div class="sub-title">{{item.title}}</div>
+          <div class="margin-table">
+            <div class="margin-cell">左上px</div>
+            <div class="margin-cell">右上px</div>
+            <div class="margin-cell">左下px</div>
+            <div class="margin-cell">右下px</div>
+          </div>
+          <div class="margin-table mb20">
+            <div class="margin-cell" v-for="(name, nameKey) in ['border-top-left-radius', 'border-top-right-radius', 'border-bottom-left-radius', 'border-bottom-right-radius']" :key="nameKey">
+              <div class="border-bk">
+                <FcTextarea :param="item[name].param" :callback="item[name].callback"/>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+
       <!-- 边框设置 -->
       <div class="tb-cell h10" v-if="item.type == 'borderGroup'">
         <div class="border-group">
@@ -585,7 +640,7 @@
           <div class="border-input-group">
             <div class="text-cell-tag"></div>
             <div class="text-cell">尺寸px</div>
-            <div class="text-cell">颜色</div>
+            <div class="selector-cell">颜色</div>
             <div class="selector-cell">样式</div>
           </div>
           <div class="border-input-group" v-for="(name, nameKey) in ['top', 'bottom', 'left', 'right']" :key="nameKey">
@@ -597,7 +652,7 @@
                 <FcTextarea :param="item[name].sizeParam.param" :callback="item[name].sizeParam.callback"/>
               </div>
             </div>
-            <div class="text-cell">
+            <div class="selector-cell">
               <div class="border-bk">
                 <FcTextarea :param="item[name].colorParam.param" :callback="item[name].colorParam.callback"/>
               </div>
@@ -606,7 +661,6 @@
               <FcSingleSelector :param="item[name].styleParam" :callback="item[name].styleParam.callback"/>
             </div>
           </div>
-          <div class="module-blank"></div>
         </div>
       </div>
 

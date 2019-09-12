@@ -28,8 +28,10 @@ module.exports = {
     let normalHeight = 0
     let bottomHeight = 0
     for (let i in showContent) {
-      showContent[i].moduleHeightSource = showContent[i].moduleHeightSource || showContent[i].moduleHeight
-      let moduleHeight = showContent[i].moduleHeightSource || 0
+      let moduleHeight = showContent[i].moduleHeight || 0
+      if (!state.sizeInit) {
+        moduleHeight = moduleHeight / 375 * (document.body.clientWidth || document.documentElement.clientWidth)
+      }
       if (showContent[i].heightType == 'set') {
         if (showContent[i].style && showContent[i].style['paddding-top']) {
           moduleHeight += parseInt(showContent[i].style['paddding-top'])
@@ -38,7 +40,6 @@ module.exports = {
           moduleHeight += parseInt(showContent[i].style['paddding-bottom'])
         }
       }
-      moduleHeight = moduleHeight / 375 * (document.body.clientWidth || document.documentElement.clientWidth)
       totalHeight += moduleHeight
       showContent[i].moduleHeight = moduleHeight
       switch (showContent[i].lockPosition) {
@@ -56,6 +57,7 @@ module.exports = {
           break
       }
     }
+    state.sizeInit = true
     let topModuleTop = 0
     if (topContent.length) {
       for (let i in topContent) {
@@ -87,7 +89,6 @@ module.exports = {
       bottomContent
     }
     store.state.showObj = showObj
-    store.commit('refreshPage')
   },
   setPageContent (store, action) {
     const state = store.state

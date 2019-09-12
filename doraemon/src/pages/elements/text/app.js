@@ -22,6 +22,8 @@ const EText = {
       this.imageRadiusStyle['border-radius'] = param.imageRadius + 'px'
     }
     this.textStyle = this.formatTextStyle(param.textStyle)
+    let elementHeight = parseInt(param.style.height, 10) || 'auto'
+    this.textStyle.height = elementHeight == 'auto' ? 'auto' : elementHeight / 375 + 'rem'
   },
   methods: {
     formatTextStyle (style) {

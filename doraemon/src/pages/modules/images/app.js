@@ -17,33 +17,52 @@ const MImages = {
       content: [],
       hiddenStyle: {},
       imageStyle: {},
+      imageFloatStyle: {},
       cellStyle: {},
       tableStyle: {},
       titleStyle: {},
       descriptionStyle: {},
       minHeightStyle: {},
       contentPaddingStyle: {},
-      imageRadiusStyle: {},
+      itemStyle: {},
       domPlayerParam: {
         loop: true,
         autoPlay: true,
         autoPlayTime: 5000,
         renderPage: 0,
         data: []
+      },
+      checkRightPadding (style, columNum, key) {
+        let newStyle = Object.assign({}, style)
+        if (key > 0 && (key + 1) % columNum == 0) {
+          newStyle['padding-right'] = 0
+        }
+        return newStyle
       }
     }
   },
   props: ['param', 'dataSource', 'elementRefreshCallback', 'isSet', 'setConfig', 'mid', 'acCallback'],
   created () {
     const param = this.param
+    // 内容设置
     let dataContent = []
-    let dataSource = this.dataSource || {}
-    let imagesDatas = dataSource.imagesDatas || []
-    for (let i in imagesDatas) {
-      if (imagesDatas[i].value == param.dataSourceId) {
-        dataContent = imagesDatas[i].data
-      }
+    switch (param.dataType) {
+      case 0:
+        if (param.singleDatas && param.singleDatas.data) {
+          dataContent = param.singleDatas.data
+        }
+        break
+      case 1:
+        let dataSource = this.dataSource || {}
+        let imagesDatas = dataSource.imagesDatas || []
+        for (let i in imagesDatas) {
+          if (imagesDatas[i].value == param.dataSourceId) {
+            dataContent = imagesDatas[i].data
+          }
+        }
+        break
     }
+    // 样式设置
     if (this.isSet) {
       this.hiddenStyle.overflow = 'hidden'
     }
@@ -51,16 +70,21 @@ const MImages = {
       this.theme = param.theme
     }
     if (param.titleStyle) {
-      this.titleStyle = this.formatTextStyle(param.titleStyle)
+      this.titleStyle = this.formatStyle(param.titleStyle)
     }
     if (param.descriptionStyle) {
-      this.descriptionStyle = this.formatTextStyle(param.descriptionStyle)
+      this.descriptionStyle = this.formatStyle(param.descriptionStyle)
     }
     if (param.imageStyle) {
-      this.imageStyle = this.formatImageStyle(param.imageStyle)
+      this.imageStyle = this.formatStyle(param.imageStyle)
+      if (this.imageStyle.float) {
+        this.imageFloatStyle.float = this.imageStyle.float
+      }
+    }
+    if (param.itemStyle) {
+      this.itemStyle = this.formatStyle(param.itemStyle)
     }
     this.minHeightStyle['min-height'] = '34px'
-    param.imageRadius = param.imageRadius || 0
     switch (this.theme) {
       case 1:
         param.contentPaddingBottom = param.contentPaddingBottom || 10
@@ -86,8 +110,36 @@ const MImages = {
         if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
           this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom)) + 'px'
         }
+        let mw = 375
         if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
           this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
+          mw -= parseInt(param.contentPaddingRight) * (this.columNum - 1)
+        }
+        let reduceGroup = [
+          {
+            setter: param.style,
+            setRate: 1
+          },
+          {
+            setter: param.itemStyle,
+            setRate: this.columNum
+          },
+          {
+            setter: param.imageStyle,
+            setRate: this.columNum
+          }
+        ]
+        for (let i in reduceGroup) {
+          if (reduceGroup[i].setter) {
+            mw -= (parseInt(reduceGroup[i].setter['padding-left']) || 0) * reduceGroup[i].setRate
+            mw -= (parseInt(reduceGroup[i].setter['padding-right']) || 0) * reduceGroup[i].setRate
+            mw -= (parseInt(reduceGroup[i].setter['border-left-width']) || 0) * reduceGroup[i].setRate
+            mw -= (parseInt(reduceGroup[i].setter['border-right-width']) || 0) * reduceGroup[i].setRate
+          }
+        }
+        mw = parseInt(mw / this.columNum)
+        if (!param.imageStyle.width) {
+          this.imageStyle.width = mw / 375 + 'rem'
         }
         break
       case 3:
@@ -133,9 +185,6 @@ const MImages = {
           this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
         }
         break
-    }
-    if (param.imageRadius) {
-      this.imageRadiusStyle['border-radius'] = param.imageRadius + 'px'
     }
   },
   methods: Object.assign({

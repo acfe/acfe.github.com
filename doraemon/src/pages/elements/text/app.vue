@@ -1,8 +1,6 @@
 <template>
   <FcEelement :param="param" :isSet="isSet" :eid="eid" :mid="mid" :setConfig="setConfig" :zIndex="zIndex" :acCallback="acCallback">
-    <div class="e-text" :style="textStyle">
-     {{param.text || ''}}
-    </div>
+    <div class="e-text" :style="textStyle" v-html="param.text || ''"></div>
   </FcEelement>
 </template>
 

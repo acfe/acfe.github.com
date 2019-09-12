@@ -21,18 +21,24 @@ import FcLazyImage from 'fcbox/image/lazy'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
 import MGoods from '../../modules/goods'
+import MTab from '../../modules/tab'
 import MPop from '../../modules/pop'
 // elements
 import EImage from '../../elements/image'
 import EIcon from '../../elements/icon'
 import EText from '../../elements/text'
+import ESearch from '../../elements/search'
+// editor
+import Wangeditor from 'wangeditor'
 Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
+Vue.use(MTab)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EIcon)
 Vue.use(EText)
+Vue.use(ESearch)
 // components
 Vue.use(FcInput)
 Vue.use(FcPop)
@@ -83,6 +89,8 @@ const Index = {
   }),
   created () {
     this.setSetter('page')
+    this.setModuleListData()
+    this.setElementListData()
   },
   mounted () {
     if (sessionStorage.getItem('configContentCatch')) {
@@ -90,11 +98,18 @@ const Index = {
     }
     this.refreshContent()
     this.refreshPageList()
+    // 富文本编辑器
+    const E = Wangeditor
+    const editor = new E('#richEditorTools', '#richEditor')
+    editor.customConfig.menus = ['bold', 'italic', 'underline', 'strikeThrough', 'head', 'fontSize', 'foreColor', 'backColor', 'link', 'justify', 'table', 'code', 'undo', 'redo']
+    editor.customConfig.colors = ['#000000', '#333333', '#666666', '#cccccc', '#ffffff', '#f44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']
+    editor.create()
+    this.setConfig.richEditor = editor
   },
   methods: {
     save () {
-      console.log(this.trimObjBlank(this.contentConfig.dataSource))
-      // console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.pages[this.setConfig.setPageId])))
+      // console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.dataSource)))
+      console.log(JSON.stringify(this.trimObjBlank(this.contentConfig.pages[this.setConfig.setPageId])))
     },
     preview () {
       localStorage.setItem('previewData', JSON.stringify(this.trimObjBlank(this.contentConfig)))
@@ -102,6 +117,12 @@ const Index = {
     },
     closePreviewPop () {
       this.previewPopParam.show = false
+    },
+    closeEditorPop () {
+      this.setConfig.editorModule[this.setConfig.editorTag] = this.setConfig.richEditor.txt.html()
+      this.refreshSetter()
+      this.refreshContent()
+      this.setConfig.showEditor = false
     },
     trimObjBlank (obj) {
       if (isBaseDataType(obj)) {
@@ -331,7 +352,7 @@ const Index = {
     refreshPageList () {
       this.setConfig.pageListOrderSetterParam.content = this.contentConfig.pages
       if (document.getElementById('pageListOrderSetter')) {
-        this.setConfig.pageListOrderSetterParam.scrollTop = document.getElementById('pageListOrderSetter').scrollTop
+        this.setConfig.pageListOrderSetterParam.scrollTop = document.getElementById('pageListOrderSetter').scrollHeight
       }
       this.setConfig.pageListOrderSetterParam.key = Math.random()
       setTimeout(() => {
@@ -339,12 +360,12 @@ const Index = {
       })
     },
     addPage () {
-      this.contentConfig.pages.unshift({
+      this.contentConfig.pages.push({
         name: '页面' + (this.contentConfig.pages.length + 1),
         content: [],
         id: new Date().getTime()
       })
-      this.setConfig.setPageId = 0
+      this.setConfig.setPageId = this.contentConfig.pages.length - 1
       this.setSetter('page')
       this.refreshPageList()
       this.refreshContent()
@@ -382,15 +403,19 @@ const Index = {
       })
     },
     addModule (item) {
+      let moduleConfig = item.config
+      moduleConfig = JSON.parse(JSON.stringify(moduleConfig))
+      let setModule = moduleConfig.module
       if (this.setConfig.setType == 'page' || this.setConfig.setType == 'module' || this.setConfig.setType == 'element' || this.setConfig.setType == 'body') {
         let key = 0
         if (this.setConfig.setType == 'page' || this.setConfig.setType == 'body' || !this.contentConfig.pages[this.setConfig.setPageId].content.length) {
-          this.contentConfig.pages[this.setConfig.setPageId].content.unshift({
-            name: item.name,
-            tag: item.tag,
-            content: [],
+          this.contentConfig.pages[this.setConfig.setPageId].content.push(Object.assign(setModule, {
             id: new Date().getTime()
-          })
+          }))
+          key = this.contentConfig.pages[this.setConfig.setPageId].content.length - 1
+          if (document.getElementById('mainSetter')) {
+            document.getElementById('mainSetter').scrollTop = document.getElementById('mainSetter').scrollHeight
+          }
         } else {
           key = parseInt(this.setConfig.setModuleId)
           const newArr = []
@@ -400,12 +425,9 @@ const Index = {
               newArr.push(content[i])
             }
           }
-          newArr.push({
-            name: item.name,
-            tag: item.tag,
-            content: [],
+          newArr.push(Object.assign(setModule, {
             id: new Date().getTime()
-          })
+          }))
           for (let j = key + 1; j < content.length; j++) {
             if (content[j]) {
               newArr.push(content[j])
@@ -417,20 +439,41 @@ const Index = {
         setTimeout(() => {
           this.setSetter('module', key)
           this.setConfig.mainOrderSetterParam.self.setSelectModule(key)
+          this.setConfig.moduleWindowSetterParam.editKey = key
           this.refreshContent()
         })
       }
     },
+    changeSetModule (item) {
+      this.setConfig.setModuleTag = item.tag
+      this.setModuleListData()
+    },
+    setModuleListData () {
+      let moudlueThemeConfig = this.setConfig.moudlueThemeConfig
+      this.setConfig.setModuleList = moudlueThemeConfig[this.setConfig.setModuleTag] || []
+    },
+    changeSetElement (item) {
+      this.setConfig.setElementTag = item.tag
+      this.setElementListData()
+    },
+    setElementListData () {
+      let elementThemeConfig = this.setConfig.elementThemeConfig
+      this.setConfig.setElementList = elementThemeConfig[this.setConfig.setElementTag] || []
+    },
     addElement (item) {
+      let elementConfig = item.config
+      elementConfig = JSON.parse(JSON.stringify(elementConfig))
+      let elements = elementConfig.elements
       switch (this.setConfig.setType) {
         case 'module':
         case 'element':
           const content = this.contentConfig.pages[this.setConfig.setPageId].content[this.setConfig.setModuleId]
           content.elements = content.elements || []
-          content.elements.unshift({
-            name: item.name,
-            tag: item.tag
-          })
+          for (let i in elements) {
+            content.elements.unshift(Object.assign(elements[i], {
+              id: Math.random().toString().substr(2, 16)
+            }))
+          }
           this.setConfig.setElementId = 0
           this.setSetter('element', this.setConfig.setModuleId, this.setConfig.setElementId)
           this.refreshSetter()
@@ -439,15 +482,19 @@ const Index = {
       }
     },
     addPopElement (item) {
+      let elementConfig = item.config
+      elementConfig = JSON.parse(JSON.stringify(elementConfig))
+      let elements = elementConfig.elements
       switch (this.setConfig.setType) {
         case 'pop':
         case 'popElement':
           const content = this.contentConfig.pops[this.setConfig.setPopId]
           content.elements = content.elements || []
-          content.elements.unshift({
-            name: item.name,
-            tag: item.tag
-          })
+          for (let i in elements) {
+            content.elements.unshift(Object.assign(elements[i], {
+              id: Math.random().toString().substr(2, 16)
+            }))
+          }
           this.setConfig.setElementId = 0
           this.setSetter('popElement', this.setConfig.setPopId, this.setConfig.setElementId)
           this.refreshSetter()
@@ -520,7 +567,7 @@ const Index = {
       }
       this.setElementWinScrollTop(parseInt(elmentKey) || 0)
       this.setSetter('element', moduleId, elmentKey)
-      if (type == 'up' && this.setConfig.mainOrderSetterParam.self.editKey != this.setConfig.setModuleId) {
+      if (type == 'up') {
         this.refreshContent()
       }
     },

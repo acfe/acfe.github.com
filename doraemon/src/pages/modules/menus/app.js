@@ -30,15 +30,27 @@ const MMenus = {
   props: ['param', 'dataSource', 'elementRefreshCallback', 'isSet', 'setConfig', 'mid', 'acCallback'],
   created () {
     const param = this.param
+    // 内容设置
     let dataContent = []
-    let dataSource = this.dataSource || {}
-    let menusDatas = dataSource.menusDatas || []
-    for (let i in menusDatas) {
-      if (menusDatas[i].value == param.dataSourceId) {
-        dataContent = menusDatas[i].data
-        this.checkedId = menusDatas[i].checkedId
-      }
+    switch (param.dataType) {
+      case 0:
+        if (param.singleDatas && param.singleDatas.data) {
+          dataContent = param.singleDatas.data
+          this.checkedId = param.singleDatas.checkedId
+        }
+        break
+      case 1:
+        let dataSource = this.dataSource || {}
+        let menusDatas = dataSource.menusDatas || []
+        for (let i in menusDatas) {
+          if (menusDatas[i].value == param.dataSourceId) {
+            dataContent = menusDatas[i].data
+            this.checkedId = menusDatas[i].checkedId
+          }
+        }
+        break
     }
+    // 样式设置
     if (this.isSet) {
       this.hiddenStyle.overflow = 'hidden'
     }
@@ -134,7 +146,30 @@ const MMenus = {
     }
   },
   methods: Object.assign({
-
+    clickCallback (item) {
+      const param = this.param
+      if (item.checkedId) {
+        this.checkedId = item.checkedId
+        switch (param.dataType) {
+          case 0:
+            param.singleDatas.checkedId = item.checkedId
+            break
+          case 1:
+            let dataSource = this.dataSource || {}
+            let menusDatas = dataSource.menusDatas || []
+            for (let i in menusDatas) {
+              if (menusDatas[i].value == param.dataSourceId) {
+                menusDatas[i].checkedId = item.checkedId
+              }
+            }
+            break
+        }
+      }
+      if (param.lockPosition == 'lock' && document.documentElement.scrollTop > param.moduleTop) {
+        document.documentElement.scrollTop = param.moduleTop
+      }
+      this.acCallback && this.acCallback(item)
+    }
   }, formatAc)
 }
 

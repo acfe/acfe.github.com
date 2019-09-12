@@ -1,0 +1,281 @@
+.setter-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	// 头部导航
+	.setter-header {
+		position: relative;
+		height: 56px;
+		background-color: #fff;
+		border-bottom: 1px solid #e5e5e5;
+	}
+	// 主体内容
+	.setter-body {
+		flex-grow: 1;
+		position: relative;
+		.setter-body-container {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			.setter-body-menu {
+				position: relative;
+				min-width: 260px;
+				box-sizing: border-box;
+				background-color: #fff;
+				.body-menu-container {
+					display: flex;
+					flex-direction: column;
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					.menu-button-area {
+						padding: 20px;
+					}
+					.body-menu-content {
+						flex-grow: 1;
+						position: relative;
+						overflow: auto;
+						box-sizing: border-box;
+					}
+					.boder-top {
+						border-top: 1px solid #e5e5e5;
+					}
+				}
+			}
+			.boder-left {
+				border-left: 1px solid #e5e5e5;
+			}
+			.boder-right {
+				border-right: 1px solid #e5e5e5;
+			}
+			.setter-body-main-content {
+				position: relative;
+				flex-grow: 1;
+				overflow: auto;
+				position: relative;
+				.stage {
+					position: relative;
+					width: 375px;
+					min-height: 667px;
+					margin: 50px auto;
+					background-color: #fff;
+					box-shadow: 0 2px 10px rgba(39,54,78,.1);
+					box-sizing: border-box;
+					.page {
+						min-height: 100%;
+						position: relative;
+					}
+				}
+			}
+		}
+	}
+	// 灰底tab
+	.gray-tab {
+		min-height: 40px;
+		display: flex;
+		.gray-tab-item {
+			flex-grow: 1;
+			line-height: 40px;
+			text-align: center;
+			background: #e5e5e5;
+			cursor: pointer;
+		}
+		.gray-tab-item-checked {
+			background: #fff;
+		}
+	}
+	// 下边线tab
+	.border-tab {
+		min-height: 40px;
+		display: flex;
+		padding: 10px;
+		.border-tab-item {
+			flex-grow: 1;
+			line-height: 40px;
+			text-align: center;
+			background: #fff;
+			border-bottom: 1px solid #e5e5e5;
+			cursor: pointer;
+		}
+		.border-tab-item-checked {
+			border-bottom: 1px solid #2196F3;
+			color: #2196F3;
+		}
+	}
+	.pb15 {
+		padding-bottom: 15px;
+	}
+	// 模块列表
+	.module-list {
+		padding: 0 10px;
+		.module-list-item {
+			position: relative;
+			cursor: pointer;
+			padding-bottom: 10px;
+			margin: 10px 0 20px 0;
+			border-bottom: 1px solid #e5e5e5;
+			.item-image {
+				font-size: 0;
+				line-height: 0;
+				vertical-align: bottom;
+				img {
+					width: 100%;
+				}
+			}
+			.item-title {
+				font-size: 14px;
+				padding: 10px 0 5px 0;
+				line-height: 20px;
+				text-align: center;
+			}
+		}
+		.module-list-item:hover {
+			background: #eee;
+		}
+	}
+	// 页面列表项
+	.page-list-item {
+		position: relative;
+		height: 70px;
+		border-bottom: 1px solid #e5e5e5;
+		box-sizing: border-box;
+		display: flex;
+		user-select: none;
+		-webkit-user-select: none;
+		.list-num-tag-area {
+			padding: 0 10px;
+			line-height: 70px;
+			.list-num-tag {
+				height: 24px;
+				line-height: 24px;
+				border-radius: 12px;
+				background: #ccc;
+				padding: 0 5px;
+				min-width: 14px;
+				text-align: center;
+				display: inline-block;
+				vertical-align: baseline;
+			}
+			.list-num-icon {
+				position: relative;
+				width: 24px;
+				height: 24px;
+				display: inline-block;
+				vertical-align: middle;
+				z-index: 1000;
+				background: url(../../../common/img/more.png) no-repeat center;
+				background-size: auto 24px;
+				cursor: pointer;
+				.pop-list-menu-area {
+					position: absolute;
+					top: 0;
+					right: 100%;
+					margin-right: 5px;
+				}
+			}
+		}
+		.list-content-area {
+			flex-grow: 1;
+			line-height: 70px;
+			.list-content-text {
+				display: inline-block;
+				vertical-align: baseline;
+				outline: none;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 160px;
+			}
+		}
+	}
+}
+// 弹出菜单
+.pop-list-menu {
+	width: 150px;
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	border-bottom: none;
+	.pop-list-menu-item {
+		padding: 0 10px;
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px solid #e5e5e5;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+// 设置弹窗
+.setter-pop {
+	position: fixed;
+	z-index: 2000;
+	top: 66px;
+	right: 270px;
+	width: 260px;
+	height: 80%;
+	border: 1px solid #e5e5e5;
+	background: #fff;
+	box-shadow: 0 2px 10px rgba(39,54,78,.1);
+	.setter-pop-container {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+	}
+	// 标题栏
+	.setter-pop-title {
+		min-height: 40px;
+		position: relative;
+		padding: 0 20px;
+		line-height: 40px;
+		cursor: move;
+		user-select: none;
+		-webkit-user-select: none;
+		.close-btn {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			width: 20px;
+			height: 20px;
+			background: url(../../../common/img/close.png) no-repeat center;
+			background-size: auto 20px;
+			cursor: pointer;
+		}
+	}
+	.setter-pop-content {
+		flex-grow: 1;
+		overflow: auto;
+		position: relative;
+	}
+	// 边栏tab
+	.side-tabs {
+		position: absolute;
+		width: 50px;
+		top: 20px;
+		left: -52px;
+		background: #fff;
+		border-top: 1px solid #e5e5e5;
+		border-left: 1px solid #e5e5e5;
+		box-shadow: 0 2px 10px rgba(39,54,78,.1);
+		.side-tabs-item {
+			height: 50px;
+			text-align: center;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: 50px;
+			cursor: pointer;
+			.side-tabs-item-text {
+				display: inline-block;
+				line-height: 16px;
+				text-align: left;
+			}
+		}
+		.side-tabs-item-checked {
+			background: #eee;
+		}
+	}
+}
+.none {
+	display: none;
+}
