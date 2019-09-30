@@ -1,11 +1,11 @@
 <template>
-  <FcModules :param="param" :isSet="isSet">
+  <FcModules :param="param" :isSet="isSet" :refreshContent="refreshContent" :setSetterContent="setSetterContent" :mid="mid" :acCallback="acCallback">
     <div class="m-images">
       <!-- theme1 -->
       <div :class="'theme-' + theme" v-if="theme == 1">
-        <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in dataContent" :key="key">
+        <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
           <div :style="itemStyle">
-            <div class="clear-fix">
+            <div class="t-center clear-fix">
               <div class="image" :style="imageFloatStyle">
                 <img :style="imageStyle" v-if="item.url" :src="item.url"/>
               </div>

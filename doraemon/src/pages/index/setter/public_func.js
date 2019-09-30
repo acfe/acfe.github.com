@@ -548,12 +548,17 @@ export default {
       {
         option: '点',
         value: 'dotted'
+      },
+      {
+        option: '双线',
+        value: 'double'
       }
     ]
     const borderStyleObj = {
       solid: '实线',
       dashed: '虚线',
-      dotted: '点'
+      dotted: '点',
+      double: '双线'
     }
     const Obj = {
       title: '边框设置',

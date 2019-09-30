@@ -31,9 +31,40 @@ export default {
     }
     return dataKey
   },
+  setContextMenu (e) {
+    let contextmenuParam = this.contextmenuParam
+    e.preventDefault()
+    const event = e.targetTouches && e.targetTouches[0] ? e.targetTouches[0] : e
+    const Y = event.pageY || event.y
+    const X = event.pageX || event.x
+    let dataContextmenu = this.getAcDataValue(e, 'data-contextmenu')
+    if (dataContextmenu) {
+      contextmenuParam.setType = dataContextmenu
+      contextmenuParam.show = true
+      contextmenuParam.style = {
+        left: X + 'px',
+        top: Y + 'px'
+      }
+      if (dataContextmenu == 'element') {
+        let setElementObj = this.getSetElementObj()
+        contextmenuParam.element = setElementObj.addElement
+      }
+    } else {
+      contextmenuParam.show = false
+    }
+  },
   // 页面点击事件设置
   bodyClickEventInit () {
+    document.getElementById('mainSetter').oncontextmenu = (e) => {
+      this.setContextMenu(e)
+    }
+    document.getElementById('elementWindowSetter').oncontextmenu = (e) => {
+      this.setContextMenu(e)
+    }
     document.body.addEventListener('click', (e) => {
+      if (!this.getAcDataValue(e, 'data-contextmenu-container')) {
+        this.contextmenuParam.show = false
+      }
       if (this.getAcDataValue(e, 'data-menu') != 'pageListMenu') {
         if (this.setConfig.pageMenuShowing) {
           let pageContent = this.setConfig.pageListOrderSetterParam.content
@@ -53,5 +84,51 @@ export default {
         }
       }
     })
+  },
+  trimObjBlank (obj) {
+    if (isBaseDataType(obj)) {
+      return obj
+    }
+    function judgeType (_obj) {
+      return _obj === null ? 'null' : _obj instanceof Array ? 'array' : typeof _obj !== 'object' ? typeof _obj : 'object'
+    }
+    function isBaseDataType (_obj) {
+      var types = ['boolean', 'number', 'string', 'function', 'null', 'undefined']
+      var type = judgeType(_obj)
+      return types.indexOf(type) !== -1
+    }
+    function _cloneArry (_obj) {
+      var res = []
+      for (var i = 0, len = _obj.length; i < len; i++) {
+        var value = _obj[i]
+        if (isBaseDataType(value) && value !== '' && value !== '请选择') {
+          res.push(value)
+        } else if (judgeType(value) === 'object') {
+          res.push(_cloneObj(value))
+        } else if (judgeType(value) === 'array') {
+          res.push(_cloneArry(value))
+        }
+      }
+      return res
+    }
+    function _cloneObj (_obj) {
+      var res = {}
+      for (var attr in _obj) {
+        var value = _obj[attr]
+        if (isBaseDataType(value) && value !== '' && value !== '请选择') {
+          res[attr] = value
+        } else if (judgeType(value) === 'object') {
+          res[attr] = _cloneObj(value)
+        } else if (judgeType(value) === 'array') {
+          res[attr] = _cloneArry(value)
+        }
+      }
+      return res
+    }
+    if (judgeType(obj) === 'array') {
+      return _cloneArry(obj)
+    } else {
+      return _cloneObj(obj)
+    }
   }
 }

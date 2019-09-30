@@ -45,7 +45,7 @@ const FcSingleUpload = {
           that.selected = false
           that.param.value = image.src
           this.picKey = Math.random()
-          // that.upLoad(file)
+          that.upLoad(file)
         }
       }
       reader.readAsDataURL(file)

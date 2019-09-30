@@ -1,24 +1,44 @@
 import moduleTheme from '../config/module_theme'
+import elementTheme from '../config/element_theme'
 import moduleThemeSet from '../config/module_theme/set'
+import elementThemeSet from '../config/element_theme/set'
+import pageSetParam from '../config/page_set'
+import popSetParam from '../config/pop_set'
+import bodySetParam from '../config/body_set'
 
 module.exports = {
   title: 'doraemon',
   setConfig: {
+    bodySetParam,
+    pageSetParam,
+    popSetParam,
     moduleTheme,
     moduleThemeSet,
+    elementThemeSet,
+    elementTheme,
     setPageId: 0,
     setModuleId: 0,
+    setElementId: 0,
     setPopId: 0,
     setterParam: {},
     setterParamValue: {},
     setterKey: Math.random(),
     showSetterPop: false,
+    showElementPop: false,
     setType: 'page',
     mainOrderSetterParam: {
       key: Math.random(),
       hideAdd: true,
       hideDel: true,
       scrollId: 'mainSetter',
+      content: []
+    },
+    elementWindowSetterParam: {
+      key: Math.random(),
+      hideAdd: true,
+      hideDel: true,
+      scrollId: 'elementWindowSetter',
+      borderStyle: '1px dashed #64B5F6',
       content: []
     },
     pageListOrderSetterParam: {
@@ -39,6 +59,9 @@ module.exports = {
     }
   },
   contentConfig: {
+    body: {
+      style: {}
+    },
     pages: [
       {
         id: 1,

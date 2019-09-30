@@ -1,0 +1,284 @@
+@rem:375rem;
+.m-images {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  // theme1
+  .theme-1 {
+    padding: 0 20px;
+    .image-group {
+      padding: 10px 0;
+      .image {
+        line-height: 0;
+        font-size: 0;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align:bottom;
+        box-sizing: border-box;
+        img {
+          width: 100%;
+        }
+      }
+      .title {
+        font-size: 14px;
+        color: #666666;
+        text-align: left;
+        line-height: 16/@rem;
+        white-space: pre-line;
+        padding: 8px 0;
+      }
+    }
+    .two-pic {
+      display: flex;
+      padding: 10/@rem 0;
+      .pic-item {
+        flex-grow: 1;
+        overflow: hidden;
+        background: #eee;
+        line-height: 0;
+        font-size: 0;
+        vertical-align: bottom;
+        img {
+          height: 80/@rem;
+        }
+      }
+      .gap {
+        min-width: 10/@rem;
+      }
+    }
+    .three-pic {
+      display: flex;
+      padding: 10/@rem 0;
+      .gap {
+        min-width: 10/@rem;
+      }
+      .left-pic-item {
+        min-width: 162/@rem;
+        height: 162/@rem;
+        overflow: hidden;
+        background: #eee;
+        line-height: 0;
+        font-size: 0;
+        vertical-align: bottom;
+        img {
+          height: 162/@rem;
+        }
+      }
+      .right-item {
+        flex-grow: 1;
+        .right-pic {
+          overflow: hidden;
+          background: #eee;
+          line-height: 0;
+          font-size: 0;
+          vertical-align: bottom;
+          height: 76/@rem;
+          img {
+            width: 100%;
+          }
+        }
+        .top-pic {
+          margin-bottom: 10/@rem;
+        }
+      }
+    }
+    .dom-player-status-bar {
+      position: absolute;
+      left: 0;
+      bottom: 5/@rem;
+      z-index: 1;
+      width: 100%;
+      text-align: center;
+      .status-bar-icon {
+        width: 6px;
+        height: 2px;
+        box-sizing: border-box;
+        display: inline-block;
+        background-color: #fff;
+        font-size: 0;
+        line-height: 0;
+        margin: 2/@rem;
+      }
+      .status-bar-icon-checked {
+        background-color: #9AD708;
+        border: none;
+      }
+    }
+  }
+  .notice {
+    background: #fff5d6;
+    height: 32/@rem;
+    line-height: 34/@rem;
+    padding: 0 50/@rem 0 35/@rem;
+    color: #FEAA3E;
+    font-size: 12/@rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    text-align: left;
+    .notice-icon {
+      position: absolute;
+      width: 17/@rem;
+      height: 15/@rem;
+      left: 15/@rem;
+      top: 9/@rem;
+      background: url(../../../../common/img/notice.png) no-repeat center;
+      background-size: 17/@rem 15/@rem;
+    }
+    .notice-close-icon {
+      position: absolute;
+      width: 13/@rem;
+      height: 13/@rem;
+      right: 15/@rem;
+      top: 10/@rem;
+      background: url(../../../../common/img/yellow-close.png) no-repeat center;
+      background-size: 13/@rem 13/@rem;
+    }
+  }
+  .sub-heading {
+    padding: 10/@rem 10/@rem;
+    font-size: 15/@rem;
+    color: #4A4A4A;
+    text-align: left;
+  }
+  .goods-container {
+    box-sizing: border-box;
+    padding: 0 5/@rem 10/@rem 5/@rem;
+    text-align: left;
+    .goods-item {
+      width: 50%;
+      height: 235/@rem;
+      box-sizing: border-box;
+      padding: 0 5/@rem 10/@rem 5/@rem;
+      float: left;
+      position: relative;
+      .warn-icon {
+        position: absolute;
+        width: 20/@rem;
+        height: 20/@rem;
+        left: 10/@rem;
+        top: 10/@rem;
+        background: url(../../../../common/img/warn.png) no-repeat center;
+        background-size: 20/@rem 20/@rem;
+      }
+      .goods-image-container {
+        height: 150/@rem;
+        width: 100%;
+        overflow: hidden;
+        text-align: center;
+        .goods-image {
+          display: inline-block;
+          overflow: hidden;
+          line-height: 0;
+          font-size: 0;
+          vertical-align: bottom;
+          img {
+            height: 150/@rem;
+          }
+        }
+      }
+      .goods-title {
+        font-size: 14/@rem;
+        padding: 8/@rem 10/@rem 0 10/@rem;
+        display: -webkit-box;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        -webkit-line-clamp: 1;
+      }
+      .goods-description {
+        font-size: 12/@rem;
+        padding: 0 10/@rem 0 10/@rem;
+        display: -webkit-box;
+        line-height: 16/@rem;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        -webkit-line-clamp: 1;
+        color: #666;
+      }
+      .goods-price {
+        position: absolute;
+        bottom: 10/@rem;
+        left: 15/@rem;
+        .price-tag {
+          display: inline-block;
+          color: #FB5654;
+          font-size: 12/@rem;
+        }
+        .price-content {
+          display: inline-block;
+          color: #FB5654;
+          font-size: 16/@rem;
+        }
+        .price-del {
+          display: inline-block;
+          color: #666;
+          font-size: 12/@rem;
+          text-decoration: line-through;
+          padding-left: 5/@rem;
+        }
+      }
+      .cart-icon {
+        position: absolute;
+        width: 22/@rem;
+        height: 22/@rem;  
+        right: 15/@rem;
+        bottom: 10/@rem;
+        background: url(../../../../common/img/cart.png) no-repeat center;
+        background-size: 22/@rem 22/@rem;
+      }
+    }
+  }
+  .tab-container {
+    padding: 10/@rem;
+    box-sizing: border-box;
+    .tab-menu-bk {
+      position: relative;
+      border-bottom: 1px solid #DFDFDF;
+      .tab-menu-icon {
+        width: 30/@rem;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        right: 0;
+        background: #fff url(../../../../common/img/black_down.png) no-repeat center;
+        background-size: auto 7/@rem;
+      }
+    }
+    .tab-menu {
+      padding: 14/@rem 30/@rem 14/@rem 0;
+      overflow: hidden;
+      position: relative;
+      .tab-menu-content {
+        white-space: nowrap;
+        text-align: left;
+        .tab-menu-item {
+          display: inline-block;
+          white-space: nowrap;
+          font-size: 14/@rem;
+          color: #666;
+          margin-right: 22/@rem;
+          position: relative;
+          cursor: pointer;
+          .checked-bar {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #9AD708;
+            bottom: -14/@rem;
+          }
+        }
+        .tab-menu-item-checked {
+          color: #9AD708;
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,6 @@
 import imagesTheme from './images'
+import menusTheme from './menus'
+import tabTheme from './tab'
 export default {
   showList: 'imagesTheme',
   data: [
@@ -9,8 +11,8 @@ export default {
     },
     {
       title: '菜单',
-      tag: 'menuTheme',
-      data: []
+      tag: 'menusTheme',
+      data: menusTheme
     },
     {
       title: '商品',
@@ -20,7 +22,7 @@ export default {
     {
       title: 'Tab',
       tag: 'tabTheme',
-      data: []
+      data: tabTheme
     }
   ]
 }

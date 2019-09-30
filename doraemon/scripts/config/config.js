@@ -2,8 +2,10 @@ const path = require('path')
 const getIp = require('../lib/get_ip').getIp
 
 // dev 后台接口地址 后台接口代理到本机
-const apiProto = 'https://'
-const apiHost = 'mall-sit2.fcbox.com'
+// const apiProto = 'https://'
+// const apiHost = 'mall-sit2.fcbox.com'
+const apiProto = 'http://'
+const apiHost = '10.204.240.61:8086'
 
 // dev 本地调试虚拟服务器端口
 const port = '3000'
@@ -17,7 +19,7 @@ const envConfig = {
   },
   online: {
     distPath: 'online',
-    publicPath: '/',
+    publicPath: '/page/dora/online/',
     apiHost: ''
   },
   local: {
@@ -31,8 +33,9 @@ const envConfig = {
 const pages = {
   polyfill: 'polyfill',
   index: 'index',
+  msg_mall: 'msg_mall',
   setter: 'setter',
-  play: 'play'
+  play: 'setter/play'
 }
 const entry = {}
 for (let p in pages) {

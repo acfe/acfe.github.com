@@ -9,8 +9,8 @@ const FcPop = {
   },
   props: ['param'],
   methods: {
-    hide () {
-      if (this.param.maskClose) {
+    hide (e) {
+      if (this.param.maskClose && e.target == e.currentTarget) {
         this.param.show = false
       }
     },

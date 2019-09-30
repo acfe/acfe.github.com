@@ -12,7 +12,7 @@ const ParamSetter = {
       setList: []
     }
   },
-  props: ['setterParam', 'setterParamValue', 'setterRefreshContent', 'posRelative'],
+  props: ['setterParam', 'setterParamValue', 'setterRefreshContent', 'posRelative', 'zIndex'],
   computed: mapState({
     setConfig: state => state.setConfig,
     contentConfig: state => state.contentConfig
@@ -33,13 +33,14 @@ const ParamSetter = {
     getParams () {
       const setterParam = this.setterParam
       let setterParamValue = this.setterParamValue
-      if (setterParam.setValueKey && setterParamValue[setterParam.setValueKey]) {
-        setterParamValue = setterParamValue[setterParam.setValueKey]
-      }
       const setList = []
       for (let i in setterParam) {
         if (setterParam[i].refreshSetter) {
           setterParam[i].callback = this.refreshSetter
+        }
+        if (setterParam[i].setValueKey) {
+          this.setterParamValue[setterParam[i].setValueKey] = this.setterParamValue[setterParam[i].setValueKey] || {}
+          setterParamValue = this.setterParamValue[setterParam[i].setValueKey]
         }
         switch (setterParam[i].type) {
           case 'inputGroup':
@@ -49,6 +50,9 @@ const ParamSetter = {
           case 'radioTabGroup':
             setList.push(this.getRadioTabGroupParam(setterParam[i], setterParamValue))
             break
+          case 'selectorGroup':
+            setList.push(this.getSelectorGroupParam(setterParam[i], setterParamValue))
+            break
           case 'dataSourceGroup':
             setList.push(this.getDataSourceGroupParam(setterParam[i], setterParamValue))
             break
@@ -57,6 +61,24 @@ const ParamSetter = {
             break
           case 'imageGroup':
             setList.push(this.getImageGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'sliderGroup':
+            setList.push(this.getSliderGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'heightGroup':
+            setList.push(this.getHeightGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'radiusGroup':
+            setList.push(this.getRadiusGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'borderGroup':
+            setList.push(this.getBorderGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'paddingGroup':
+            setList.push(this.getPaddingGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'actionGroup':
+            setList.push(this.getActionGroupParam(setterParam[i], setterParamValue))
             break
           case 'contentGroup':
             let setSource

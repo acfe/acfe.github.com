@@ -19,12 +19,14 @@ const MImages = {
       imageFloatStyle: {},
       imageStyle: {},
       titleStyle: {},
-      descriptionStyle: {}
+      descriptionStyle: {},
+      clickCallback: () => {}
     }
   },
-  props: ['param', 'dataSource', 'isSet'],
+  props: ['param', 'dataSource', 'isSet', 'refreshContent', 'setSetterContent', 'mid', 'acCallback'],
   created () {
     const param = this.param
+    this.clickCallback = this.acCallback || this.clickCallback
     // 内容设置
     let dataContent = []
     switch (param.dataType) {

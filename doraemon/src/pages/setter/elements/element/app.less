@@ -1,0 +1,68 @@
+.fc-element {
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  user-select: none;
+  .elment-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .elment-setter {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+  }
+  .set-border {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    border: 1px dashed #64DD17;
+    left: 0;
+    top: 0;
+    z-index: 1;
+  }
+  .setted {
+    border: 1px dashed #00B0FF;
+  }
+  .set-size-control {
+    width: 11px;
+    height: 11px;
+    border: 1px solid #00B0FF;
+    position: absolute;
+    background: #fff;
+    border-radius: 6px;
+    z-index: 1;
+    font-size: 0;
+    line-height: 0;
+  }
+  .set-size-left {
+    left: -6px;
+    top: 50%;
+    margin-top: -6px;
+  }
+  .set-size-right {
+    right: -6px;
+    top: 50%;
+    margin-top: -6px;
+  }
+  .set-size-top {
+    top: -6px;
+    left: 50%;
+    margin-left: -6px;
+  }
+  .set-size-bottom {
+    bottom: -6px;
+    left: 50%;
+    margin-left: -6px;
+  }
+  .set-rotate {
+    top: -30px;
+    left: 50%;
+    margin-left: -6px;
+  }
+}
