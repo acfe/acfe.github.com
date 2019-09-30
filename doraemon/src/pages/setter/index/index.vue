@@ -111,7 +111,7 @@
                 <div class="order-setter-item" v-for="(item, key) in setConfig.mainOrderSetterParam.content" :key="key" :slot="'s' + key">
                   <MImages v-if="item && item.tag == 'images'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MMenus v-if="item && item.tag == 'menus'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
-                  <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1"/>
+                  <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                 </div>
               </OrderSetter>
             </div>

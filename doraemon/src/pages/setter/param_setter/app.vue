@@ -276,7 +276,7 @@
                   <div class="sub-icon edit-icon" v-if="contentItem.contentListType == 'list'" @click="item.changeItemContentListType('edit', contentKey)"></div>
                   <div class="sub-icon list-icon" v-if="contentItem.contentListType != 'list'" @click="item.changeItemContentListType('list', contentKey)"></div>
                 </div>
-                <div class="set-text" :class="{'set-text-checked': setterParamValue.singleDatas.checkedId == contentItem.checkedId}" v-if="item.changeCheckedId" @click="item.changeCheckedId(contentItem.checkedId, contentKey)">默认显示</div>
+                <div class="set-text" :class="{'set-text-checked': setterParamValue.singleDatas.checkedId == contentItem.checkedId}" v-if="item.changeCheckedId && contentItem.contentListType != 'list'" @click="item.changeCheckedId(contentItem.checkedId, contentKey)">默认显示</div>
                 <ParamSetter v-if="contentItem.contentListType != 'list'" :zIndex="item.orderSetterParam.content.length + 2 - contentKey" :setterParam="item.setList" :setterParamValue="contentItem" :setterRefreshContent="refreshContent" :posRelative="1"/>
               </div>
             </div>

@@ -15,7 +15,7 @@ const MTab = {
       tabContent: []
     }
   },
-  props: ['param', 'tabItems', 'pages', 'dataSource', 'isSet', 'mid', 'acCallback'],
+  props: ['param', 'tabItems', 'pages', 'dataSource', 'isSet', 'mid', 'acCallback', 'refreshContent', 'setSetterContent'],
   created () {
     const param = this.param
     this.theme = param.theme || 1
@@ -25,7 +25,7 @@ const MTab = {
     this.setContent()
   },
   methods: Object.assign({
-    refreshContent () {
+    refreshTabContent () {
       this.setContent()
       this.randKey = Math.random()
     },

@@ -268,7 +268,7 @@ const Index = {
               if (showPageContent[i].id == tabId && showPageContent[i].singleDatas) {
                 showPageContent[i].singleDatas.checkedId = action.tabItemId
                 if (this.tabItems[showPageContent[i].id]) {
-                  this.tabItems[showPageContent[i].id].refreshContent()
+                  this.tabItems[showPageContent[i].id].refreshTabContent()
                 }
                 break
               }

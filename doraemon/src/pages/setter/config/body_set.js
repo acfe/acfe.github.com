@@ -21,6 +21,27 @@ const bodySetParam = {
           param: {
             placeholder: '请输入文档关键字'
           }
+        },
+        {
+          type: 'selectorGroup',
+          title: '展示位置',
+          tag: 'showPosition',
+          data: [
+            {
+              option: '搜索页面',
+              value: 1
+            },
+            {
+              option: '派件列表',
+              value: 2
+            }
+          ],
+          defaultOption: '请选择',
+          defaultValue: '',
+          optionObj: {
+            1: '搜索页面',
+            2: '派件列表'
+          }
         }
       ]
     },
