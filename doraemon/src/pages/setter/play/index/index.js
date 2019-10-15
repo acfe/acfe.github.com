@@ -6,18 +6,24 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import Animation from 'fcbox/utils/animation'
 import FormatFunc from '../../func/format_style'
+import FcDomPlayer from 'fcbox/player/dom'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
+import MGoods from '../../modules/goods'
 import MTab from '../../modules/tab'
 import MPop from '../../modules/pop'
 import EImage from '../../elements/image'
 import EText from '../../elements/text'
+import EIcon from '../../elements/icon'
 Vue.use(MImages)
 Vue.use(MMenus)
+Vue.use(MGoods)
 Vue.use(MTab)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
+Vue.use(EIcon)
+Vue.use(FcDomPlayer)
 
 const Index = {
   name: 'Index',

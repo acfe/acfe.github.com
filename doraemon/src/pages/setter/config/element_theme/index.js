@@ -1,5 +1,6 @@
 import imageTheme from './image'
 import textTheme from './text'
+import iconTheme from './icon'
 export default {
   showList: 'imageTheme',
   data: [
@@ -16,12 +17,7 @@ export default {
     {
       title: '图标',
       tag: 'iconTheme',
-      data: []
-    },
-    {
-      title: '组合',
-      tag: 'groupTheme',
-      data: []
+      data: iconTheme
     },
     {
       title: '业务',

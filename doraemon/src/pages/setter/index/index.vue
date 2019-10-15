@@ -13,6 +13,8 @@
         <div class="contextmenu-item" @click="contextDelElement">删除元素</div>
       </div>
       <div v-if="contextmenuParam.setType == 'module'">
+        <div class="contextmenu-item" @click="contextShowElement('set')">设置模块</div>
+        <div class="contextmenu-item" @click="contextShowElement('element')">插入元素</div>
         <div class="contextmenu-item" @click="contextCopyModule">复制模块</div>
         <div class="contextmenu-item" @click="contextMoveModule('up')">上移</div>
         <div class="contextmenu-item" @click="contextMoveModule('down')">下移</div>
@@ -87,10 +89,11 @@
             </div>
             <div class="body-menu-content" v-if="themeTabValue == 'element'">
               <div class="module-list">
-                <div class="module-list-item" v-for="(item, key) in getElementThemeList()" :key="key" @click="addElement(item, 'pop')">
+                <div class="module-list-item" v-for="(item, key) in getElementThemeList()" :class="{'module-list-item-icon': item.config.elements[0].tag == 'icon'}" :key="key" @click="addElement(item, 'pop')">
                   <div class="item-image" v-if="item.url">
                     <img :src="item.url"/>
                   </div>
+                  <div class="item-icon" v-if="item.config.elements[0].svgContent" v-html="item.config.elements[0].svgContent"></div>
                   <div class="item-title" :style="item.titleStyle || {}">{{item.title}}</div>
                 </div>
               </div>
@@ -111,6 +114,7 @@
                 <div class="order-setter-item" v-for="(item, key) in setConfig.mainOrderSetterParam.content" :key="key" :slot="'s' + key">
                   <MImages v-if="item && item.tag == 'images'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MMenus v-if="item && item.tag == 'menus'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+                  <MGoods v-if="item && item.tag == 'goods'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                 </div>
               </OrderSetter>
@@ -235,10 +239,11 @@
         </div>
         <div class="setter-pop-content" v-if="setConfig.setType == 'module' && popContentType == 'element'">
           <div class="module-list">
-            <div class="module-list-item" v-for="(item, key) in getElementThemeList()" :key="key" @click="addElement(item)">
+            <div class="module-list-item" v-for="(item, key) in getElementThemeList()" :class="{'module-list-item-icon': item.config.elements[0].tag == 'icon'}" :key="key" @click="addElement(item)">
               <div class="item-image" v-if="item.url">
                 <img :src="item.url"/>
               </div>
+              <div class="item-icon" v-if="item.config.elements[0].svgContent" v-html="item.config.elements[0].svgContent"></div>
               <div class="item-title" :style="item.titleStyle || {}">{{item.title}}</div>
             </div>
           </div>

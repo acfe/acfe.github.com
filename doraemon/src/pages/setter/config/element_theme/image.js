@@ -13,9 +13,36 @@ const imageTheme = [
           elementStyle: {
             'width': 100,
             'height': 100,
-            'left': 50,
-            'top': 50,
+            'left': 0,
+            'top': 0,
             'rotateZ': 0
+          },
+          imageStyle: {}
+        }
+      ]
+    }
+  },
+  // 白底色块
+  {
+    title: '白底色块',
+    titleStyle: {
+      'font-size': '14px',
+      'line-height': '30px',
+      'padding-top': 0
+    },
+    config: {
+      elements: [
+        {
+          name: '白底色块',
+          tag: 'image',
+          theme: 1,
+          elementStyle: {
+            'width': 200,
+            'height': 60,
+            'left': 0,
+            'top': 0,
+            'rotateZ': 0,
+            'background-color': '#fff'
           },
           imageStyle: {}
         }

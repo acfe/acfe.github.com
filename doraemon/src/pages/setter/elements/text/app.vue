@@ -1,9 +1,8 @@
 <template>
   <FcElement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback">
-    <div class="e-text" :style="textStyle">
+    <div class="e-text" :style="textStyle">{{param.text}}
       <div class="text-mask" v-if="isSet"></div>
       <div class="mh" v-if="isSet && !param.text"></div>
-      {{param.text}}
     </div>
   </FcElement>
 </template>

@@ -15,11 +15,13 @@ const MMenus = {
       theme: 1,
       checkedId: 0,
       dataContent: [],
+      contentList: [],
       contentPaddingStyle: {},
       itemStyle: {},
       nameStyle: {},
       nameCheckedStyle: {},
       imageStyle: {},
+      imageFloatStyle: {},
       checkedBarStyle: {},
       checkedBarPosStyle: {},
       hiddenStyle: {},
@@ -28,6 +30,12 @@ const MMenus = {
           return Object.assign({}, style, styleChecked)
         }
         return style
+      },
+      getContentPaddingStyle (contentPaddingStyle, key) {
+        if (key == this.dataContent.length - 1) {
+          return Object.assign({}, contentPaddingStyle, { 'padding-right': 0 })
+        }
+        return contentPaddingStyle
       }
     }
   },
@@ -70,6 +78,12 @@ const MMenus = {
     if (param.contentPaddingRight || parseInt(param.contentPaddingRight) === 0) {
       this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight)) + 'px'
     }
+    if (this.imageStyle.float) {
+      this.imageFloatStyle.float = this.imageStyle.float
+    }
+    if (this.imageStyle['text-align']) {
+      this.imageFloatStyle['text-align'] = this.imageStyle['text-align']
+    }
     switch (this.theme) {
       case 1:
         if ((param.heightType == 'set' || param.heightType == 'screen') && param.moduleHeight) {
@@ -79,11 +93,18 @@ const MMenus = {
         this.checkedBarPosStyle = this.formatStyle(param.checkedBarPosStyle || {})
         break
     }
+    this.setThemeContent()
   },
   methods: Object.assign({
     clickCallback (e) {
-      e.currentTarget.parentNode.parentNode.parentNode.scrollLeft = e.currentTarget.offsetLeft - e.currentTarget.parentNode.parentNode.clientWidth / 2 + e.currentTarget.clientWidth / 2
-      let item = this.dataContent[parseInt(e.currentTarget.getAttribute('data-key'))]
+      let item = e
+      switch (this.theme) {
+        case 1:
+        case 3:
+          e.currentTarget.parentNode.parentNode.parentNode.scrollLeft = e.currentTarget.offsetLeft - e.currentTarget.parentNode.parentNode.clientWidth / 2 + e.currentTarget.clientWidth / 2
+          item = this.dataContent[parseInt(e.currentTarget.getAttribute('data-key'))]
+          break
+      }
       const param = this.param
       if (item.checkedId) {
         this.checkedId = item.checkedId

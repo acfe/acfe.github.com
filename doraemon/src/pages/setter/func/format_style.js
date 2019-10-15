@@ -94,5 +94,61 @@ export default {
       }
     }
     return newStyle
+  },
+  setThemeContent () {
+    const param = this.param
+    const contentList = []
+    let dataContent = this.dataContent
+    switch (this.theme) {
+      case 2:
+        let cl = dataContent.length
+        if (cl % param.columNum) {
+          cl = (parseInt(cl / param.columNum) + 1) * param.columNum
+        }
+        for (let i = 0; i < cl; i++) {
+          let ik = parseInt(i / param.columNum)
+          contentList[ik] = contentList[ik] || []
+          contentList[ik].push(dataContent[i] || { emptyContent: true })
+          if (((parseInt(i) + 1) % param.columNum) && param.contentPaddingRight) {
+            contentList[ik].push({
+              blankStyle: {
+                'min-width': param.contentPaddingRight / 375 + 'rem'
+              }
+            })
+          }
+        }
+        this.contentList = contentList
+        if (param.contentPaddingBottom || parseInt(param.contentPaddingBottom) === 0) {
+          this.contentPaddingStyle = {}
+          this.contentPaddingStyle['padding-bottom'] = (parseInt(param.contentPaddingBottom) / 375) + 'rem'
+        }
+        break
+      case 3:
+        this.contentPaddingStyle['width'] = 100 / param.columNum + '%'
+        break
+      case 4:
+        let data = []
+        for (let c in dataContent) {
+          data.push(Object.assign(dataContent[c], {
+            slot: 's1'
+          }))
+        }
+        this.domPlayerParam.data = data
+        this.domPlayerParam.loop = !!parseInt(param.loop)
+        if (data.length <= 1) {
+          this.domPlayerParam.loop = false
+        }
+        this.domPlayerParam.showGuild = !!parseInt(param.showGuild)
+        this.domPlayerParam.autoPlayTime = parseInt(param.autoPlayTime) || 0
+        if (!this.domPlayerParam.autoPlayTime) {
+          this.domPlayerParam.autoPlay = false
+        } else if (this.domPlayerParam.autoPlayTime < 100) {
+          this.domPlayerParam.autoPlayTime = 100
+        }
+        if (this.isSet) {
+          this.domPlayerParam.autoPlay = false
+        }
+        break
+    }
   }
 }

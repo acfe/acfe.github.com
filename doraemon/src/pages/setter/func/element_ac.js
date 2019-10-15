@@ -44,7 +44,7 @@ export default {
       sizeMoveParam.sT = this.setSizeInfo.target.offsetTop
       sizeMoveParam.sL = this.setSizeInfo.target.offsetLeft
       sizeMoveParam.cL = document.getElementById('stage').offsetLeft + 260 + moveParam.sL + moveParam.sW / 2
-      sizeMoveParam.cT = document.getElementById('stage').offsetTop + parentTop + 57 + moveParam.sT + moveParam.sH / 2
+      sizeMoveParam.cT = document.getElementById('stage').offsetTop - document.getElementById('mainSetter').scrollTop + parentTop + 57 + moveParam.sT + moveParam.sH / 2
     }
     this.$store.state.setConfig.setType = 'element'
     this.$store.state.setConfig.setModuleId = this.mid

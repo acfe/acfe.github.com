@@ -524,6 +524,8 @@ const ParamFunc = {
   getImageGroupParam (setterParam, setterParamValue) {
     let Obj = {
       type: setterParam.type,
+      title: setterParam.title,
+      showTitle: setterParam.showTitle,
       urlParam: {
         title: setterParam.title,
         param: {

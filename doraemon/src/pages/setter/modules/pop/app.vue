@@ -3,8 +3,9 @@
       <div class="mask" :style="maskStyle" @touchstart="touchstart"></div>
       <div v-if="param.elements && param.elements.length">
       <div v-for="(item, key) in param.elements" :key="key">
-        <EImage v-if="item.tag == 'image'" :param="item" :eid="key" mid="pop" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
-        <EText v-if="item.tag == 'text'" :param="item" :eid="key" mid="pop" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+        <EImage v-if="item.tag == 'image'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
+        <EText v-if="item.tag == 'text'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
+        <EIcon v-if="item.tag == 'icon'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
       </div>
     </div>
     </div>  

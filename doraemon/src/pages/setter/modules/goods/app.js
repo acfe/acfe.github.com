@@ -4,11 +4,11 @@
 import FcModules from '../module/app.vue'
 import formatAc from '../../func/format_style'
 
-const MImages = {
+const MGoods = {
   components: {
     FcModules
   },
-  name: 'MImages',
+  name: 'MGoods',
   data () {
     return {
       randKey: Math.random(),
@@ -20,15 +20,13 @@ const MImages = {
       itemStyle: {},
       imageFloatStyle: {},
       imageStyle: {},
-      titleStyle: {},
+      nameStyle: {},
       descriptionStyle: {},
-      domPlayerParam: {
-        loop: true,
-        autoPlay: true,
-        autoPlayTime: 5000,
-        renderPage: 0,
-        data: []
-      },
+      salePriceStyle: {},
+      originPriceStyle: {},
+      salePriceTagStyle: {},
+      originPriceTagStyle: {},
+      cartIconStyle: {},
       clickCallback: () => {},
       getContentPaddingStyle (contentPaddingStyle, key) {
         if (key == this.dataContent.length - 1) {
@@ -68,8 +66,13 @@ const MImages = {
     // 样式设置
     this.itemStyle = this.formatStyle(param.itemStyle || {})
     this.imageStyle = this.formatStyle(param.imageStyle || {})
-    this.titleStyle = this.formatStyle(param.titleStyle || {})
+    this.nameStyle = this.formatStyle(param.nameStyle || {})
     this.descriptionStyle = this.formatStyle(param.descriptionStyle || {})
+    this.salePriceStyle = this.formatStyle(param.salePriceStyle || {})
+    this.originPriceStyle = this.formatStyle(param.originPriceStyle || {})
+    this.salePriceTagStyle = this.formatStyle(param.salePriceTagStyle || {})
+    this.originPriceTagStyle = this.formatStyle(param.originPriceTagStyle || {})
+    this.cartIconStyle = this.formatStyle(param.cartIconStyle || {})
     if (this.imageStyle.float) {
       this.imageFloatStyle.float = this.imageStyle.float
     }
@@ -89,4 +92,4 @@ const MImages = {
   }, formatAc)
 }
 
-export default MImages
+export default MGoods

@@ -19,7 +19,9 @@ const EImage = {
   created () {
     const param = this.param
     this.imageStyle = this.formatStyle(param.imageStyle || {})
-    this.imageStyle['background-image'] = 'url(' + param.url + ')'
+    if (param.url) {
+      this.imageStyle['background-image'] = 'url(' + param.url + ')'
+    }
     if (param.elementStyle.height > param.elementStyle.width) {
       this.imageStyle['background-size'] = 'auto 100%'
     }

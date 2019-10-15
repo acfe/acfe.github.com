@@ -18,27 +18,39 @@ const contentSetParam1 = {
     }
   ]
 }
-const theme1ContentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
-theme1ContentSetList.push(contentSetParam1)
-const theme1ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
-theme1ItemStyleSetGroup.setList.unshift({
+const contentPaddingBottomSet = {
+  type: 'inputGroup',
+  title: '行间距(px)',
+  tag: 'contentPaddingBottom',
+  param: {
+    placeholder: '请输入行间距'
+  }
+}
+const contentPaddingRightSet = {
   type: 'inputGroup',
   title: '列间距(px)',
   tag: 'contentPaddingRight',
   param: {
     placeholder: '请输入列间距'
   }
-})
+}
+const columNumSet = {
+  type: 'inputGroup',
+  title: '每行显示列数',
+  tag: 'columNum',
+  param: {
+    placeholder: '每行显示列数'
+  }
+}
+const theme1ContentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
+theme1ContentSetList.push(contentSetParam1)
+const theme1ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
+theme1ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
 // theme2
 const contentSetParam2 = {
   title: '内容设置',
   type: 'contentGroup',
   setList: [
-    {
-      type: 'imageGroup',
-      title: '图片地址',
-      tag: 'url'
-    },
     {
       type: 'textareaGroup',
       title: '名称',
@@ -46,6 +58,18 @@ const contentSetParam2 = {
       param: {
         placeholder: '请输入菜单名'
       }
+    },
+    {
+      type: 'imageGroup',
+      title: '图片地址',
+      showTitle: 1,
+      tag: 'url'
+    },
+    {
+      type: 'imageGroup',
+      title: '选中图片地址',
+      showTitle: 1,
+      tag: 'checkedUrl'
     },
     {
       type: 'actionGroup',
@@ -56,22 +80,12 @@ const contentSetParam2 = {
 const theme2ContentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
 theme2ContentSetList.push(contentSetParam2)
 const theme2ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
-theme2ItemStyleSetGroup.setList.unshift({
-  type: 'inputGroup',
-  title: '列间距(px)',
-  tag: 'contentPaddingRight',
-  param: {
-    placeholder: '请输入列间距'
-  }
-})
-theme2ItemStyleSetGroup.setList.unshift({
-  type: 'inputGroup',
-  title: '行间距(px)',
-  tag: 'contentPaddingBottom',
-  param: {
-    placeholder: '请输入行间距'
-  }
-})
+theme2ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
+theme2ItemStyleSetGroup.setList.unshift(contentPaddingBottomSet)
+theme2ItemStyleSetGroup.setList.unshift(columNumSet)
+const theme3ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
+theme3ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
+theme3ItemStyleSetGroup.setList.unshift(columNumSet)
 const menusSetTheme = [
   // 文字菜单
   {
@@ -183,6 +197,28 @@ const menusSetTheme = [
         setList: [
           commonSet.moduleStyleSetGroup,
           theme2ItemStyleSetGroup,
+          commonSet.imageStyleSetGroup,
+          commonSet.getTextGroupParam('名称', 'nameStyle')
+        ]
+      }
+    ]
+  },
+  // 侧滑菜单
+  {
+    theme: 3,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: theme2ContentSetList
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup,
+          theme3ItemStyleSetGroup,
           commonSet.imageStyleSetGroup,
           commonSet.getTextGroupParam('名称', 'nameStyle')
         ]

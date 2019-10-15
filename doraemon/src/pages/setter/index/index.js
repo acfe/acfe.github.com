@@ -16,19 +16,24 @@ import FcTextarea from 'fcbox/form/textarea'
 import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
+import FcDomPlayer from 'fcbox/player/dom'
 // modules
 import MImages from '../modules/images'
 import MMenus from '../modules/menus'
+import MGoods from '../modules/goods'
 import MTab from '../modules/tab'
 import MPop from '../modules/pop'
 import EImage from '../elements/image'
 import EText from '../elements/text'
+import EIcon from '../elements/icon'
 Vue.use(MImages)
 Vue.use(MMenus)
+Vue.use(MGoods)
 Vue.use(MTab)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
+Vue.use(EIcon)
 Vue.use(FcButton)
 Vue.use(FcInput)
 Vue.use(FcSingleSelector)
@@ -38,6 +43,7 @@ Vue.use(FcTextarea)
 Vue.use(FcRadioTab)
 Vue.use(OrderSetter)
 Vue.use(ParamSetter)
+Vue.use(FcDomPlayer)
 
 const Index = {
   name: 'Index',
@@ -256,6 +262,14 @@ const Index = {
       setConfig.setType = 'module'
       this.setSetterContent()
       setConfig.showSetterPop = true
+    },
+    contextShowElement (popContentType) {
+      let setConfig = this.setConfig
+      setConfig.setType = 'module'
+      this.popContentType = popContentType
+      this.setSetterContent()
+      setConfig.showSetterPop = true
+      this.contextmenuParam.show = false
     },
     contextMoveModule (type) {
       let { setConfig, contentConfig } = this
@@ -569,10 +583,8 @@ const Index = {
     elementWindowSetterEditContentCallback (key) {
       let setConfig = this.setConfig
       if (key !== undefined && key != 'move') {
-        if (parseInt(key) != setConfig.elementWindowSetterParam.editKey) {
-          setConfig.elementWindowSetterParam.editKey = key
-          setConfig.setElementId = setConfig.elementWindowSetterParam.content[key].id
-        }
+        setConfig.elementWindowSetterParam.editKey = key
+        setConfig.setElementId = setConfig.elementWindowSetterParam.content[key].id
         setConfig.setType = 'element'
         this.setSetterContent()
         setConfig.showSetterPop = true
@@ -826,8 +838,8 @@ const Index = {
       if (setConfig.setType != 'element' || !setElement) {
         return false
       }
-      setElement.elementStyle.width = setElement.elementStyle.width || 0
-      setElement.elementStyle.height = setElement.elementStyle.height || 0
+      setElement.elementStyle.width = parseInt(setElement.elementStyle.width) || 0
+      setElement.elementStyle.height = parseInt(setElement.elementStyle.height) || 0
       switch (setConfig.setType) {
         case 'element':
         case 'popElement':
@@ -856,8 +868,8 @@ const Index = {
       if (setConfig.setType != 'element' || !setElement) {
         return false
       }
-      setElement.elementStyle.left = setElement.elementStyle.left || 0
-      setElement.elementStyle.top = setElement.elementStyle.top || 0
+      setElement.elementStyle.left = parseInt(setElement.elementStyle.left) || 0
+      setElement.elementStyle.top = parseInt(setElement.elementStyle.top) || 0
       switch (setConfig.setType) {
         case 'element':
         case 'popElement':

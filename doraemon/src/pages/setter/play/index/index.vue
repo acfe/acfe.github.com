@@ -5,6 +5,7 @@
         <div class="module-relative" v-for="(item, key) in showObj.topContent" :key="key">
           <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+          <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
         </div>
       </div>
       <div class="module-relative" :style="setNormalContentPadding()">
@@ -12,6 +13,7 @@
           <div class="module-relative">
             <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
             <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+            <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
             <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :tabItems="tabItems" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           </div>
         </div>
@@ -20,6 +22,7 @@
         <div class="module-relative" v-for="(item, key) in showObj.bottomContent" :key="key">
           <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+          <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
         </div>
       </div>
     </div>

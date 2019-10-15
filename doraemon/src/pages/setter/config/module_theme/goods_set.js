@@ -10,10 +10,10 @@ const contentSetParam = {
     },
     {
       type: 'textareaGroup',
-      title: '标题',
-      tag: 'title',
+      title: '商品名称',
+      tag: 'name',
       param: {
-        placeholder: '请输入标题'
+        placeholder: '请输入商品名称'
       }
     },
     {
@@ -25,19 +25,20 @@ const contentSetParam = {
       }
     },
     {
-      type: 'actionGroup',
-      tag: 'action'
-    }
-  ]
-}
-const contentSetParam4 = {
-  title: '内容设置',
-  type: 'contentGroup',
-  setList: [
+      type: 'textareaGroup',
+      title: '售价',
+      tag: 'salePrice',
+      param: {
+        placeholder: '请输入售价'
+      }
+    },
     {
-      type: 'imageGroup',
-      title: '图片地址',
-      tag: 'url'
+      type: 'textareaGroup',
+      title: '原价',
+      tag: 'originPrice',
+      param: {
+        placeholder: '请输入原价'
+      }
     },
     {
       type: 'actionGroup',
@@ -45,6 +46,8 @@ const contentSetParam4 = {
     }
   ]
 }
+const contentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
+contentSetList.push(contentSetParam)
 const contentPaddingBottomSet = {
   type: 'inputGroup',
   title: '行间距(px)',
@@ -69,10 +72,6 @@ const columNumSet = {
     placeholder: '每行显示列数'
   }
 }
-const contentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
-contentSetList.push(contentSetParam)
-const contentSetList4 = JSON.parse(JSON.stringify(commonSet.contentSetList))
-contentSetList4.push(contentSetParam4)
 // theme1
 const theme1ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
 theme1ItemStyleSetGroup.setList.unshift(contentPaddingBottomSet)
@@ -85,6 +84,79 @@ theme2ItemStyleSetGroup.setList.unshift(columNumSet)
 const theme3ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
 theme3ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
 theme3ItemStyleSetGroup.setList.unshift(columNumSet)
+
+const salePriceStyleSet = commonSet.getTextGroupParam('商品售价', 'salePriceStyle')
+salePriceStyleSet.setList.unshift({
+  type: 'radioTabGroup',
+  title: '显示售价',
+  tag: 'showSalePrice',
+  defaultValue: 0,
+  data: [
+    {
+      option: '显示',
+      value: 1
+    },
+    {
+      option: '不显示',
+      value: 0
+    }
+  ]
+})
+const originPriceStyleSet = commonSet.getTextGroupParam('商品原价', 'originPriceStyle')
+originPriceStyleSet.setList.unshift({
+  type: 'radioTabGroup',
+  title: '显示售价',
+  tag: 'showOriginPrice',
+  defaultValue: 0,
+  data: [
+    {
+      option: '显示',
+      value: 1
+    },
+    {
+      option: '不显示',
+      value: 0
+    }
+  ]
+})
+const styleSetList = [
+  commonSet.imageStyleSetGroup,
+  commonSet.getTextGroupParam('商品名称', 'nameStyle'),
+  commonSet.descriptionStyleGroup,
+  salePriceStyleSet,
+  commonSet.getTextGroupParam('售价符号', 'salePriceTagStyle'),
+  originPriceStyleSet,
+  commonSet.getTextGroupParam('原价符号', 'originPriceTagStyle'),
+  {
+    type: 'setGroup',
+    title: '购物车图标',
+    setList: [
+      {
+        type: 'imageGroup',
+        title: '图片地址',
+        tag: 'cartIconUrl'
+      },
+      {
+        type: 'inputGroup',
+        title: '图标宽度',
+        tag: 'width',
+        setValueKey: 'cartIconStyle'
+      },
+      {
+        type: 'inputGroup',
+        title: '右边距',
+        tag: 'right',
+        setValueKey: 'cartIconStyle'
+      },
+      {
+        type: 'inputGroup',
+        title: '底边距',
+        tag: 'bottom',
+        setValueKey: 'cartIconStyle'
+      }
+    ]
+  }
+]
 const imagesSetTheme = [
   // Banner排版
   {
@@ -101,11 +173,8 @@ const imagesSetTheme = [
         setType: 'style',
         setList: [
           commonSet.moduleStyleSetGroup,
-          theme1ItemStyleSetGroup,
-          commonSet.imageStyleSetGroup,
-          commonSet.titleStyleGroup,
-          commonSet.descriptionStyleGroup
-        ]
+          theme1ItemStyleSetGroup
+        ].concat(styleSetList)
       }
     ]
   },
@@ -124,11 +193,8 @@ const imagesSetTheme = [
         setType: 'style',
         setList: [
           commonSet.moduleStyleSetGroup,
-          theme2ItemStyleSetGroup,
-          commonSet.imageStyleSetGroup,
-          commonSet.titleStyleGroup,
-          commonSet.descriptionStyleGroup
-        ]
+          theme2ItemStyleSetGroup
+        ].concat(styleSetList)
       }
     ]
   },
@@ -147,77 +213,8 @@ const imagesSetTheme = [
         setType: 'style',
         setList: [
           commonSet.moduleStyleSetGroup,
-          theme3ItemStyleSetGroup,
-          commonSet.imageStyleSetGroup,
-          commonSet.titleStyleGroup,
-          commonSet.descriptionStyleGroup
-        ]
-      }
-    ]
-  },
-  // 侧滑轮播
-  {
-    theme: 4,
-    setType: 'content',
-    data: [
-      {
-        title: '内容',
-        setType: 'content',
-        setList: contentSetList4
-      },
-      {
-        title: '样式',
-        setType: 'style',
-        setList: [
-          commonSet.moduleStyleSetGroup,
-          {
-            type: 'setGroup',
-            title: '轮播设置',
-            setList: [
-              {
-                type: 'radioTabGroup',
-                title: '循环播放',
-                tag: 'loop',
-                defaultValue: 0,
-                data: [
-                  {
-                    option: '是',
-                    value: 1
-                  },
-                  {
-                    option: '否',
-                    value: 0
-                  }
-                ]
-              },
-              {
-                type: 'radioTabGroup',
-                title: '显示导航',
-                tag: 'showGuild',
-                defaultValue: 0,
-                data: [
-                  {
-                    option: '是',
-                    value: 1
-                  },
-                  {
-                    option: '否',
-                    value: 0
-                  }
-                ]
-              },
-              {
-                type: 'inputGroup',
-                title: '轮播时间(ms)',
-                tag: 'autoPlayTime',
-                param: {
-                  placeholder: '请输入时间(毫秒ms)'
-                }
-              }
-            ]
-          },
-          commonSet.imageStyleSetGroup
-        ]
+          theme3ItemStyleSetGroup
+        ].concat(styleSetList)
       }
     ]
   }

@@ -32,7 +32,7 @@ const envConfig = {
 // 入口配置
 const pages = {
   polyfill: 'polyfill',
-  index: 'index',
+  // index: 'index',
   msg_mall: 'msg_mall',
   setter: 'setter',
   play: 'setter/play'

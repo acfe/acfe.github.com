@@ -68,7 +68,7 @@
           </div>
           <div class="goods-title">{{item.goodsTitle}}</div>
           <div class="goods-description">{{item.goodsAd}}</div>
-          <div class="goods-price" v-if="item.sellPriceStr"><div class="price-tag">&yen;</div><div class="price-content">{{item.sellPriceStr}}</div>
+          <div class="goods-price" v-if="item.sellPriceStr"><div class="price-content">{{item.sellPriceStr}}</div>
             <div class="price-del">{{item.originalPriceStr}}</div>
           </div>
           <div class="cart-icon"></div>
@@ -98,7 +98,7 @@
           </div>
           <div class="goods-title">{{item.goodsTitle}}</div>
           <div class="goods-description">{{item.goodsAd}}</div>
-          <div class="goods-price" v-if="item.sellPriceStr"><div class="price-tag">&yen;</div><div class="price-content">{{item.sellPriceStr}}</div>
+          <div class="goods-price" v-if="item.sellPriceStr"><div class="price-content">{{item.sellPriceStr}}</div>
             <div class="price-del">{{item.originalPriceStr}}</div>
           </div>
           <div class="cart-icon"></div>

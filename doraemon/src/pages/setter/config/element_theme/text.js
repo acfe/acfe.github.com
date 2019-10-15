@@ -22,8 +22,8 @@ const textTheme = [
           },
           elementStyle: {
             'width': 240,
-            'left': 50,
-            'top': 50
+            'left': 0,
+            'top': 0
           }
         }
       ]
@@ -52,8 +52,8 @@ const textTheme = [
           },
           elementStyle: {
             'width': 240,
-            'left': 50,
-            'top': 50
+            'left': 0,
+            'top': 0
           }
         }
       ]
@@ -82,8 +82,8 @@ const textTheme = [
           },
           elementStyle: {
             'width': 240,
-            'left': 50,
-            'top': 50
+            'left': 0,
+            'top': 0
           }
         }
       ]
@@ -112,8 +112,8 @@ const textTheme = [
           },
           elementStyle: {
             'width': 240,
-            'left': 50,
-            'top': 50
+            'left': 0,
+            'top': 0
           }
         }
       ]
@@ -142,8 +142,8 @@ const textTheme = [
           },
           elementStyle: {
             'width': 240,
-            'left': 50,
-            'top': 50
+            'left': 0,
+            'top': 0
           }
         }
       ]

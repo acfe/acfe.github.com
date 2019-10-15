@@ -60,7 +60,9 @@ module.exports = {
   },
   contentConfig: {
     body: {
-      style: {}
+      style: {
+        'background-color': '#fff'
+      }
     },
     pages: [
       {
