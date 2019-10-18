@@ -37,7 +37,7 @@ module.exports = {
     },
     {
       test: /\.css$/,
-      use: ExtractTextPlugin.extract('style-loader', 'css-loader')
+      use: ExtractTextPlugin.extract('css-loader')
     },
     {
       test: /\.less$/,

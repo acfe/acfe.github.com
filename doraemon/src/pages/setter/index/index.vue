@@ -115,6 +115,7 @@
                   <MImages v-if="item && item.tag == 'images'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MMenus v-if="item && item.tag == 'menus'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MGoods v-if="item && item.tag == 'goods'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+                  <MGroup v-if="item && item.tag == 'group'" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                   <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :param="item" :mid="key" :dataSource="contentConfig.dataSource" :isSet="1" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
                 </div>
               </OrderSetter>

@@ -6,6 +6,7 @@
           <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+          <MGroup v-if="item && item.tag == 'group'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
         </div>
       </div>
       <div class="module-relative" :style="setNormalContentPadding()">
@@ -14,6 +15,7 @@
             <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
             <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
             <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+            <MGroup v-if="item && item.tag == 'group'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
             <MTab v-if="item && item.tag == 'tab'" :pages="contentConfig.pages" :tabItems="tabItems" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           </div>
         </div>
@@ -23,6 +25,7 @@
           <MImages v-if="item && item.tag == 'images'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MMenus v-if="item && item.tag == 'menus'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
           <MGoods v-if="item && item.tag == 'goods'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
+          <MGroup v-if="item && item.tag == 'group'" :dataSource="contentConfig.dataSource" :param="item" :acCallback="acCallback"/>
         </div>
       </div>
     </div>

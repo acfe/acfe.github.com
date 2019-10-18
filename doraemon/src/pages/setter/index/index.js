@@ -9,6 +9,7 @@ import FormatFunc from '../func/format_style'
 import PopDrag from '../func/pop_drag'
 import FcButton from 'fcbox/form/button'
 import FcInput from 'fcbox/form/input'
+import FcEditor from 'fcbox/form/editor'
 import FcSingleSelector from 'fcbox/form/selector/single'
 import FcSlider from 'fcbox/form/slider'
 import FcSingleUpload from 'fcbox/upload/qq'
@@ -17,11 +18,14 @@ import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
+import { ColorPicker } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 // modules
 import MImages from '../modules/images'
 import MMenus from '../modules/menus'
 import MGoods from '../modules/goods'
 import MTab from '../modules/tab'
+import MGroup from '../modules/group'
 import MPop from '../modules/pop'
 import EImage from '../elements/image'
 import EText from '../elements/text'
@@ -30,12 +34,14 @@ Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
 Vue.use(MTab)
+Vue.use(MGroup)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
 Vue.use(FcButton)
 Vue.use(FcInput)
+Vue.use(FcEditor)
 Vue.use(FcSingleSelector)
 Vue.use(FcSlider)
 Vue.use(FcSingleUpload)
@@ -44,6 +50,7 @@ Vue.use(FcRadioTab)
 Vue.use(OrderSetter)
 Vue.use(ParamSetter)
 Vue.use(FcDomPlayer)
+Vue.use(ColorPicker)
 
 const Index = {
   name: 'Index',
@@ -54,6 +61,7 @@ const Index = {
       popContentType: 'set', // set -> 设置 element -> 元素
       bodyStyle: {},
       pageStyle: {},
+      color2: '#ff0000',
       contextmenuParam: {
         show: false,
         style: {},
@@ -118,6 +126,9 @@ const Index = {
     },
     save () {
 
+    },
+    changeColor (color) {
+      console.log(color)
     },
     // 关闭设置弹窗
     closeSetterPop () {
@@ -827,9 +838,9 @@ const Index = {
         }
         setConfig.setModuleId = 'empty'
         setConfig.setElementId = 'empty'
+        setConfig.showSetterPop = true
         this.setSetterContent()
         this.refreshContent()
-        setConfig.showSetterPop = true
       }
     },
     keySetElementSize (type, size) {

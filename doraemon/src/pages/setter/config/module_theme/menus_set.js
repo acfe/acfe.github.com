@@ -137,7 +137,7 @@ const menusSetTheme = [
                 setValueKey: 'checkedBarStyle'
               },
               {
-                type: 'inputGroup',
+                type: 'colorGroup',
                 title: '背景色',
                 tag: 'background-color',
                 param: {
@@ -198,7 +198,8 @@ const menusSetTheme = [
           commonSet.moduleStyleSetGroup,
           theme2ItemStyleSetGroup,
           commonSet.imageStyleSetGroup,
-          commonSet.getTextGroupParam('名称', 'nameStyle')
+          commonSet.getTextGroupParam('名称', 'nameStyle'),
+          commonSet.getTextGroupParam('名称选中', 'nameCheckedStyle')
         ]
       }
     ]
@@ -220,7 +221,8 @@ const menusSetTheme = [
           commonSet.moduleStyleSetGroup,
           theme3ItemStyleSetGroup,
           commonSet.imageStyleSetGroup,
-          commonSet.getTextGroupParam('名称', 'nameStyle')
+          commonSet.getTextGroupParam('名称', 'nameStyle'),
+          commonSet.getTextGroupParam('名称选中', 'nameCheckedStyle')
         ]
       }
     ]

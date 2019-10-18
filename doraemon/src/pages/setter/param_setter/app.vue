@@ -28,6 +28,24 @@
           </div>
         </div>
       </div>
+      <!-- editorGroup -->
+      <div class="item-tb-group clear-fix" v-if="item.type == 'editorGroup'">
+        <div class="item-title">
+          {{item.title}}
+        </div>
+        <div class="pt10">
+          <div class="editor-container">
+            <FcEditor :param="item.param" :callback="item.callback"/>
+          </div>
+        </div>
+      </div>
+      <!-- colorGroup -->
+      <div class="item-lr-group" v-if="item.type == 'colorGroup'">
+        <div class="item-title">{{item.title}}</div>
+        <div class="item-content">
+          <el-color-picker v-model="item.param.value" size="medium" @change="item.callback"></el-color-picker>
+        </div>
+      </div>
       <!-- radioTabGroup -->
       <div class="item-tb-group clear-fix" v-if="item.type == 'radioTabGroup'">
         <div class="item-title">{{item.title}}</div>

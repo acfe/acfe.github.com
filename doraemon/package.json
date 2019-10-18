@@ -47,5 +47,8 @@
   "sideEffects": [
     "*.js",
     "*.css"
-  ]
+  ],
+  "dependencies": {
+    "element-ui": "^2.12.0"
+  }
 }

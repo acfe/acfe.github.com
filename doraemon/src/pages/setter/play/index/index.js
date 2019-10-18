@@ -11,6 +11,7 @@ import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
 import MGoods from '../../modules/goods'
 import MTab from '../../modules/tab'
+import MGroup from '../../modules/group'
 import MPop from '../../modules/pop'
 import EImage from '../../elements/image'
 import EText from '../../elements/text'
@@ -19,6 +20,7 @@ Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
 Vue.use(MTab)
+Vue.use(MGroup)
 Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)

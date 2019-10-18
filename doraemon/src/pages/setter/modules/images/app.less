@@ -75,7 +75,6 @@
   .theme-3 {
     position: relative;
     overflow: auto;
-    background: #fff;
     height: 100%;
     .fl-container {
       position: relative;
@@ -146,6 +145,29 @@
       }
       .status-bar-icon-checked {
         background-color: #FFDE00;
+        border: none;
+      }
+    }
+    .dom-player-status-bar1 {
+      position: absolute;
+      left: 0;
+      bottom: 4/@rem;
+      z-index: 1;
+      width: 100%;
+      text-align: center;
+      .status-bar-icon {
+        width: 5px;
+        height: 5px;
+        box-sizing: border-box;
+        display: inline-block;
+        border-radius: 4px;
+        font-size: 0;
+        line-height: 0;
+        border:1px solid #fff;
+        margin: 4/@rem;
+      }
+      .status-bar-icon-checked {
+        background-color: #fff;
         border: none;
       }
     }

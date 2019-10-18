@@ -45,7 +45,11 @@ const ParamSetter = {
         switch (setterParam[i].type) {
           case 'inputGroup':
           case 'textareaGroup':
+          case 'editorGroup':
             setList.push(this.getInputGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'colorGroup':
+            setList.push(this.getColorGroupParam(setterParam[i], setterParamValue))
             break
           case 'radioTabGroup':
             setList.push(this.getRadioTabGroupParam(setterParam[i], setterParamValue))

@@ -36,7 +36,7 @@ const getSelectorParam = (param, setterParam, setterParamValue, that) => {
 }
 
 const ParamFunc = {
-  // inputGroup textareaGroup
+  // inputGroup textareaGroup editorGroup
   getInputGroupParam (setterParam, setterParamValue) {
     this.setParamDefaultValue(setterParam, setterParamValue)
     const Obj = {
@@ -52,6 +52,24 @@ const ParamFunc = {
             this.refreshContent()
           }
           setterParam.callback && setterParam.callback(acParam)
+        }
+      }.bind(this)
+    }
+    return Obj
+  },
+  // colorGroup
+  getColorGroupParam (setterParam, setterParamValue) {
+    this.setParamDefaultValue(setterParam, setterParamValue)
+    const Obj = {
+      title: setterParam.title,
+      type: setterParam.type,
+      param: Object.assign({}, setterParam.param, {
+        value: setterParamValue[setterParam.tag]
+      }),
+      callback: function (acParam) {
+        setterParamValue[setterParam.tag] = acParam || setterParam.defaultValue
+        if (!setterParam.static) {
+          this.refreshContent()
         }
       }.bind(this)
     }

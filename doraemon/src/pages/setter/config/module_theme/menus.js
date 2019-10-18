@@ -132,6 +132,7 @@ const menusTheme = [
           'padding-top': 5
         },
         nameCheckedStyle: {
+          'text-align': 'center',
           'color': '#333333'
         }
       }
@@ -187,6 +188,7 @@ const menusTheme = [
           'padding-top': 3
         },
         nameCheckedStyle: {
+          'text-align': 'center',
           'color': '#333333'
         }
       }

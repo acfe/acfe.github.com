@@ -2,6 +2,7 @@ import imagesTheme from './images'
 import menusTheme from './menus'
 import goodsTheme from './goods'
 import tabTheme from './tab'
+import groupTheme from './group'
 export default {
   showList: 'imagesTheme',
   data: [
@@ -26,9 +27,9 @@ export default {
       data: tabTheme
     },
     {
-      title: '组合',
+      title: '定制',
       tag: 'groupTheme',
-      data: []
+      data: groupTheme
     }
   ]
 }

@@ -75,7 +75,7 @@ const getBackgroundParam = (title, setValueKey = '') => {
         setValueKey
       },
       {
-        type: 'inputGroup',
+        type: 'colorGroup',
         title: '背景色',
         tag: 'background-color',
         param: {
@@ -395,7 +395,7 @@ const getTextGroupParam = (title, setValueKey = '') => {
         setValueKey
       },
       {
-        type: 'inputGroup',
+        type: 'colorGroup',
         title: '颜色',
         tag: 'color',
         param: {
