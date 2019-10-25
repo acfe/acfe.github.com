@@ -86,6 +86,34 @@ const theme3ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSet
 theme3ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
 theme3ItemStyleSetGroup.setList.unshift(columNumSet)
 const imagesSetTheme = [
+  // 空模块
+  {
+    theme: 9999,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '模块名称',
+            tag: 'name',
+            param: {
+              placeholder: '请输入模块名称'
+            }
+          }
+        ]
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup
+        ]
+      }
+    ]
+  },
   // Banner排版
   {
     theme: 1,

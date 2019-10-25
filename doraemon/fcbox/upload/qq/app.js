@@ -2,6 +2,7 @@
  * Created by 001264 on 2017/6/26.
  */
 import ajax from 'fcbox/utils/http/ajax'
+import COS from 'cos-js-sdk-v5'
 
 const FcSingleUpload = {
   name: 'FcSingleUpload',
@@ -53,41 +54,43 @@ const FcSingleUpload = {
     upLoad (file) {
       var name = file.name
       name = name.substring(name.lastIndexOf('.'))
-      this.param.key = '' + Math.random().toString(36).substr(2) + name
+      let fileName = '' + Math.random().toString(36).substr(2) + name
+      let path = 'discovery'
       ajax.get({
-        url: this.$store.state.config.api.op.uploadSign,
+        url: this.$store.state.config.api.op.customerServiceCenter.upSign,
         data: {
-          fileName: this.param.key,
-          directory: 'discovery'
+          fileName,
+          directory: path
         }
       }).then((res) => {
         res = JSON.parse(res)
-        if (res.data) {
-          let data = res.data || {}
-          this.param.Authorization = data.sign || ''
-          this.param.domain = data.domain || ''
-          this.param.imageUrl = data.imageUrl || ''
-          ajax.uploadFormData({
-            url: this.param.domain,
-            Authorization: this.param.Authorization,
-            data: {
-              op: 'upload',
-              insertOnly: 0,
-              filecontent: file
+        if (res && res.data) {
+          let d = res.data
+          let date = new Date()
+          let month = date.getMonth() + 1
+          month = month < 10 ? '0' + month : month
+          let year = date.getFullYear().toString()
+          var cos = new COS({
+            getAuthorization: (options, callback) => {
+              callback(d.sign)
             }
-          }).then((res) => {
-            res = JSON.parse(res)
-            if (!res.data) {
-              return false
+          })
+          cos.putObject({
+            Bucket: d.bucket + '-' + d.appId,
+            Region: d.region,
+            Key: path + '/' + year + month + '/' + fileName,
+            Body: file
+          }, (err, data) => {
+            if (err || !data || data.statusCode != 200) {
+              console.log(err)
+            } else {
+              var src = 'http://' + d.bucket + '-' + d.appId + '.file.myqcloud.com/' + path + '/' + year + month + '/' + fileName
+              this.param.value = src
+              this.param.uploaded = true
+              this.param.src = src
+              this.picKey = Math.random()
+              this.callback && this.callback('uploaded', this.param)
             }
-            let src = this.param.imageUrl
-            // let src =this.param.imageUrl.replace('http:', '');
-            // this.param.value = src + '?imageView2/2/h/100';
-            this.param.value = src
-            this.param.uploaded = true
-            this.param.src = src
-            this.picKey = Math.random()
-            this.callback && this.callback('uploaded', this.param)
           })
         }
       })

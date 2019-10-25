@@ -16,6 +16,8 @@ const MGroup = {
       dataContent: [],
       contentList: [],
       titleStyle: {},
+      imageFloatStyle: {},
+      imageStyle: {},
       descriptionStyle: {},
       clickCallback: () => {}
     }
@@ -47,6 +49,13 @@ const MGroup = {
     // 样式设置
     this.titleStyle = this.formatStyle(param.titleStyle || {})
     this.descriptionStyle = this.formatStyle(param.descriptionStyle || {})
+    this.imageStyle = this.formatStyle(param.imageStyle || {})
+    if (this.imageStyle.float) {
+      this.imageFloatStyle.float = this.imageStyle.float
+    }
+    if (this.imageStyle['text-align']) {
+      this.imageFloatStyle['text-align'] = this.imageStyle['text-align']
+    }
   },
   methods: Object.assign({
 

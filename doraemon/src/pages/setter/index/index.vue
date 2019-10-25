@@ -1,5 +1,14 @@
 <template>
   <div class="setter-container">
+    <!-- 预览弹窗 -->
+    <FcPop :param="previewPopParam">
+      <div class="preview-pop">
+        <div class="preview-title">预览</div>
+        <div class="preview-content">
+          <iframe class="frame" :src="envConfig.publicPath + 'index.html?preview=1#/play'"></iframe>
+        </div>
+      </div>
+    </FcPop>
     <!-- 右键菜单 -->
     <div class="contextmenu-container" data-contextmenu-container="1" v-if="contextmenuParam.show" :style="contextmenuParam.style">
       <div v-if="contextmenuParam.setType == 'element'">
@@ -73,7 +82,16 @@
               </div>
             </div>
             <!-- 页面模版 -->
-            <div class="body-menu-content" v-if="themeTabValue == 'page'"></div>
+            <div class="body-menu-content" v-if="themeTabValue == 'page'">
+              <div class="module-list">
+                <div class="module-list-item" v-for="(item, key) in setConfig.pageTheme" :key="key" @click="setPageTheme(item)">
+                  <div class="item-image" v-if="item.url">
+                    <img class="pop-image" :src="item.url"/>
+                  </div>
+                  <div class="item-title" :style="item.titleStyle || {}">{{item.title}}</div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- 弹窗左侧菜单 -->
           <div class="body-menu-container" v-if="setContentType == 'pop'">
@@ -94,6 +112,17 @@
                     <img :src="item.url"/>
                   </div>
                   <div class="item-icon" v-if="item.config.elements[0].svgContent" v-html="item.config.elements[0].svgContent"></div>
+                  <div class="item-title" :style="item.titleStyle || {}">{{item.title}}</div>
+                </div>
+              </div>
+            </div>
+            <!-- 弹窗模版 -->
+            <div class="body-menu-content" v-if="themeTabValue == 'pop'">
+              <div class="module-list">
+                <div class="module-list-item" v-for="(item, key) in setConfig.popTheme" :key="key" @click="setPopTheme(item)">
+                  <div class="item-image" v-if="item.url">
+                    <img class="pop-image" :src="item.url"/>
+                  </div>
                   <div class="item-title" :style="item.titleStyle || {}">{{item.title}}</div>
                 </div>
               </div>

@@ -226,6 +226,28 @@ const menusSetTheme = [
         ]
       }
     ]
+  },
+  // 帮助中心定制tab菜单
+  {
+    theme: 1001,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: theme1ContentSetList
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup,
+          theme2ItemStyleSetGroup,
+          commonSet.getTextGroupParam('名称', 'nameStyle'),
+          commonSet.getTextGroupParam('名称选中', 'nameCheckedStyle')
+        ]
+      }
+    ]
   }
 ]
 export default menusSetTheme

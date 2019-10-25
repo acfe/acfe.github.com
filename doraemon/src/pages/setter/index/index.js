@@ -4,6 +4,10 @@
  */
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import { envConfig } from 'src/common/js/env.config'
+import Location from 'fcbox/utils/location'
+import ajax from 'fcbox/utils/http/ajax'
+import COS from 'cos-js-sdk-v5'
 import PublicFunc from '../func/public_func'
 import FormatFunc from '../func/format_style'
 import PopDrag from '../func/pop_drag'
@@ -18,8 +22,9 @@ import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
+import FcPreImage from 'fcbox/image/pre'
+import FcPop from 'fcbox/pop/pop'
 import { ColorPicker } from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 // modules
 import MImages from '../modules/images'
 import MMenus from '../modules/menus'
@@ -50,12 +55,15 @@ Vue.use(FcRadioTab)
 Vue.use(OrderSetter)
 Vue.use(ParamSetter)
 Vue.use(FcDomPlayer)
+Vue.use(FcPreImage)
+Vue.use(FcPop)
 Vue.use(ColorPicker)
 
 const Index = {
   name: 'Index',
   data () {
     return {
+      envConfig,
       themeTabValue: 'module', // module -> 模块 page -> 页面
       setContentType: 'page', // page -> 页面 pop -> 弹窗 global -> 全局设置
       popContentType: 'set', // set -> 设置 element -> 元素
@@ -66,6 +74,10 @@ const Index = {
         show: false,
         style: {},
         setType: ''
+      },
+      previewPopParam: {
+        show: false,
+        maskClose: true
       },
       showAhead: false,
       showUndo: false,
@@ -123,12 +135,74 @@ const Index = {
   methods: Object.assign({
     preview () {
       localStorage.setItem('previewData', JSON.stringify(this.trimObjBlank(this.contentConfig)))
+      this.previewPopParam.show = true
     },
     save () {
-
+      if (!this.contentConfig.body.title) {
+        window.fc.Dialog.show({ text: '请填写标题' })
+        return false
+      }
+      let fileName = this.getRandId() + '.json'
+      let path = 'advice'
+      ajax.get({
+        url: this.$store.state.config.api.op.customerServiceCenter.upSign,
+        data: {
+          fileName,
+          directory: path
+        }
+      }).then((res) => {
+        res = JSON.parse(res)
+        if (res && res.data) {
+          let d = res.data
+          let date = new Date()
+          let month = date.getMonth() + 1
+          month = month < 10 ? '0' + month : month
+          let year = date.getFullYear().toString()
+          var cos = new COS({
+            getAuthorization: (options, callback) => {
+              callback(d.sign)
+            }
+          })
+          cos.putObject({
+            Bucket: d.bucket + '-' + d.appId,
+            Region: d.region,
+            Key: path + '/' + year + month + '/' + fileName,
+            Body: JSON.stringify(this.trimObjBlank(this.contentConfig))
+          }, (err, data) => {
+            if (err || !data || data.statusCode != 200) {
+              window.fc.Dialog.show({ text: err })
+            } else {
+              var url = 'http://' + d.bucket + '-' + d.appId + '.file.myqcloud.com/' + path + '/' + year + month + '/' + fileName
+              this.saveContent(url)
+              // console.log(url)
+            }
+          })
+        }
+      })
     },
-    changeColor (color) {
-      console.log(color)
+    saveContent (adviceUrl) {
+      let { contentConfig } = this
+      let postData = {
+        showType: contentConfig.body.showType || '帖子',
+        adviceTitle: contentConfig.body.title || '',
+        adviceRemark: contentConfig.body.keyword || '',
+        shareImage: contentConfig.body.shareImage || '',
+        adviceSubheading: contentConfig.body.adviceSubheading || '',
+        adviceUrl,
+        directionUrl: ''
+      }
+      let postParam = {
+        url: this.$store.state.config.api.op.customerServiceCenter.addAdviceFeedback,
+        data: postData
+      }
+      if (Location.queryParams['id']) {
+        postParam.url = this.$store.state.config.api.op.customerServiceCenter.updateAdviceFeedback
+        postParam.data.id = Location.queryParams['id']
+      }
+      ajax.post(postParam).then((res) => {
+        res = JSON.parse(res)
+        window.fc.Dialog.show({ text: res.msg })
+      })
     },
     // 关闭设置弹窗
     closeSetterPop () {
@@ -273,6 +347,9 @@ const Index = {
       setConfig.setType = 'module'
       this.setSetterContent()
       setConfig.showSetterPop = true
+      if (item.config.elements) {
+        this.addElement(item)
+      }
     },
     contextShowElement (popContentType) {
       let setConfig = this.setConfig
@@ -768,6 +845,35 @@ const Index = {
       this.refreshContent()
       setConfig.setType = 'pop'
       this.setSetterContent()
+    },
+    // 设置弹窗模版
+    setPopTheme (item) {
+      window.fc.Dialog.show({
+        text: '使用弹窗模版将覆盖当前弹窗内容，确定使用吗？',
+        clearText: '取消',
+        confirmCallback: () => {
+          let { setConfig, contentConfig } = this
+          let pop = contentConfig.pops[setConfig.setPopId]
+          // console.log(JSON.stringify(pop))
+          let id = pop.id
+          let data = JSON.parse(item.data)
+          data.id = id
+          contentConfig.pops[setConfig.setPopId] = data
+          this.refreshContent()
+        }
+      })
+    },
+    // 设置页面模版
+    setPageTheme (item) {
+      window.fc.Dialog.show({
+        text: '使用页面模版将会覆盖当前所有页面设置，确定使用吗？',
+        clearText: '取消',
+        confirmCallback: () => {
+          let data = JSON.parse(item.data)
+          this.$store.state.contentConfig = data
+          this.refreshContent()
+        }
+      })
     },
     // 删除弹窗
     delPop (key) {

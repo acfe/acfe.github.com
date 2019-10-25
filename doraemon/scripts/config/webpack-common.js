@@ -68,7 +68,7 @@ module.exports = {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/](vue)|(vuex)|(vue-router)/,
+          test: /[\\/]node_modules[\\/](vue)|(vuex)|(vue-router)|(wangeditor)/,
           name: 'vendor',
           priority: -20,
           chunks: 'all'

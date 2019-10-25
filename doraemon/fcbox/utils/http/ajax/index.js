@@ -32,6 +32,9 @@ class Ajax {
       }
     }
     url += /\?/.test(url) ? dataStr : '?' + dataStr
+    if (param.colseWithCredentials) {
+      xmlHttp.withCredentials = false
+    }
     xmlHttp.open('GET', url, true)
     this.setHeader(param, xmlHttp)
     xmlHttp.send()

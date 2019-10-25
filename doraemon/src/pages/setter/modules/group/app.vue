@@ -14,6 +14,44 @@
           </div>
         </div>
       </div>
+      <!-- theme2 -->
+      <div :class="'theme-' + theme" v-if="theme == 2">
+        <div class="theme2-item" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
+          <div :style="titleStyle" v-if="item.title">
+            {{item.title}}
+          </div>
+        </div>
+      </div>
+      <!-- theme3 -->
+      <div :class="'theme-' + theme" v-if="theme == 3">
+        <div class="theme3-item" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
+          <div class="item-content">
+            <div class="title" :style="titleStyle" v-if="item.title">
+              {{item.title}}
+            </div>
+            <div class="description" :style="descriptionStyle" v-if="item.description">
+              {{item.description}}
+            </div>
+          </div>
+          <div class="image-content">
+            <div class="image-bk clear-fix">
+              <div class="image" :style="imageFloatStyle" v-if="item.url">
+                <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- theme4 -->
+      <div :class="'theme-' + theme" v-if="theme == 4">
+        <div :style="titleStyle" v-if="param.title">
+          {{param.title}}
+        </div>
+        <div class="author" v-if="param.author || param.time">
+          {{param.author}} {{param.time}}
+        </div>
+      </div>
     </div>  
   </FcModules>
 </template>

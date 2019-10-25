@@ -9,7 +9,12 @@ class Config {
         addConfigTemplate: '/operation/fcboxapp/mallconfig/addConfigTemplate',
         getQiNiuToken: '/operation/consumer/topic/uploadToken',
         uploadSign: '/operation/consumer/patch/getOldUploadToken',
-        logout: '/operation/operationLogin/logout'
+        logout: '/operation/operationLogin/logout',
+        customerServiceCenter: {
+          upSign: '/operation/consumer/patch/getUploadToken',
+          addAdviceFeedback: '/operation/consumer/adviceFeedback/addAdviceFeedback',
+          updateAdviceFeedback: '/operation/consumer/adviceFeedback/updateAdviceFeedback'
+        }
       }
     }
   }

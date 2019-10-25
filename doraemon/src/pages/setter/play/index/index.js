@@ -4,9 +4,14 @@
  */
 import Vue from 'vue'
 import { mapState } from 'vuex'
+import { envConfig } from 'src/common/js/env.config'
+import ajax from 'fcbox/utils/http/ajax'
+import Location from 'fcbox/utils/location'
+import Share from 'fcbox/utils/share'
 import Animation from 'fcbox/utils/animation'
 import FormatFunc from '../../func/format_style'
 import FcDomPlayer from 'fcbox/player/dom'
+import FcPreImage from 'fcbox/image/pre'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
 import MGoods from '../../modules/goods'
@@ -26,6 +31,7 @@ Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
 Vue.use(FcDomPlayer)
+Vue.use(FcPreImage)
 
 const Index = {
   name: 'Index',
@@ -51,8 +57,6 @@ const Index = {
   created () {
     this.Animation = new Animation()
     this.dataInit()
-    this.setBodyStyle()
-    this.pageInit()
   },
   mounted () {
     this.scrollEventInit()
@@ -118,8 +122,46 @@ const Index = {
       })
     },
     dataInit () {
-      if (localStorage.getItem('previewData')) {
-        Object.assign(this.contentConfig, JSON.parse(localStorage.getItem('previewData')))
+      if (Location.queryParams['preview']) {
+        if (localStorage.getItem('previewData')) {
+          Object.assign(this.contentConfig, JSON.parse(localStorage.getItem('previewData')))
+          this.setBodyStyle()
+          this.pageInit()
+        }
+      } else if (Location.queryParams['id']) {
+        ajax.get({
+          url: envConfig.apiHost,
+          colseWithCredentials: true,
+          data: {
+            id: Location.queryParams['id']
+          }
+        }).then((res) => {
+          res = JSON.parse(res)
+          // console.log(res)
+          if (res.data && res.data.adviceUrl) {
+            document.title = res.data.adviceTitle
+            let shareParam = {
+              'title': res.data.adviceTitle,
+              'icon': res.data.shareImage,
+              'desc': res.data.adviceRemark,
+              'link': location.href,
+              'smsDesc': res.data.adviceRemark
+            }
+            if (res.data.showType == '首页') {
+              shareParam.customer = 1
+            }
+            Share.appShare(shareParam)
+            ajax.get({
+              url: res.data.adviceUrl,
+              colseWithCredentials: true,
+              data: {}
+            }).then((res) => {
+              Object.assign(this.contentConfig, JSON.parse(res))
+              this.setBodyStyle()
+              this.pageInit()
+            })
+          }
+        })
       }
     },
     setBodyStyle () {

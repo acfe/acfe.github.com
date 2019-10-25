@@ -14,18 +14,23 @@ const port = '3000'
 const envConfig = {
   test: {
     distPath: 'test',
-    publicPath: '/dora/',
-    apiHost: ''
+    publicPath: '/cdn/staticResource/program/app/advice/',
+    apiHost: 'http://consumer-sit3.fcbox.com/v1/adviceFeedBack/findAdviceFeedBack'
   },
   online: {
     distPath: 'online',
     publicPath: '/page/dora/online/',
     apiHost: ''
   },
+  common: {
+    distPath: 'common',
+    publicPath: '/cdn/staticResource/program/app/advice/',
+    apiHost: 'http://consumer.fcbox.com/v1/adviceFeedBack/findAdviceFeedBack'
+  },
   local: {
     distPath: 'local',
     publicPath: 'http://' + getIp() + ':3000/',
-    apiHost: ''
+    apiHost: 'http://consumer-sit3.fcbox.com/v1/adviceFeedBack/findAdviceFeedBack'
   }
 }
 

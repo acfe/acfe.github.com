@@ -5,6 +5,8 @@ import elementThemeSet from '../config/element_theme/set'
 import pageSetParam from '../config/page_set'
 import popSetParam from '../config/pop_set'
 import bodySetParam from '../config/body_set'
+import popTheme from '../config/pop_theme'
+import pageTheme from '../config/page_theme'
 
 module.exports = {
   title: 'doraemon',
@@ -13,6 +15,8 @@ module.exports = {
     pageSetParam,
     popSetParam,
     moduleTheme,
+    popTheme,
+    pageTheme,
     moduleThemeSet,
     elementThemeSet,
     elementTheme,

@@ -15,7 +15,7 @@
         </div>
       </div>
       <!-- theme2 -->
-      <div :class="'theme-' + theme" v-if="theme == 2">
+      <div class="theme-2" v-if="theme == 2 || theme == 1001">
         <div class="fl-item-list" v-for="(lItem, lKey) in contentList" :key="lKey" :style="contentPaddingStyle">
           <div v-for="(item, key) in lItem" :key="key" :class="{'fl-item-group': !item.blankStyle}" :style="item.blankStyle || {}">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">

@@ -101,6 +101,7 @@ export default {
     let dataContent = this.dataContent
     switch (this.theme) {
       case 2:
+      case 1001:
         let cl = dataContent.length
         if (cl % param.columNum) {
           cl = (parseInt(cl / param.columNum) + 1) * param.columNum

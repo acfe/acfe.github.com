@@ -697,7 +697,7 @@ const ParamFunc = {
         this.refreshSetter()
         this.refreshContent()
       }.bind(this)
-      Obj.orderSetterParam.addContent = function () {
+      Obj.addContent = function () {
         let checkedId = PublicFunc.getRandId()
         setSource.data.push({
           checkedId

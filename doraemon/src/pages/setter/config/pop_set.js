@@ -21,6 +21,26 @@ const pageSetParam = {
             }
           ]
         },
+        {
+          type: 'radioTabGroup',
+          title: '弹窗对齐',
+          tag: 'popValign',
+          defaultValue: 'top',
+          data: [
+            {
+              option: '靠上',
+              value: 'top'
+            },
+            {
+              option: '居中',
+              value: 'center'
+            },
+            {
+              option: '靠下',
+              value: 'bottom'
+            }
+          ]
+        },
         commonSet.getBackgroundParam('弹窗背景设置', 'style'),
         {
           type: 'textareaGroup',

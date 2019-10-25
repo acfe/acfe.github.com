@@ -7,40 +7,59 @@ const bodySetParam = {
       open: true,
       setList: [
         {
-          type: 'textareaGroup',
-          title: '文档标题',
-          tag: 'title',
-          param: {
-            placeholder: '请输入文档标题'
-          }
-        },
-        {
-          type: 'textareaGroup',
-          title: '文档关键字',
-          tag: 'keyword',
-          param: {
-            placeholder: '请输入文档关键字'
-          }
-        },
-        {
           type: 'selectorGroup',
-          title: '展示位置',
-          tag: 'showPosition',
+          title: '内容类型',
+          tag: 'showType',
           data: [
             {
-              option: '搜索页面',
-              value: 1
+              option: '首页',
+              value: '首页'
             },
             {
-              option: '派件列表',
-              value: 2
+              option: '专题',
+              value: '专题'
+            },
+            {
+              option: '帖子',
+              value: '帖子'
             }
           ],
-          defaultOption: '请选择',
-          defaultValue: '',
+          defaultOption: '帖子',
+          defaultValue: '帖子',
           optionObj: {
-            1: '搜索页面',
-            2: '派件列表'
+            '首页': '首页',
+            '专题': '专题',
+            '帖子': '帖子'
+          }
+        },
+        {
+          type: 'textareaGroup',
+          title: '标题',
+          tag: 'title',
+          param: {
+            placeholder: '请输入标题'
+          }
+        },
+        {
+          type: 'textareaGroup',
+          title: '小标题',
+          tag: 'adviceSubheading',
+          param: {
+            placeholder: '请输入小标题'
+          }
+        },
+        {
+          type: 'imageGroup',
+          title: '分享缩略图',
+          showTitle: 1,
+          tag: 'shareImage'
+        },
+        {
+          type: 'textareaGroup',
+          title: '关键字',
+          tag: 'keyword',
+          param: {
+            placeholder: '请输入关键字'
           }
         }
       ]

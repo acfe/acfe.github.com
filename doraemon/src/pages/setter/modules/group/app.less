@@ -4,6 +4,21 @@
   height: 100%;
   position: relative;
   // public class
+  .image-bk {
+    text-align: center;
+  }
+  .image {
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align:bottom;
+    box-sizing: border-box;
+    img {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
   .title {
     font-size: 14px;
     color: #666666;
@@ -23,8 +38,8 @@
   .theme-1 {
     .group-item {
       float: left;
-      width: 168/@rem;
-      padding: 16/@rem 7/@rem 8/@rem 0;
+      width: 167/@rem;
+      padding: 16/@rem 4/@rem 8/@rem 4/@rem;
       box-sizing: border-box;
       .group-item-content {
         box-shadow: 0/@rem 4/@rem 8/@rem 0 rgba(191,211,198,0.5);
@@ -61,6 +76,61 @@
     }
     .pr0 {
       padding-right: 0;
+    }
+  }
+  // theme-2
+  .theme-2 {
+    .theme2-item {
+      height: 45/@rem;
+      line-height: 45/@rem;
+      display: -webkit-box;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
+      -webkit-line-clamp: 1;
+      border-bottom: 1px solid #e5e5e5;
+    }
+  }
+  // theme-3
+  .theme-3 {
+    .theme3-item {
+      display: flex;
+      padding-bottom: 32/@rem;
+      .item-content {
+        flex-grow: 1;
+        padding-right: 16/@rem;
+        position: relative;
+      }
+      .image-content {
+        width: 120/@rem;
+        min-width: 120/@rem;
+        height: 75/@rem;
+        overflow: hidden;
+      }
+    }
+    .description {
+      position: absolute;
+      bottom: 2/@rem;
+    }
+    .title, .description {
+      display: -webkit-box;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
+      -webkit-line-clamp: 2;
+      line-height: 20/@rem;
+    }
+  }
+  // theme-4
+  .theme-4 {
+    .author {
+      color: #999;
+      font-size: 12/@rem;
+      padding-top: 10/@rem;
     }
   }
 }

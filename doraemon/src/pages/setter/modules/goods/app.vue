@@ -8,7 +8,8 @@
             <div class="image-cell">
               <div class="t-center clear-fix">
                 <div class="image" :style="imageFloatStyle">
-                  <img :style="imageStyle" v-if="item.url" :src="item.url"/>
+                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
                 </div>
               </div>
             </div>
@@ -33,7 +34,8 @@
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
                 <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :style="imageStyle" :src="item.url"/>
+                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
                 </div>
               </div>
               <div class="name" :style="nameStyle" v-if="item.name" v-html="item.name"></div>
@@ -56,7 +58,8 @@
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
                 <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :style="imageStyle" :src="item.url"/>
+                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
                 </div>
               </div>
               <div class="name" :style="nameStyle" v-if="item.name" v-html="item.name"></div>

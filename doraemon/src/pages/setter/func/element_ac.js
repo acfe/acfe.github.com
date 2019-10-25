@@ -164,7 +164,7 @@ export default {
     }
     e.stopPropagation()
     moveParam.moveLock = false
-    this.refreshContent()
+    // this.refreshContent()
     this.setSetterContent(true)
   },
   getAcInfo (e, tag) {

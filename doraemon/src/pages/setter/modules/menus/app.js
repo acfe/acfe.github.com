@@ -56,11 +56,11 @@ const MMenus = {
         break
       case 1:
         let dataSource = this.dataSource || {}
-        let imagesDatas = dataSource.images || []
-        for (let i in imagesDatas) {
-          if (imagesDatas[i].value == param.dataSourceId) {
-            dataContent = imagesDatas[i].data
-            this.checkedId = imagesDatas[i].checkedId
+        let menusDatas = dataSource.menus || []
+        for (let i in menusDatas) {
+          if (menusDatas[i].value == param.dataSourceId) {
+            dataContent = menusDatas[i].data
+            this.checkedId = menusDatas[i].checkedId
           }
         }
         break

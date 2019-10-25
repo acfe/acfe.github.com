@@ -4,7 +4,7 @@ import goodsTheme from './goods'
 import tabTheme from './tab'
 import groupTheme from './group'
 export default {
-  showList: 'imagesTheme',
+  showList: 'groupTheme',
   data: [
     {
       title: '图文',

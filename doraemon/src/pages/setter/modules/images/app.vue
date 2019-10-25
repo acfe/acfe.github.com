@@ -7,7 +7,8 @@
           <div :style="itemStyle">
             <div class="t-center clear-fix">
               <div class="image" :style="imageFloatStyle">
-                <img :style="imageStyle" v-if="item.url" :src="item.url"/>
+                <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
               </div>
             </div>
             <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
@@ -22,7 +23,8 @@
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
                 <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :style="imageStyle" :src="item.url"/>
+                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
                 </div>
               </div>
               <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
@@ -38,7 +40,8 @@
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
                 <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :style="imageStyle" :src="item.url"/>
+                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
+                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
                 </div>
               </div>
               <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
@@ -60,7 +63,8 @@
           </template>
           <template slot="s1" slot-scope="props">
             <div class="image" :style="imageStyle" @click="clickCallback(props.data)">
-              <img :src="props.data.url"/>
+              <img :src="props.data.url" v-if="props.data.url && isSet"/>
+              <FcPreImage :src="props.data.url" v-if="props.data.url && !isSet" first="1"/>
             </div>
           </template>
         </FcDomPlayer>

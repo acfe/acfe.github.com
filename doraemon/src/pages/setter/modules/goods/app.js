@@ -53,10 +53,10 @@ const MGoods = {
         break
       case 1:
         let dataSource = this.dataSource || {}
-        let imagesDatas = dataSource.images || []
-        for (let i in imagesDatas) {
-          if (imagesDatas[i].value == param.dataSourceId) {
-            dataContent = imagesDatas[i].data
+        let goodsDatas = dataSource.goods || []
+        for (let i in goodsDatas) {
+          if (goodsDatas[i].value == param.dataSourceId) {
+            dataContent = goodsDatas[i].data
           }
         }
         break

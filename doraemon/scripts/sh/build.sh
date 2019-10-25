@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $1 == "test" ] || [ $1 == "online" ] || [ $1 == "local" ]
+if [ $1 == "test" ] || [ $1 == "online" ] || [ $1 == "local" ] || [ $1 == "common" ]
 	then
 	node scripts/build/conf.js $1
 	node scripts/build/html.js

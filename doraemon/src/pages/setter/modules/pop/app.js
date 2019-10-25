@@ -21,6 +21,7 @@ const MPop = {
       this.setPopId = this.$store.state.setConfig.setPopId
     }
     let param = this.param || {}
+    param.popValign = param.popValign || 'top'
     this.maskStyle = this.formatStyle(param.style || {})
   },
   mounted () {
