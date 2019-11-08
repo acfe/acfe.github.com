@@ -39,13 +39,14 @@
     .group-item {
       float: left;
       width: 167/@rem;
-      padding: 16/@rem 4/@rem 8/@rem 4/@rem;
+      padding: 4/@rem 4/@rem 8/@rem 6/@rem;
       box-sizing: border-box;
       .group-item-content {
-        box-shadow: 0/@rem 4/@rem 8/@rem 0 rgba(191,211,198,0.5);
+        box-shadow: 1/@rem 2/@rem 8/@rem 2/@rem rgba(191,211,198,0.5);
         border-radius: 6/@rem;
         height: 52/@rem;
-        padding-left: 16/@rem;
+        padding-top: 16/@rem;
+        padding-left: 8/@rem;
         position: relative;
         cursor: pointer;
         .title-bar {
@@ -56,21 +57,18 @@
           background-color: #F3C500;
         }
         .title, .description {
-          display: -webkit-box;
-          white-space: normal;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          -webkit-box-orient: vertical;
-          word-break: break-all;
-          -webkit-line-clamp: 1;
         }
         .new-tip {
           display: inline-block;
           background: #9AD708;
           color: #fff;
           font-size: 12/@rem;
+          line-height: 16/@rem;
           border-radius: 2px;
-          padding: 2px 5px;
+          padding: 2px 5px 0 5px;
         }
       }
     }

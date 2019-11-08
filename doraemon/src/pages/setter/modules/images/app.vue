@@ -54,12 +54,7 @@
       <div :class="'theme-' + theme" v-if="theme == 4">
         <FcDomPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
           <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
-            <div class="dom-player-status-bar" v-if="!param.guildTheme">
-              <div class="status-bar-icon" v-for="(item, key) in  props.data" :key="key" :class="{'status-bar-icon-checked' : props.checked == key}"></div>
-            </div>
-            <div class="dom-player-status-bar1" v-if="param.guildTheme == 1">
-              <div class="status-bar-icon" v-for="(item, key) in  props.data" :key="key" :class="{'status-bar-icon-checked' : props.checked == key}"></div>
-            </div>
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :guildTheme="param.guildTheme"/>
           </template>
           <template slot="s1" slot-scope="props">
             <div class="image" :style="imageStyle" @click="clickCallback(props.data)">

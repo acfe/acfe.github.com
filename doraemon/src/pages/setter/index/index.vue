@@ -5,7 +5,7 @@
       <div class="preview-pop">
         <div class="preview-title">预览</div>
         <div class="preview-content">
-          <iframe class="frame" :src="envConfig.publicPath + 'index.html?preview=1#/play'"></iframe>
+          <iframe class="frame" :src="envConfig.publicPath + 'index.html?preview=1#/play/' + (parseInt(setConfig.setPageId) + 1)"></iframe>
         </div>
       </div>
     </FcPop>

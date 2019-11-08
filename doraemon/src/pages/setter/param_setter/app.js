@@ -9,7 +9,8 @@ const ParamSetter = {
   data () {
     return {
       randKey: Math.random(),
-      setList: []
+      setList: [],
+      isTab: false
     }
   },
   props: ['setterParam', 'setterParamValue', 'setterRefreshContent', 'posRelative', 'zIndex'],
@@ -52,6 +53,11 @@ const ParamSetter = {
             setList.push(this.getColorGroupParam(setterParam[i], setterParamValue))
             break
           case 'radioTabGroup':
+          case 'imageTabGroup':
+            let { setConfig, contentConfig } = this
+            if (setterParam[i].tag == 'lockPosition' && contentConfig.pages[setConfig.setPageId].isTab) {
+              break
+            }
             setList.push(this.getRadioTabGroupParam(setterParam[i], setterParamValue))
             break
           case 'selectorGroup':

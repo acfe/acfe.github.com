@@ -345,11 +345,29 @@ const ParamFunc = {
           }
         }.bind(this)
       },
+      fioParam: {
+        title: '埋点标识',
+        param: {
+          placeholder: '请输入埋点标识',
+          value: setterParamValue.action['fcEvent'] || ''
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue.action['fcEvent'] = acParam.value || ''
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
       tabParam: getSelectorParam({
         tag: 'tabId',
         defaultOption: '请选择tab',
         optionObj: tabNames,
-        data: tabsData
+        data: tabsData,
+        callback: () => {
+          this.refreshSetter()
+        }
       }, Object.assign({}, setterParam, {
         title: '选择tab'
       }), setterParamValue.action, this)

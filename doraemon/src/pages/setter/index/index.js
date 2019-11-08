@@ -22,6 +22,7 @@ import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
+import PlayerStatusBar from 'fcbox/player/dom/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import FcPop from 'fcbox/pop/pop'
 import { ColorPicker } from 'element-ui'
@@ -55,6 +56,7 @@ Vue.use(FcRadioTab)
 Vue.use(OrderSetter)
 Vue.use(ParamSetter)
 Vue.use(FcDomPlayer)
+Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
 Vue.use(FcPop)
 Vue.use(ColorPicker)
@@ -201,7 +203,12 @@ const Index = {
       }
       ajax.post(postParam).then((res) => {
         res = JSON.parse(res)
-        window.fc.Dialog.show({ text: res.msg })
+        window.fc.Dialog.show({
+          text: res.msg,
+          confirmCallback: () => {
+            history.go(-1)
+          }
+        })
       })
     },
     // 关闭设置弹窗
@@ -866,11 +873,12 @@ const Index = {
     // 设置页面模版
     setPageTheme (item) {
       window.fc.Dialog.show({
-        text: '使用页面模版将会覆盖当前所有页面设置，确定使用吗？',
+        text: '使用页面模版将会覆盖当前页面设置，确定使用吗？',
         clearText: '取消',
         confirmCallback: () => {
           let data = JSON.parse(item.data)
-          this.$store.state.contentConfig = data
+          this.$store.state.contentConfig.pages[this.setConfig.setPageId] = data.pages[0]
+          this.refreshPageList()
           this.refreshContent()
         }
       })

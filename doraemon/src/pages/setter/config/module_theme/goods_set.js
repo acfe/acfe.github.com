@@ -72,8 +72,25 @@ const columNumSet = {
     placeholder: '每行显示列数'
   }
 }
+const showLineBSet = {
+  type: 'radioTabGroup',
+  title: '是否显示底线',
+  tag: 'showLineB',
+  defaultValue: 0,
+  data: [
+    {
+      option: '是',
+      value: 1
+    },
+    {
+      option: '否',
+      value: 0
+    }
+  ]
+}
 // theme1
 const theme1ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
+theme1ItemStyleSetGroup.setList.unshift(showLineBSet)
 theme1ItemStyleSetGroup.setList.unshift(contentPaddingBottomSet)
 // theme2
 const theme2ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
@@ -105,7 +122,23 @@ salePriceStyleSet.setList.unshift({
 const originPriceStyleSet = commonSet.getTextGroupParam('商品原价', 'originPriceStyle')
 originPriceStyleSet.setList.unshift({
   type: 'radioTabGroup',
-  title: '显示售价',
+  title: '原价换行显示',
+  tag: 'originPriceBreak',
+  defaultValue: 0,
+  data: [
+    {
+      option: '换行',
+      value: 1
+    },
+    {
+      option: '不换行',
+      value: 0
+    }
+  ]
+})
+originPriceStyleSet.setList.unshift({
+  type: 'radioTabGroup',
+  title: '显示原价',
   tag: 'showOriginPrice',
   defaultValue: 0,
   data: [

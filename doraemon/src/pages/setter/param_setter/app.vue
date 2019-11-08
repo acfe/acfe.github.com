@@ -53,6 +53,16 @@
           <FcRadioTab :param="item.param" :callback="item.callback"/>
         </div>
       </div>
+      <!-- imageTabGroup -->
+      <div class="item-tb-group clear-fix" v-if="item.type == 'imageTabGroup'">
+        <div class="item-title">{{item.title}}</div>
+        <div class="item-content clear-fix">
+          <div class="image-tab-item" v-for="(it, k) in item.param.data" :key="k" @click="item.callback(it)">
+            <div class="image-content" :class="{'image-content-checked': it.value == item.param.value}" :style="{'background-image': it.url ? 'url(' + it.url + ')' : 'none'}"></div>
+            <div class="text-content" v-if="it.option">{{it.option}}</div>
+          </div>
+        </div>
+      </div>
       <!-- sliderGroup -->
       <div class="item-lr-group" v-if="item.type == 'sliderGroup'">
         <div class="item-title slider-input-content">{{item.title}}</div>
@@ -268,6 +278,15 @@
           <div class="item-title">{{item.tabItemParam.title}}</div>
           <div class="item-content">
             <FcSingleSelector :param="item.tabItemParam.param" :callback="item.tabItemParam.callback"/>
+          </div>
+        </div>
+        <!-- 埋点标识 -->
+        <div class="item-tb-group clear-fix" v-if="item.acTypeParam.param.value">
+          <div class="item-title">{{item.fioParam.title}}</div>
+          <div class="pt10">
+            <div class="item-input-bk">
+              <FcTextarea :param="item.fioParam.param" :callback="item.fioParam.callback"/>
+            </div>
           </div>
         </div>
       </div>

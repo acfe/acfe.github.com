@@ -7,64 +7,62 @@ const FcPreImage = {
   data () {
     return {
       randKey: Math.random(),
-      imageContainerStyle: {},
-      imageContentStyle: {},
+      isMounted: false,
       loadingStyle: {
         width: 'auto'
       },
-      isMounted: false,
-      imageUrl: ''
+      imageRenderStyle: {},
+      imageUrl: '',
+      getStyle (imageUrl) {
+        return imageUrl ? this.imageRenderStyle : this.loadingStyle
+      }
     }
   },
-  props: ['fit', 'src', 'first', 'loadingHeight', 'imageStyle'],
+  props: ['fit', 'src', 'first', 'imageStyle'],
   created () {
     window.fc = window.fc || {}
     window.fc.FcPreImages = window.fc.FcPreImages || []
     window.fc.FcPreImagesLoaded = window.fc.FcPreImagesLoaded || {}
-    let loadingHeight = this.loadingHeight || 50
-    this.loadingStyle.height = loadingHeight + 'px'
-    let imageStyle = this.imageStyle || {}
-    if (imageStyle.width) {
-      this.imageContainerStyle.width = imageStyle.width
-    }
-    if (imageStyle.height) {
-      this.imageContainerStyle.height = imageStyle.height
-    }
-    if (imageStyle.float) {
-      this.imageContainerStyle.float = imageStyle.float
-    }
   },
   mounted () {
-    let imageWidth = this.$refs.fcPreImage.clientWidth
-    let imageHeight = this.$refs.fcPreImage.clientHeight
-    if (window.fc.FcPreImagesLoaded[this.src.split('?')[0]]) {
+    let parentNode = this.$el.parentNode
+    let pW = parentNode.clientWidth
+    let pH = parentNode.clientHeight
+    parentNode.style.overflow = 'hidden'
+    if (pW < 120) {
+      let lW = pW - 20
+      lW = lW > 50 ? lW : 50
+      this.loadingStyle.width = lW + 'px'
+    }
+    this.isMounted = true
+    let loadSrc = this.src.split('?')[0] + '?imageView2/2/w/' + pW
+    if (pW && pH && pH > pW) {
+      loadSrc = this.src.split('?')[0] + '?imageView2/2/h/' + pH
+    }
+    if (window.fc.FcPreImagesLoaded[loadSrc]) {
       this.isMounted = true
-      let src = this.src.split('?')[0] + '?imageView2/2/w/' + imageWidth
       let img = new Image()
       let that = this
       let imageStyle = this.imageStyle || {}
+      Object.assign(this.imageRenderStyle, imageStyle)
       img.onload = function () {
-        if (that.fit && this.width > this.height && that.$refs.fcPreImage) {
-          let w = this.width * (that.$refs.fcPreImage.clientHeight / this.height)
-          Object.assign(that.imageContentStyle, imageStyle, {
-            width: 'auto',
-            height: that.$refs.fcPreImage.clientHeight + 'px',
-            'margin-left': -(w - that.$refs.fcPreImage.clientWidth) / 2 + 'px'
-          })
-        } else {
-          Object.assign(that.imageContentStyle, imageStyle)
-        }
+        that.setImageStyle({
+          src: loadSrc,
+          pW,
+          pH,
+          width: this.width,
+          height: this.height
+        })
       }
-      img.src = src
-      this.imageUrl = src
+      img.src = loadSrc
+      this.imageUrl = loadSrc
       return false
     }
     let infoParam = {
-      fit: this.fit,
-      imageWidth,
-      imageHeight,
+      pW,
+      pH,
       loadNum: 0,
-      src: this.src,
+      src: loadSrc,
       callback: this.refreshImage.bind(this),
       loadImage: this.loadImage.bind(this)
     }
@@ -77,26 +75,51 @@ const FcPreImage = {
     this.loadImage()
   },
   methods: {
-    refreshImage (param) {
+    setImageStyle (param) {
       let imageStyle = this.imageStyle || {}
-      this.imageUrl = param.src
-      if (window.fc.FcPreImagesLoaded[param.src.split('?')[0]]) {
-        if (param.width > window.fc.FcPreImagesLoaded[param.src.split('?')[0]].width) {
-          window.fc.FcPreImagesLoaded[param.src.split('?')[0]].width = param.width
+      this.randKey = Math.random()
+      if (!this.fit) {
+        return false
+      }
+      // auto fit
+      if (!imageStyle.width) {
+        if (!imageStyle.float) {
+          if (parseInt(imageStyle.height)) {
+            param.width = param.width * (param.height / parseInt(imageStyle.height))
+          }
+          Object.assign(this.imageRenderStyle, {
+            'margin-left': -(param.width - param.pW) / 2 + 'px'
+          })
         }
       } else {
-        window.fc.FcPreImagesLoaded[param.src.split('?')[0]] = param
+        if (!imageStyle.float) {
+          Object.assign(this.imageRenderStyle, {
+            'margin-left': -(parseInt(imageStyle.width) - param.pW) / 2 + 'px'
+          })
+        }
       }
-      if (this.fit && param.width > param.height) {
-        let w = param.width * (this.$refs.fcPreImage.clientHeight / param.height)
-        Object.assign(this.imageContentStyle, imageStyle, {
-          width: 'auto',
-          height: this.$refs.fcPreImage.clientHeight + 'px',
-          'margin-left': -(w - this.$refs.fcPreImage.clientWidth) / 2 + 'px'
-        })
-      } else {
-        Object.assign(this.imageContentStyle, imageStyle)
+      if (param.pH) {
+        if (!imageStyle.height) {
+          Object.assign(this.imageRenderStyle, {
+            'margin-top': -(param.height - param.pH) / 2 + 'px'
+          })
+        } else {
+          Object.assign(this.imageRenderStyle, {
+            'margin-top': -(parseInt(imageStyle.height) - param.pH) / 2 + 'px'
+          })
+        }
       }
+    },
+    refreshImage (param) {
+      if (param.height < param.pH) {
+        param.width = param.width * (param.pH / param.height)
+        param.src = param.src.split('?')[0] + '?imageView2/2/h/' + param.pH
+      }
+      this.imageUrl = param.src
+      window.fc.FcPreImagesLoaded[param.src] = param
+      let imageStyle = this.imageStyle || {}
+      Object.assign(this.imageRenderStyle, imageStyle)
+      this.setImageStyle(param)
     },
     loadImage () {
       if (window.fc.FcPreImageLoading || !window.fc.FcPreImages.length) {
@@ -107,18 +130,14 @@ const FcPreImage = {
       if (!loadObj.src || loadObj.loadNum > 3) {
         return false
       }
-      loadObj.imageWidth = loadObj.imageWidth || document.body.clientWidth
-      loadObj.imageWidth = loadObj.imageWidth > document.body.clientWidth ? document.body.clientWidth : loadObj.imageWidth
-      let cut = '?imageView2/2/w/' + loadObj.imageWidth
-      if (loadObj.fit && loadObj.imageWidth >= loadObj.imageHeight) {
-        cut = '?imageView2/2/h/' + loadObj.imageHeight
-      }
-      let src = loadObj.src.split('?')[0] + cut
+      let src = loadObj.src
       let img = new Image()
       img.onload = function () {
         window.fc.FcPreImageLoading = false
         loadObj.callback && loadObj.callback({
           src,
+          pW: loadObj.pW,
+          pH: loadObj.pH,
           width: this.width,
           height: this.height
         })

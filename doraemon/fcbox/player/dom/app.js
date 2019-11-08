@@ -99,6 +99,13 @@ const FcDomPlayer = {
         }
       }
       this.randKey = Math.random()
+      if (this.param.fitHeight) {
+        requestAnimationFrame(() => {
+          if (this.player && this.player.childNodes[0] && this.player.childNodes[0].childNodes[page + 1]) {
+            this.player.style.height = this.player.childNodes[0].childNodes[page + 1].childNodes[0].offsetHeight + 'px'
+          }
+        })
+      }
     },
     autoPlay () {
       if (!this.param.autoPlay || this.autoPlaying || this.param.data.length <= 1 || this.animating) {
@@ -141,6 +148,7 @@ const FcDomPlayer = {
       if (!this.param.drag || this.animating || this.scrollParam.moveLock) {
         return false
       }
+      e.stopPropagation()
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlaying = false
       const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e

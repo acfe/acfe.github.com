@@ -4,9 +4,7 @@
     <div class="dom-player-scroll" ref="player">
       <div class="dom-player-content" v-if="renderData && renderData.length" :style="playerStyle" :key="randKey">
         <div class="player-td" v-for="(item, key) in renderData" :key="key" :style="itemStyle">
-          <div class="image">
-            <slot :name="item.slot" :data="item" v-if="item.slot != 'empty' && item.show"/>
-          </div>
+          <slot :name="item.slot" :data="item" v-if="item.slot != 'empty' && item.show"/>
           <div v-if="item.slot == 'empty' || !item.show">&nbsp;</div>
         </div>
       </div>

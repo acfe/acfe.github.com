@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable no-undef */
 /**
  * Created by 001264 on 2019/8/15.
@@ -11,6 +12,7 @@ import Share from 'fcbox/utils/share'
 import Animation from 'fcbox/utils/animation'
 import FormatFunc from '../../func/format_style'
 import FcDomPlayer from 'fcbox/player/dom'
+import PlayerStatusBar from 'fcbox/player/dom/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
@@ -31,7 +33,25 @@ Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
 Vue.use(FcDomPlayer)
+Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
+
+// eslint-disable-next-line one-var
+var tag, env = 'test', topic = 'comprehensiveFrontEndLog', fioUrl = 'common-sit1.fcbox.com/cdn/staticResource/commonUtil/fio/fio_v2.0.js'
+if (location.host == 'common.fcbox.com' || location.host == 'op.fcbox.com') {
+  fioUrl = 'common.fcbox.com/cdn/staticResource/commonUtil/fio/fio_v2.0.js'
+  env = 'online'
+  topic = 'comprehensiveFrontEndLog'
+}
+// eslint-disable-next-line no-unused-expressions
+!(function (e, t, n, g, i) { e[i] = e[i] || function () { (e[i].q = e[i].q || []).push(arguments) }, n = t.createElement('script'), tag = t.getElementsByTagName('script')[0], n.async = 1, n.src = (document.location.protocol == 'https:' ? 'https://' : 'http://') + g, tag.parentNode.insertBefore(n, tag) }(window, document, 'script', fioUrl, 'fio'))
+window.fio('init', {
+  fc_project: 'fc_common_page',
+  fc_page: 'play_' + (Location.queryParams['id'] || ''),
+  fc_pagename: 'play_' + (Location.queryParams['id'] || ''),
+  env,
+  topic
+})
 
 const Index = {
   name: 'Index',
@@ -152,7 +172,7 @@ const Index = {
             }
             Share.appShare(shareParam)
             ajax.get({
-              url: res.data.adviceUrl,
+              url: res.data.adviceUrl.replace(/http:/i, ''),
               colseWithCredentials: true,
               data: {}
             }).then((res) => {
@@ -251,6 +271,9 @@ const Index = {
     },
     acCallback (item) {
       const action = item.action || {}
+      if (action.fcEvent) {
+        window.fio('send', { fc_type: 'click', fc_event: action.fcEvent })
+      }
       switch (parseInt(action.acType)) {
         case 1: // 1跳转链接 2跳转内页 3打开窗口 4执行事件 5关闭窗口
           if (action.acTarget == '_blank' && action.acUrl) {
@@ -297,19 +320,22 @@ const Index = {
         case 7:
           let showPageContent
           let tabId = action.tabId
+          let hasLock
+          let offsetTop
+          let topHeight
           if (document.getElementById('tab' + tabId)) {
-            let offsetTop = document.getElementById('tab' + tabId).parentNode.parentNode.parentNode.offsetTop
+            offsetTop = document.getElementById('tab' + tabId).parentNode.parentNode.parentNode.offsetTop
             let scrollTop = document.documentElement.scrollTop
-            let topHeight = this.$refs.topContent.offsetHeight
+            topHeight = this.$refs.topContent.offsetHeight
             if (scrollTop > offsetTop - topHeight) {
               let moduleLockList = document.getElementsByClassName('moduleLock')
               for (let i = 0; i < moduleLockList.length; i++) {
                 let moduleLock = moduleLockList[i]
                 if (moduleLock.childNodes[0].style.position == 'fixed' && moduleLock.childNodes[0].style.zIndex == 2) {
                   topHeight += moduleLock.offsetHeight
+                  hasLock = true
                 }
               }
-              document.documentElement.scrollTop = offsetTop - topHeight
             }
           }
           for (let p in this.contentConfig.pages) {
@@ -319,6 +345,9 @@ const Index = {
                 showPageContent[i].singleDatas.checkedId = action.tabItemId
                 if (this.tabItems[showPageContent[i].id]) {
                   this.tabItems[showPageContent[i].id].refreshTabContent()
+                  if (hasLock && offsetTop !== undefined && topHeight !== undefined && !this.contentConfig.pages[p].isTab) {
+                    document.documentElement.scrollTop = offsetTop - topHeight
+                  }
                 }
                 break
               }

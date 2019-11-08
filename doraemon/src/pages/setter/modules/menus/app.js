@@ -108,19 +108,23 @@ const MMenus = {
       const param = this.param
       if (item.checkedId) {
         this.checkedId = item.checkedId
-        switch (param.dataType) {
-          case 0:
-            param.singleDatas.checkedId = item.checkedId
-            break
-          case 1:
-            let dataSource = this.dataSource || {}
-            let menusDatas = dataSource.menusDatas || []
-            for (let i in menusDatas) {
-              if (menusDatas[i].value == param.dataSourceId) {
-                menusDatas[i].checkedId = item.checkedId
+        if (item.action && item.action.acType != 2) {
+          switch (param.dataType) {
+            case 0:
+              if (param.singleDatas && param.singleDatas.data) {
+                param.singleDatas.checkedId = item.checkedId
               }
-            }
-            break
+              break
+            case 1:
+              let dataSource = this.dataSource || {}
+              let menusDatas = dataSource.menus || []
+              for (let i in menusDatas) {
+                if (menusDatas[i].value == param.dataSourceId) {
+                  menusDatas[i].checkedId = item.checkedId
+                }
+              }
+              break
+          }
         }
       }
       if (param.lockPosition == 'lock' && document.documentElement.scrollTop > param.moduleTop) {

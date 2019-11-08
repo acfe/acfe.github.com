@@ -33,8 +33,8 @@ class Share {
         'title': title,
         'icon': imgUrl,
         'desc': desc,
-        'link': link,
-        'smsDesc': desc
+        'link': link
+        // 'smsDesc': desc
       }
       let jsonStr = {
         callInfoList: [{
@@ -46,12 +46,12 @@ class Share {
       jsonStr = JSON.stringify(jsonStr)
       let u = navigator.userAgent
       if (u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-        // window.location.href = 'npc4fc://?jsonStr=' + jsonStr
-        if (param.customer) {
-          window.webkit.messageHandlers.appOnlineService.postMessage(jsonStr)
-        } else {
-          window.webkit.messageHandlers.appShareCallBack.postMessage(jsonStr)
-        }
+        window.location.href = 'npc4fc://?jsonStr=' + jsonStr
+        // if (param.customer) {
+        //   window.webkit.messageHandlers.appOnlineService.postMessage(jsonStr)
+        // } else {
+        //   window.webkit.messageHandlers.appShareCallBack.postMessage(jsonStr)
+        // }
       } else if (window.npc4fc) {
         window.npc4fc.callAction(jsonStr)
       }

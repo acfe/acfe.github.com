@@ -1,6 +1,6 @@
 <template>
   <FcModules :param="param" :isSet="isSet" :refreshContent="refreshContent" :setSetterContent="setSetterContent" :mid="mid" :acCallback="acCallback">
-    <div class="m-menus">
+    <div class="m-menus" :key="randKey">
       <!-- theme1 -->
       <div :class="'theme-' + theme" v-if="theme == 1" :style="hiddenStyle">
         <div class="menu-container">

@@ -235,6 +235,31 @@ const imagesSetTheme = [
                 ]
               },
               {
+                type: 'imageTabGroup',
+                title: '导航样式',
+                tag: 'guildTheme',
+                refreshSetter: true,
+                defaultValue: 0,
+                data: [
+                  {
+                    url: 'http://consumerapp-1251779293.file.myqcloud.com/discovery/201911/wy9typ5ar8d.jpg',
+                    value: 0
+                  },
+                  {
+                    url: 'http://consumerapp-1251779293.file.myqcloud.com/discovery/201911/46jn1elny0b.jpg',
+                    value: 1
+                  },
+                  {
+                    url: 'http://consumerapp-1251779293.file.myqcloud.com/discovery/201911/cue4dupptjg.jpg',
+                    value: 2
+                  },
+                  {
+                    url: 'http://consumerapp-1251779293.file.myqcloud.com/discovery/201911/sv9d59oo4yh.jpg',
+                    value: 3
+                  }
+                ]
+              },
+              {
                 type: 'inputGroup',
                 title: '轮播时间(ms)',
                 tag: 'autoPlayTime',
