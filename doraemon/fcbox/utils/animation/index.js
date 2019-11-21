@@ -49,11 +49,11 @@ class Animation {
             return;
         }
         if (param.handle) {
-            param.handle(this.aData[this.acNum]);
+            param.handle(this.aData[this.acNum], this.acNum + 1);
         }
-        this.acNum++;
         this.to && cancelAnimationFrame(this.to);
         this.to = requestAnimationFrame(this.doAnimate.bind(this, param));
+        this.acNum++;
     }
 
     setRequestAnimationFrame() {

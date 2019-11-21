@@ -10,6 +10,7 @@ const imageTheme = [
           url: 'http://static.fcbox.com/fcapp/mall/bactik82vmj.jpg',
           tag: 'image',
           theme: 1,
+          animationRepeat: 1,
           elementStyle: {
             'width': 100,
             'height': 100,

@@ -4,13 +4,12 @@
 import Animation from 'fcbox/utils/animation'
 let autoPlayTimeout = []
 
-const FcDomPlayer = {
-  name: 'FcDomPlayer',
+const FcVerticalPlayer = {
+  name: 'FcVerticalPlayer',
   data () {
     return {
       randKey: Math.random(),
       playerStyle: {},
-      itemStyle: {},
       renderData: [],
       renderPage: 0
     }
@@ -28,7 +27,7 @@ const FcDomPlayer = {
     this.dataLength = dataLength
     this.renderDataInit()
     this.Animation = new Animation()
-    this.param.FcDomPlayer = this
+    this.param.FcVerticalPlayer = this
     this.param.drag = this.param.drag === undefined ? true : this.param.drag
     this.param.initCallback && this.param.initCallback(this)
   },
@@ -37,20 +36,16 @@ const FcDomPlayer = {
     if (!player) {
       return false
     }
+    const param = this.param
     this.player = player
-    let playerWidth = player.clientWidth
-    this.playerWidth = playerWidth
+    let moduleHeight = param.moduleHeight
+    moduleHeight = moduleHeight > document.body.clientHeight ? document.body.clientHeight : moduleHeight
+    this.moduleHeight = moduleHeight
     this.playerStyle = {
-      width: ((this.dataLength + 2) * playerWidth) + 'px'
-    }
-    this.itemStyle = {
-      width: playerWidth + 'px'
+      height: moduleHeight + 'px'
     }
     let setPage = this.param.renderPage || 0
     this.setRenderPage(setPage)
-    requestAnimationFrame(() => {
-      player.scrollLeft = playerWidth * (this.renderPage + 1)
-    })
     player.addEventListener('touchstart', this.touchstart.bind(this))
     player.addEventListener('touchmove', this.touchmove.bind(this))
     player.addEventListener('touchend', this.touchend.bind(this))
@@ -105,22 +100,33 @@ const FcDomPlayer = {
       }
       for (let i in this.renderData) {
         this.renderData[i].show = false
+        this.renderData[i].style = {
+          top: (3 * this.moduleHeight) + 'px'
+        }
+        this.renderData[i].ref = 'empty'
         this.renderData[i].dataRender = 'empty'
-        if (i == page || i == page + 1 || i == page + 2) {
+        if (i == page) {
           this.renderData[i].show = true
+          this.renderData[i].style = {
+            top: -this.moduleHeight + 'px'
+          }
         }
         if (i == page + 1) {
+          this.renderData[i].show = true
+          this.renderData[i].style = {
+            top: 0
+          }
+          this.renderData[i].ref = 'renderScroll'
           this.renderData[i].dataRender = 'render'
+        }
+        if (i == page + 2) {
+          this.renderData[i].show = true
+          this.renderData[i].style = {
+            top: this.moduleHeight + 'px'
+          }
         }
       }
       this.randKey = Math.random()
-      if (this.param.fitHeight) {
-        requestAnimationFrame(() => {
-          if (this.player && this.player.childNodes[0] && this.player.childNodes[0].childNodes[page + 1]) {
-            this.player.style.height = this.player.childNodes[0].childNodes[page + 1].childNodes[0].offsetHeight + 'px'
-          }
-        })
-      }
     },
     autoPlay () {
       if (!this.param.autoPlay || this.autoPlaying || this.param.data.length <= 1 || this.animating) {
@@ -130,17 +136,17 @@ const FcDomPlayer = {
       let autoPlayTime = this.param.autoPlayTime || 3000
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlayTimeout = setTimeout(() => {
-        this.changeX = 100
+        this.changeY = -100
         this.moveBack(true)
       }, autoPlayTime)
       autoPlayTimeout.push(this.autoPlayTimeout)
     },
     goPre () {
-      this.changeX = -100
+      this.changeY = 100
       this.moveBack()
     },
     goNext () {
-      this.changeX = 100
+      this.changeY = -100
       this.moveBack()
     },
     goto (setPage, callback) {
@@ -153,22 +159,37 @@ const FcDomPlayer = {
       let max = this.dataLength - 1
       page = page < 0 ? max : page
       page = page > max ? 0 : page
-      let added = page > this.renderPage ? 1 : -1
-      let goPage = this.renderPage + 1 + added
-      this.renderData[goPage] = Object.assign({}, this.param.data[page], {
-        show: true
-      })
+      let added = page > this.renderPage ? -1 : 1
+      let eT = added * this.moduleHeight
+      for (let i in this.renderData) {
+        this.renderData[i].show = false
+        this.renderData[i].style = {
+          top: (3 * this.moduleHeight) + 'px'
+        }
+        this.renderData[i].ref = 'empty'
+        if (i == parseInt(page) + 1) {
+          this.renderData[i].show = true
+          this.renderData[i].style = {
+            top: -eT + 'px'
+          }
+        }
+        if (i == parseInt(this.renderPage) + 1) {
+          this.renderData[i].show = true
+          this.renderData[i].style = {
+            top: 0
+          }
+          this.renderData[i].ref = 'renderScroll'
+        }
+      }
       this.randKey = Math.random()
-      let moveLeft = (this.renderPage + added + 1) * this.playerWidth
-      this.play(this.player.scrollLeft, moveLeft, () => {
+      this.play(0, eT, () => {
         this.setRenderPage(page)
-        this.player.scrollLeft = this.playerWidth * (page + 1)
         callback && callback()
       })
     },
     touchstart (e) {
       this.scrollParam = this.scrollParam || {}
-      if (!this.param.drag || this.animating || this.scrollParam.moveLock) {
+      if (!this.param.drag || this.animating || this.scrollParam.moveLock || !this.$refs.renderScroll || !this.$refs.renderScroll[0]) {
         return false
       }
       e.stopPropagation()
@@ -178,12 +199,12 @@ const FcDomPlayer = {
       const scrollParam = this.scrollParam
       const sX = event.pageX || event.x
       const sY = event.pageY || event.y
-      this.changeX = 0
+      this.changeY = 0
       Object.assign(scrollParam, {
         sX,
         sY,
         moveLock: true,
-        sL: this.player.scrollLeft,
+        sT: 0,
         move: false
       })
       return true
@@ -193,15 +214,26 @@ const FcDomPlayer = {
       if (!scrollParam || !scrollParam.moveLock) {
         return false
       }
+      this.renderScroll = this.$refs.renderScroll[0]
       const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
       scrollParam.mX = event.pageX || event.x
       scrollParam.mY = event.pageY || event.y
-      if (Math.abs(scrollParam.mX - scrollParam.sX) > 30 || (Math.abs(scrollParam.mX - scrollParam.sX) > Math.abs(scrollParam.mY - scrollParam.sY)) || scrollParam.move) {
-        e.preventDefault()
-        let changeX = scrollParam.sX - scrollParam.mX
-        this.player.scrollLeft = scrollParam.sL + changeX / 3
-        this.changeX = changeX
+      let changeY = scrollParam.mY - scrollParam.sY
+      let maxScroll = this.renderScroll.scrollHeight - this.renderScroll.offsetHeight
+      scrollParam.move = false
+      if ((this.renderScroll.scrollTop == 0 && changeY > 30) || (this.renderScroll.scrollTop >= maxScroll && changeY < 30)) {
         scrollParam.move = true
+        this.changeY = changeY
+      }
+      if (scrollParam.move) {
+        e.preventDefault()
+        Object.assign(this.player.childNodes[0].style, {
+          transform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
+          WebkitTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
+          OTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
+          MozTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
+          MsTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)'
+        })
       }
     },
     touchend (e) {
@@ -211,7 +243,7 @@ const FcDomPlayer = {
         return false
       }
       scrollParam.moveLock = false
-      if (!this.changeX) {
+      if (!this.changeY) {
         this.clickCallback(this.renderPage)
         this.param.clickCallback && this.param.clickCallback(this.param.data[this.renderPage])
       } else {
@@ -226,19 +258,26 @@ const FcDomPlayer = {
       this.autoPlay()
     },
     moveBack (fromDrag) {
-      let added = this.changeX > 0 ? 1 : -1
-      let renderPage = this.renderPage + added
+      let added = this.changeY > 0 ? 1 : -1
+      let renderPage = this.renderPage - added
       if (!this.param.loop && (renderPage < 0 || renderPage > this.dataLength - 1)) {
         renderPage = this.renderPage
+        added = 0
       }
-      if (Math.abs(this.changeX) < 90) {
+      if (Math.abs(this.changeY) < 100) {
         renderPage = this.renderPage
+        added = 0
       }
-      this.changeX = 0
-      let moveLeft = (renderPage + 1) * this.playerWidth
-      this.play(this.player.scrollLeft, moveLeft, () => {
-        this.setRenderPage(renderPage, fromDrag)
-        this.player.scrollLeft = this.playerWidth * (this.renderPage + 1)
+      this.changeY = 0
+      let sT = 0
+      if (/^translateY\((-?\d+)/.exec(this.player.childNodes[0].style.transform)) {
+        sT = parseInt(/^translateY\((-?\d+)/.exec(this.player.childNodes[0].style.transform)[1]) || 0
+      }
+      let eT = added * this.moduleHeight
+      this.play(sT, eT, () => {
+        if (added) {
+          this.setRenderPage(renderPage, fromDrag)
+        }
       })
     },
     play (toPageStart, toPageEnd, callback) {
@@ -251,7 +290,13 @@ const FcDomPlayer = {
         tEnd: 24,
         tween,
         handle (num) {
-          that.player.scrollLeft = parseInt(num)
+          Object.assign(that.player.childNodes[0].style, {
+            transform: 'translateY(' + parseInt(num) + 'px)',
+            WebkitTransform: 'translateY(' + parseInt(num) + 'px)',
+            OTransform: 'translateY(' + parseInt(num) + 'px)',
+            MozTransform: 'translateY(' + parseInt(num) + 'px)',
+            MsTransform: 'translateY(' + parseInt(num) + 'px)'
+          })
         },
         finish () {
           that.animating = false
@@ -266,4 +311,4 @@ const FcDomPlayer = {
   }
 }
 
-export default FcDomPlayer
+export default FcVerticalPlayer

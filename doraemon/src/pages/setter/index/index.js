@@ -22,7 +22,7 @@ import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
-import PlayerStatusBar from 'fcbox/player/dom/player_status_bar'
+import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import FcPop from 'fcbox/pop/pop'
 import { ColorPicker } from 'element-ui'
@@ -954,7 +954,12 @@ const Index = {
         setConfig.setElementId = 'empty'
         setConfig.showSetterPop = true
         this.setSetterContent()
-        this.refreshContent()
+        const doms = setConfig.mainOrderSetterParam.self.scroll.getElementsByClassName('selectedBorder')
+        if (doms && doms.length) {
+          for (let i = 0; i < doms.length; i++) {
+            doms[i].style.border = 'none'
+          }
+        }
       }
     },
     keySetElementSize (type, size) {

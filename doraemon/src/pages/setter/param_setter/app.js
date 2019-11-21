@@ -10,7 +10,16 @@ const ParamSetter = {
     return {
       randKey: Math.random(),
       setList: [],
-      isTab: false
+      isTab: false,
+      inArr (item, list) {
+        let inList = false
+        for (let i in list) {
+          if (list[i] == item) {
+            inList = true
+          }
+        }
+        return inList
+      }
     }
   },
   props: ['setterParam', 'setterParamValue', 'setterRefreshContent', 'posRelative', 'zIndex'],
@@ -90,6 +99,9 @@ const ParamSetter = {
           case 'actionGroup':
             setList.push(this.getActionGroupParam(setterParam[i], setterParamValue))
             break
+          case 'animationGroup':
+            setList.push(this.getAnimationGroupParam(setterParam[i], setterParamValue))
+            break
           case 'contentGroup':
             let setSource
             switch (parseInt(setterParamValue['dataType'])) {
@@ -109,6 +121,10 @@ const ParamSetter = {
                   }
                 }
                 break
+            }
+            if (setterParam[i].tag == 'animations') {
+              setterParamValue.animations = setterParamValue.animations || { data: [] }
+              setSource = setterParamValue.animations
             }
             if (setSource) {
               setList.push(this.getContentGroupParam(setterParam[i], setterParamValue, setSource))

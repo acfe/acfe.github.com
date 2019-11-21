@@ -95,7 +95,25 @@ const MMenus = {
     }
     this.setThemeContent()
   },
+  mounted () {
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.ac == 'tabSlide') {
+        this.tabSlideRefresh(e.data)
+      }
+    })
+  },
   methods: Object.assign({
+    stopTouchstart (e) {
+      e.stopPropagation()
+    },
+    tabSlideRefresh (tabInfo) {
+      for (let i in this.dataContent) {
+        let action = this.dataContent[i].action || {}
+        if (tabInfo.tabId == action.tabId && tabInfo.tabItemId == action.tabItemId) {
+          this.checkedId = this.dataContent[i].checkedId
+        }
+      }
+    },
     clickCallback (e) {
       let item = e
       switch (this.theme) {

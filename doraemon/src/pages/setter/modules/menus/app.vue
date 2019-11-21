@@ -3,7 +3,7 @@
     <div class="m-menus" :key="randKey">
       <!-- theme1 -->
       <div :class="'theme-' + theme" v-if="theme == 1" :style="hiddenStyle">
-        <div class="menu-container">
+        <div class="menu-container" @touchstart="stopTouchstart" @mousedown="stopTouchstart">
           <div class="meun-item-content" v-for="(item, key) in dataContent" :key="key" :style="contentPaddingStyle">
             <div class="meun-item" :style="itemStyle" @click="clickCallback" :data-key="key">
               <div class="menu-item-text" :style="mergeCheckedStyle(nameStyle, nameCheckedStyle, item.checkedId)">{{item.name}}</div>
@@ -32,7 +32,7 @@
       </div>
       <!-- theme3 -->
       <div :class="'theme-' + theme" v-if="theme == 3">
-        <div class="fl-container" :style="hiddenStyle">
+        <div class="fl-container" :style="hiddenStyle" @touchstart="stopTouchstart" @mousedown="stopTouchstart">
           <div class="fl-item-content" v-for="(item, key) in dataContent" :key="key" :style="getContentPaddingStyle(contentPaddingStyle, key)">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback" :data-key="key">
               <div class="image-bk clear-fix">

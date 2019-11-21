@@ -84,7 +84,7 @@ const FcSingleUpload = {
             if (err || !data || data.statusCode != 200) {
               console.log(err)
             } else {
-              var src = 'http://' + d.bucket + '-' + d.appId + '.file.myqcloud.com/' + path + '/' + year + month + '/' + fileName
+              var src = 'http://' + d.bucket + '-' + d.appId + '.image.myqcloud.com/' + path + '/' + year + month + '/' + fileName
               this.param.value = src
               this.param.uploaded = true
               this.param.src = src

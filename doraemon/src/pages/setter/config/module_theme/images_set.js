@@ -45,6 +45,42 @@ const contentSetParam4 = {
     }
   ]
 }
+const contentSetParam6 = {
+  title: '内容设置',
+  type: 'contentGroup',
+  setList: [
+    {
+      type: 'textareaGroup',
+      title: '内容',
+      tag: 'title',
+      param: {
+        placeholder: '请输入文字内容'
+      }
+    },
+    {
+      type: 'actionGroup',
+      tag: 'action'
+    }
+  ]
+}
+const contentSetParam7 = {
+  title: '内容设置',
+  type: 'contentGroup',
+  setList: [
+    {
+      type: 'editorGroup',
+      title: '内容',
+      tag: 'title',
+      param: {
+        placeholder: '请输入文字内容'
+      }
+    },
+    {
+      type: 'actionGroup',
+      tag: 'action'
+    }
+  ]
+}
 const contentPaddingBottomSet = {
   type: 'inputGroup',
   title: '行间距(px)',
@@ -73,6 +109,10 @@ const contentSetList = JSON.parse(JSON.stringify(commonSet.contentSetList))
 contentSetList.push(contentSetParam)
 const contentSetList4 = JSON.parse(JSON.stringify(commonSet.contentSetList))
 contentSetList4.push(contentSetParam4)
+const contentSetList6 = JSON.parse(JSON.stringify(commonSet.contentSetList))
+contentSetList6.push(contentSetParam6)
+const contentSetList7 = JSON.parse(JSON.stringify(commonSet.contentSetList))
+contentSetList7.push(contentSetParam7)
 // theme1
 const theme1ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
 theme1ItemStyleSetGroup.setList.unshift(contentPaddingBottomSet)
@@ -85,6 +125,9 @@ theme2ItemStyleSetGroup.setList.unshift(columNumSet)
 const theme3ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
 theme3ItemStyleSetGroup.setList.unshift(contentPaddingRightSet)
 theme3ItemStyleSetGroup.setList.unshift(columNumSet)
+// theme5
+const theme5ItemStyleSetGroup = JSON.parse(JSON.stringify(commonSet.itemStyleSetGroup))
+theme5ItemStyleSetGroup.setList.unshift(contentPaddingBottomSet)
 const imagesSetTheme = [
   // 空模块
   {
@@ -270,6 +313,69 @@ const imagesSetTheme = [
             ]
           },
           commonSet.imageStyleSetGroup
+        ]
+      }
+    ]
+  },
+  // 图片模块
+  {
+    theme: 5,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: contentSetList4
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup,
+          theme5ItemStyleSetGroup,
+          commonSet.imageStyleSetGroup
+        ]
+      }
+    ]
+  },
+  // 文字模块
+  {
+    theme: 6,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: contentSetList6
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup,
+          theme5ItemStyleSetGroup,
+          Object.assign(commonSet.titleStyleGroup, { title: '文字内容样式设置' })
+        ]
+      }
+    ]
+  },
+  // 富文本模块
+  {
+    theme: 7,
+    setType: 'content',
+    data: [
+      {
+        title: '内容',
+        setType: 'content',
+        setList: contentSetList7
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          commonSet.moduleStyleSetGroup,
+          theme5ItemStyleSetGroup,
+          Object.assign(commonSet.titleStyleGroup, { title: '文字内容样式设置' })
         ]
       }
     ]

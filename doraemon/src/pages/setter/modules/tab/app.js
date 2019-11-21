@@ -50,6 +50,19 @@ const MTab = {
             this.domPlayerParam.FcDomPlayer.goto(this.domPlayerParam.renderPage)
           }
           break
+        case 3:
+          this.setContent2()
+          if (this.domPlayerParam.FcVerticalPlayer) {
+            this.domPlayerParam.FcVerticalPlayer.goto(this.domPlayerParam.renderPage)
+          }
+          break
+        case 4:
+          this.setContent2()
+          this.domPlayerParam.loop = true
+          if (this.domPlayerParam.FcFlipPlayer) {
+            this.domPlayerParam.FcFlipPlayer.goto(this.domPlayerParam.renderPage)
+          }
+          break
       }
     },
     setContent () {
@@ -92,6 +105,7 @@ const MTab = {
           let pageContent = []
           if (pageObj[dataContent[i].tabPageId]) {
             pageContent = pageObj[dataContent[i].tabPageId]
+            pageContent.checkedId = dataContent[i].checkedId
           }
           tabContents.push(pageContent)
           if (dataContent[i].checkedId == param.singleDatas.checkedId) {
@@ -103,10 +117,12 @@ const MTab = {
       for (let i in tabContents) {
         data.push({
           slot: 's1',
+          checkedId: tabContents[i].checkedId,
           content: tabContents[i].content || []
         })
       }
       this.domPlayerParam.data = data
+      this.domPlayerParam.tabId = param.id
       this.domPlayerParam.loop = !!parseInt(param.loop)
       if (data.length <= 1) {
         this.domPlayerParam.loop = false
@@ -124,6 +140,8 @@ const MTab = {
         this.domPlayerParam.drag = false
       }
       this.domPlayerParam.renderPage = tabCheckedId
+      this.domPlayerParam.singleDatas = param.singleDatas
+      this.domPlayerParam.moduleHeight = param.moduleHeight
     }
   })
 }

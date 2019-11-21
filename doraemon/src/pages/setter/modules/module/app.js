@@ -23,6 +23,7 @@ const FcModules = {
     } else if (param.heightType == 'screen') {
       let mh = this.isSet ? 667 : document.body.clientHeight
       this.moduleStyle['height'] = mh + 'px'
+      this.param.moduleHeight = mh
     } else {
       this.param.heightType = 'auto'
     }

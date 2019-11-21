@@ -51,6 +51,60 @@ const tabTheme = [
         moduleStyle: {}
       }
     }
+  },
+  // 纵向侧滑tab
+  {
+    title: '纵向侧滑tab',
+    titleStyle: {
+      'line-height': '24px',
+      'padding-top': 0
+    },
+    config: {
+      module: {
+        name: '纵向侧滑tab',
+        tag: 'tab',
+        theme: 3,
+        guildTheme: 0,
+        dataType: 0,
+        singleDatas: {
+          checkedId: 1,
+          data: [
+            {
+              checkedId: 1,
+              name: '测试项'
+            }
+          ]
+        },
+        moduleStyle: {}
+      }
+    }
+  },
+  // 翻转tab
+  {
+    title: '立体翻转tab',
+    titleStyle: {
+      'line-height': '24px',
+      'padding-top': 0
+    },
+    config: {
+      module: {
+        name: '立体翻转tab',
+        tag: 'tab',
+        theme: 4,
+        guildTheme: 0,
+        dataType: 0,
+        singleDatas: {
+          checkedId: 1,
+          data: [
+            {
+              checkedId: 1,
+              name: '测试项'
+            }
+          ]
+        },
+        moduleStyle: {}
+      }
+    }
   }
 ]
 export default tabTheme

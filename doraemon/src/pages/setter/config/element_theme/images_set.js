@@ -41,6 +41,30 @@ const imageSetTheme = [
             tag: 'action'
           }
         ]
+      },
+      {
+        title: '动画',
+        setType: 'animation',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '播放次数',
+            tag: 'animationRepeat',
+            param: {
+              placeholder: '无限循环请置空'
+            }
+          },
+          {
+            title: '动画设置',
+            type: 'contentGroup',
+            tag: 'animations',
+            setList: [
+              {
+                type: 'animationGroup'
+              }
+            ]
+          }
+        ]
       }
     ]
   }

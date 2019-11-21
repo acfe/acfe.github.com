@@ -12,7 +12,9 @@ import Share from 'fcbox/utils/share'
 import Animation from 'fcbox/utils/animation'
 import FormatFunc from '../../func/format_style'
 import FcDomPlayer from 'fcbox/player/dom'
-import PlayerStatusBar from 'fcbox/player/dom/player_status_bar'
+import FcVerticalPlayer from 'fcbox/player/vertical'
+import FcFlipPlayer from 'fcbox/player/flip'
+import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
@@ -33,6 +35,8 @@ Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
 Vue.use(FcDomPlayer)
+Vue.use(FcVerticalPlayer)
+Vue.use(FcFlipPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
 
@@ -60,6 +64,7 @@ const Index = {
       bodyStyle: {},
       pageStyle: {},
       tabItems: {},
+      popKey: Math.random(),
       setNormalContentPadding () {
         return {
           'padding-top': (this.showObj.topHeight || 0) / 375 + 'rem',
@@ -97,7 +102,8 @@ const Index = {
         if (!moduleLockList || !moduleLockList.length) {
           return false
         }
-        let scrollTop = document.documentElement.scrollTop
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        this.scrollTop = scrollTop
         let topHeight = this.$refs.topContent.offsetHeight
         for (let i = 0; i < moduleLockList.length; i++) {
           moduleLockList[i].lockTop = moduleLockList[i].offsetTop - topHeight
@@ -117,7 +123,7 @@ const Index = {
               'position': 'fixed',
               'left': 0,
               'top': moduleLock.lockMoveTop - scrollTop + topHeight + 'px',
-              'z-index': 1
+              'z-index': 1001
             })
           } else {
             if (scrollTop >= lockTop) {
@@ -125,8 +131,8 @@ const Index = {
               Object.assign(moduleLock.childNodes[0].style, {
                 'position': 'fixed',
                 'left': 0,
-                'top': topHeight + 'px',
-                'z-index': 2
+                'z-index': 2000,
+                'top': topHeight + 'px'
               })
             } else {
               moduleLockList[i].style.height = 'auto'
@@ -217,7 +223,9 @@ const Index = {
         this.setPageStyle()
         this.setShowObj()
         this.$store.state.pageKey = Math.random()
-        this.scrollEventInit()
+        requestAnimationFrame(() => {
+          this.scrollEventInit()
+        })
       }
     },
     setPopContent (action) {
@@ -228,7 +236,7 @@ const Index = {
           pops[i].show = action.acType == 3
         }
       }
-      this.$store.state.pageKey = Math.random()
+      this.popKey = Math.random()
     },
     setShowObj () {
       let showObj = {}
@@ -270,6 +278,9 @@ const Index = {
       this.$store.state.showObj = showObj
     },
     acCallback (item) {
+      if (window.fc.isMoveUp) {
+        return false
+      }
       const action = item.action || {}
       if (action.fcEvent) {
         window.fio('send', { fc_type: 'click', fc_event: action.fcEvent })
@@ -284,6 +295,7 @@ const Index = {
           break
         case 2:
           document.documentElement.scrollTop = 0
+          document.body.scrollTop = 0
           setTimeout(() => {
             this.setPageContent(action)
           }, 16)
@@ -305,12 +317,13 @@ const Index = {
           const that = this
           this.animating = true
           this.Animation.play({
-            aStart: document.documentElement.scrollTop,
+            aStart: document.documentElement.scrollTop || document.body.scrollTop,
             aEnd: 0,
             tEnd: 24,
             tween,
             handle (num) {
               document.documentElement.scrollTop = parseInt(num)
+              document.body.scrollTop = parseInt(num)
             },
             finish () {
               that.animating = false
@@ -325,13 +338,13 @@ const Index = {
           let topHeight
           if (document.getElementById('tab' + tabId)) {
             offsetTop = document.getElementById('tab' + tabId).parentNode.parentNode.parentNode.offsetTop
-            let scrollTop = document.documentElement.scrollTop
+            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
             topHeight = this.$refs.topContent.offsetHeight
             if (scrollTop > offsetTop - topHeight) {
               let moduleLockList = document.getElementsByClassName('moduleLock')
               for (let i = 0; i < moduleLockList.length; i++) {
                 let moduleLock = moduleLockList[i]
-                if (moduleLock.childNodes[0].style.position == 'fixed' && moduleLock.childNodes[0].style.zIndex == 2) {
+                if (moduleLock.childNodes[0].style.position == 'fixed' && moduleLock.childNodes[0].style.zIndex == 2000) {
                   topHeight += moduleLock.offsetHeight
                   hasLock = true
                 }
@@ -347,6 +360,7 @@ const Index = {
                   this.tabItems[showPageContent[i].id].refreshTabContent()
                   if (hasLock && offsetTop !== undefined && topHeight !== undefined && !this.contentConfig.pages[p].isTab) {
                     document.documentElement.scrollTop = offsetTop - topHeight
+                    document.body.scrollTop = offsetTop - topHeight
                   }
                 }
                 break

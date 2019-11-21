@@ -1,11 +1,11 @@
 <template>
   <FcModules :param="param" :isSet="isSet" :refreshContent="refreshContent" :setSetterContent="setSetterContent" :mid="mid" :acCallback="acCallback">
     <div class="m-images">
-      <!-- theme1 -->
-      <div :class="'theme-' + theme" v-if="theme == 1">
+      <!-- theme1 5 6 7-->
+      <div :class="'theme-1'" v-if="inTheme(theme, [1, 5, 6, 7])">
         <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
           <div :style="itemStyle">
-            <div class="t-center clear-fix">
+            <div class="t-center clear-fix" v-if="item.url">
               <div class="image" :style="imageFloatStyle">
                 <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
                 <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
@@ -35,7 +35,7 @@
       </div>
       <!-- theme3 -->
       <div :class="'theme-' + theme" v-if="theme == 3">
-        <div class="fl-container" :style="hiddenStyle">
+        <div class="fl-container" :style="hiddenStyle" @touchstart="stopTouchstart" @mousedown="stopTouchstart">
           <div class="fl-item-content" v-for="(item, key) in dataContent" :key="key" :style="getContentPaddingStyle(contentPaddingStyle, key)">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">

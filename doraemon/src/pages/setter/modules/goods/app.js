@@ -88,7 +88,9 @@ const MGoods = {
     this.setThemeContent()
   },
   methods: Object.assign({
-
+    stopTouchstart (e) {
+      e.stopPropagation()
+    }
   }, formatAc)
 }
 

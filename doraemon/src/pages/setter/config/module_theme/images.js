@@ -1,4 +1,112 @@
+/*
+  theme value
+  1.Banner排版
+  2.多列排版
+  3.横向滚动
+  4.侧滑轮播
+  5.图片模块
+  6.文字模块
+  7.富文本模块
+  9999.空模块
+*/
 const imagesTheme = [
+  // 图片模块
+  {
+    url: 'http://static.fcbox.com/fcapp/mall/64gvy412zcq.jpg?imageView2/2/w/240',
+    title: '图片模块',
+    config: {
+      module: {
+        name: '图片模块',
+        tag: 'images',
+        theme: 5,
+        dataType: 0,
+        singleDatas: {
+          data: [
+            {
+              url: 'http://static.fcbox.com/fcapp/mall/64gvy412zcq.jpg'
+            }
+          ]
+        },
+        contentPaddingBottom: 0,
+        moduleStyle: {},
+        itemStyle: {},
+        imageStyle: {}
+      }
+    }
+  },
+  // 文字模块
+  {
+    title: '文字模块',
+    config: {
+      module: {
+        name: '文字模块',
+        tag: 'images',
+        theme: 6,
+        dataType: 0,
+        singleDatas: {
+          data: [
+            {
+              title: '文字内容'
+            }
+          ]
+        },
+        contentPaddingBottom: 0,
+        moduleStyle: {},
+        itemStyle: {},
+        titleStyle: {
+          'font-size': 14,
+          'color': '#333333',
+          'line-height': 20,
+          'padding-left': 10,
+          'padding-right': 10,
+          'padding-top': 0
+        }
+      }
+    }
+  },
+  // 富文本模块
+  {
+    title: '富文本模块',
+    config: {
+      module: {
+        name: '富文本模块',
+        tag: 'images',
+        theme: 7,
+        dataType: 0,
+        singleDatas: {
+          data: [
+            {
+              title: '文字内容'
+            }
+          ]
+        },
+        contentPaddingBottom: 0,
+        moduleStyle: {},
+        itemStyle: {},
+        titleStyle: {
+          'padding-left': 10,
+          'padding-right': 10,
+          'padding-top': 0
+        }
+      }
+    }
+  },
+  // 空模块
+  {
+    title: '空模块',
+    config: {
+      module: {
+        name: '空模块',
+        tag: 'images',
+        theme: 9999,
+        dataType: 0,
+        singleDatas: {
+          data: []
+        },
+        moduleStyle: {}
+      }
+    }
+  },
   // Banner排版
   {
     url: 'http://static.fcbox.com/fcapp/mall/64gvy412zcq.jpg?imageView2/2/w/240',

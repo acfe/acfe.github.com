@@ -50,6 +50,9 @@ const FcInput = {
       if (this.callback && parseInt(e.keyCode) === 13) {
         this.callback(this.param, 'keyup')
       }
+    },
+    stopTouchstart (e) {
+      e.stopPropagation()
     }
   }
 }

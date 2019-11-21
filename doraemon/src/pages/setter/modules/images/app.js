@@ -35,6 +35,15 @@ const MImages = {
           return Object.assign({}, contentPaddingStyle, { 'padding-right': 0 })
         }
         return contentPaddingStyle
+      },
+      inTheme (theme, list) {
+        let inList = false
+        for (let i in list) {
+          if (list[i] == theme) {
+            inList = true
+          }
+        }
+        return inList
       }
     }
   },
@@ -85,7 +94,9 @@ const MImages = {
     this.setThemeContent()
   },
   methods: Object.assign({
-
+    stopTouchstart (e) {
+      e.stopPropagation()
+    }
   }, formatAc)
 }
 

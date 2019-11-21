@@ -232,43 +232,52 @@ const ParamFunc = {
       popsNames[pops[i].id] = pops[i].name
     }
     // tabs
-    let tabsData = []
-    let tabNames = {}
-    let tabContent = []
-    let showPageContent
-    for (let p in this.contentConfig.pages) {
-      showPageContent = this.contentConfig.pages[p].content
-      for (let i in showPageContent) {
-        if (showPageContent[i].tag == 'tab') {
-          tabsData.push({
-            option: showPageContent[i].name,
-            value: showPageContent[i].id
+    const getTabData = () => {
+      let tabsData = []
+      let tabNames = {}
+      let tabContent = []
+      let showPageContent
+      for (let p in this.contentConfig.pages) {
+        showPageContent = this.contentConfig.pages[p].content
+        for (let i in showPageContent) {
+          if (showPageContent[i].tag == 'tab') {
+            tabsData.push({
+              option: showPageContent[i].name,
+              value: showPageContent[i].id
+            })
+            tabNames[showPageContent[i].id] = showPageContent[i].name
+          }
+        }
+        let tabId = setterParamValue.action.tabId
+        if (tabsData.length && !tabId) {
+          tabId = tabsData[0].value
+          setterParamValue.action.tabId = tabId
+        }
+        for (let i in showPageContent) {
+          if (showPageContent[i].tag == 'tab' && showPageContent[i].id == tabId && showPageContent[i].singleDatas) {
+            tabContent = showPageContent[i].singleDatas.data
+          }
+        }
+      }
+      let tabItemData = []
+      let tabItemNames = {}
+      if (tabContent && tabContent.length) {
+        for (let i in tabContent) {
+          tabItemData.push({
+            option: tabContent[i].name || '第' + (parseInt(i) + 1) + '项',
+            value: tabContent[i].checkedId
           })
-          tabNames[showPageContent[i].id] = showPageContent[i].name
+          tabItemNames[tabContent[i].checkedId] = tabContent[i].name || '第' + (parseInt(i) + 1) + '项'
         }
       }
-      let tabId = setterParamValue.action.tabId
-      if (tabsData.length && !tabId) {
-        tabId = tabsData[0].value
-        setterParamValue.action.tabId = tabId
-      }
-      for (let i in showPageContent) {
-        if (showPageContent[i].tag == 'tab' && showPageContent[i].id == tabId && showPageContent[i].singleDatas) {
-          tabContent = showPageContent[i].singleDatas.data
-        }
+      return {
+        tabNames,
+        tabsData,
+        tabItemData,
+        tabItemNames
       }
     }
-    let tabItemData = []
-    let tabItemNames = {}
-    if (tabContent && tabContent.length) {
-      for (let i in tabContent) {
-        tabItemData.push({
-          option: tabContent[i].name || '第' + (parseInt(i) + 1) + '项',
-          value: tabContent[i].checkedId
-        })
-        tabItemNames[tabContent[i].checkedId] = tabContent[i].name
-      }
-    }
+    let tabData = getTabData()
     let Obj = {
       type: setterParam.type,
       pagesParam: getSelectorParam({
@@ -363,21 +372,29 @@ const ParamFunc = {
       tabParam: getSelectorParam({
         tag: 'tabId',
         defaultOption: '请选择tab',
-        optionObj: tabNames,
-        data: tabsData,
+        optionObj: tabData.tabNames,
+        data: tabData.tabsData,
         callback: () => {
-          this.refreshSetter()
+          let newTabData = getTabData()
+          Obj.tabItemParam = getSelectorParam({
+            tag: 'tabItemId',
+            defaultOption: '请选择tab项',
+            optionObj: newTabData.tabItemNames,
+            data: newTabData.tabItemData
+          }, Object.assign({}, setterParam, {
+            title: '选择tab项'
+          }), setterParamValue.action, this)
         }
       }, Object.assign({}, setterParam, {
         title: '选择tab'
       }), setterParamValue.action, this)
     }
-    if (tabItemData.length) {
+    if (tabData.tabItemData.length) {
       Obj.tabItemParam = getSelectorParam({
         tag: 'tabItemId',
         defaultOption: '请选择tab项',
-        optionObj: tabItemNames,
-        data: tabItemData
+        optionObj: tabData.tabItemNames,
+        data: tabData.tabItemData
       }, Object.assign({}, setterParam, {
         title: '选择tab项'
       }), setterParamValue.action, this)
@@ -592,6 +609,338 @@ const ParamFunc = {
           this.refreshContent()
         }.bind(this)
       }
+    }
+    return Obj
+  },
+  // animationGroup
+  getAnimationGroupParam (setterParam, setterParamValue) {
+    setterParamValue['tweenType'] = setterParamValue['tweenType'] || 'Cubic'
+    setterParamValue['tweenAc'] = setterParamValue['tweenAc'] || 'easeOut'
+    let Obj = {
+      type: setterParam.type,
+      themeTypeParam: {
+        title: '动画类型',
+        param: {
+          value: setterParamValue['themeType'] || 'in',
+          data: [
+            {
+              option: '进入',
+              value: 'in'
+            },
+            {
+              option: '退出',
+              value: 'out'
+            }
+          ]
+        },
+        callback: function (acParam) {
+          setterParamValue['themeType'] = acParam.value || ''
+        }
+      },
+      themeParam: {
+        value: setterParamValue['theme'] || 1,
+        data: [
+          {
+            url: '',
+            title: '左侧飞入',
+            theme: 1
+          },
+          {
+            url: '',
+            title: '右侧飞入',
+            theme: 2
+          },
+          {
+            url: '',
+            title: '上方飞入',
+            theme: 3
+          },
+          {
+            url: '',
+            title: '下方飞入',
+            theme: 4
+          },
+          {
+            url: '',
+            title: '淡入',
+            theme: 5,
+            tEnd: 96
+          },
+          {
+            url: '',
+            title: '左上飞入',
+            theme: 6
+          },
+          {
+            url: '',
+            title: '左下飞入',
+            theme: 7
+          },
+          {
+            url: '',
+            title: '右上飞入',
+            theme: 8
+          },
+          {
+            url: '',
+            title: '右下飞入',
+            theme: 9
+          },
+          {
+            url: '',
+            title: '翻转',
+            theme: 10,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '左侧翻入',
+            theme: 11,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '右侧翻入',
+            theme: 12,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '上方翻入',
+            theme: 13,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '下方翻入',
+            theme: 14,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '左上翻入',
+            theme: 15,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '左下翻入',
+            theme: 16,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '右上翻入',
+            theme: 17,
+            deg: 360
+          },
+          {
+            url: '',
+            title: '右下翻入',
+            theme: 18,
+            deg: 360
+          }
+        ],
+        dataOut: [
+          {
+            url: '',
+            title: '左侧飞出',
+            theme: 1001
+          },
+          {
+            url: '',
+            title: '右侧飞出',
+            theme: 1002
+          },
+          {
+            url: '',
+            title: '上方飞出',
+            theme: 1003
+          },
+          {
+            url: '',
+            title: '下方飞出',
+            theme: 1004
+          }
+        ],
+        callback: function (item) {
+          setterParamValue['title'] = item.title || ''
+          Obj.themeParam.value = setterParamValue['theme'] = item.theme || 1
+          Obj.repeatParam.param.value = setterParamValue['repeat'] = item.repeat || 1
+          Obj.delayParam.param.value = setterParamValue['delay'] = item.delay || ''
+          Obj.tEndParam.param.value = setterParamValue['tEnd'] = item.tEnd || 48
+          if (parseInt(item.deg) || parseInt(item.deg) === 0) {
+            Obj.degParam.param.value = setterParamValue['deg'] = item.deg
+          }
+          Obj.tweenTypeParam.param.option = Obj.tweenTypeParam.param.value = setterParamValue['tweenType'] = item.tweenType || 'Cubic'
+          Obj.tweenAcParam.param.option = Obj.tweenAcParam.param.value = setterParamValue['tweenAc'] = item.tweenAc || 'easeOut'
+          if (!setterParam.static) {
+            this.refreshContent()
+          }
+        }.bind(this)
+      },
+      repeatParam: {
+        title: '播放次数',
+        param: {
+          value: setterParamValue['repeat'] || 1,
+          placeholder: '无限循环请置空'
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue['repeat'] = acParam.value
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      delayParam: {
+        title: '延迟ms',
+        param: {
+          value: setterParamValue['delay'] || '',
+          placeholder: '请输入毫秒数'
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue['delay'] = acParam.value
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      tEndParam: {
+        title: '帧数',
+        param: {
+          value: setterParamValue['tEnd'] || '',
+          placeholder: '请输入帧数'
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue['tEnd'] = acParam.value
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      degParam: {
+        title: '翻转/旋转度数',
+        param: {
+          value: setterParamValue['deg'] || '',
+          placeholder: '请输入度数'
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue['deg'] = acParam.value
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      tweenTypeParam: getSelectorParam({
+        tag: 'tweenType',
+        defaultOption: 'Cubic',
+        defaultValue: 'Cubic',
+        optionObj: {
+          'Cubic': 'Cubic',
+          'Linear': 'Linear',
+          'Quad': 'Quad',
+          'Quart': 'Quart',
+          'Quint': 'Quint',
+          'Sine': 'Sine',
+          'Expo': 'Expo',
+          'Circ': 'Circ',
+          'Elastic': 'Elastic',
+          'Back': 'Back',
+          'Bounce': 'Bounce'
+        },
+        data: [
+          {
+            option: 'Cubic',
+            value: 'Cubic'
+          },
+          {
+            option: 'Linear',
+            value: 'Linear'
+          },
+          {
+            option: 'Quad',
+            value: 'Quad'
+          },
+          {
+            option: 'Quart',
+            value: 'Quart'
+          },
+          {
+            option: 'Quint',
+            value: 'Quint'
+          },
+          {
+            option: 'Sine',
+            value: 'Sine'
+          },
+          {
+            option: 'Expo',
+            value: 'Expo'
+          },
+          {
+            option: 'Circ',
+            value: 'Circ'
+          },
+          {
+            option: 'Elastic',
+            value: 'Elastic'
+          },
+          {
+            option: 'Back',
+            value: 'Back'
+          },
+          {
+            option: 'Bounce',
+            value: 'Bounce'
+          }
+        ],
+        callback: () => {
+          if (!setterParam.static) {
+            this.refreshContent()
+          }
+        }
+      }, Object.assign({}, setterParam, {
+        title: '缓动'
+      }), setterParamValue, this),
+      tweenAcParam: getSelectorParam({
+        tag: 'tweenAc',
+        defaultOption: 'easeOut',
+        defaultValue: 'easeOut',
+        optionObj: {
+          'easeIn': 'easeIn',
+          'easeOut': 'easeOut',
+          'easeInOut': 'easeInOut'
+        },
+        data: [
+          {
+            option: 'easeIn',
+            value: 'easeIn'
+          },
+          {
+            option: 'easeOut',
+            value: 'easeOut'
+          },
+          {
+            option: 'easeInOut',
+            value: 'easeInOut'
+          }
+        ],
+        callback: () => {
+          if (!setterParam.static) {
+            this.refreshContent()
+          }
+        }
+      }, Object.assign({}, setterParam, {
+        title: '缓动方向'
+      }), setterParamValue, this)
     }
     return Obj
   },

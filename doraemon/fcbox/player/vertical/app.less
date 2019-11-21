@@ -1,0 +1,25 @@
+.fc-vertical-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .vertical-player-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .vertical-player-scroll {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      .vertical-player-content {
+        transform: translate3d(0, 0 , 0);
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}

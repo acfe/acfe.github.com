@@ -28,7 +28,9 @@ const FcEditor = {
     editor.txt.html(param.value || '')
   },
   methods: {
-
+    stopTouchstart (e) {
+      e.stopPropagation()
+    }
   }
 }
 

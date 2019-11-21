@@ -29,8 +29,10 @@
         </div>
       </div>
     </div>
-    <div v-for="(item, key) in contentConfig.pops" :key="key">
-      <MPop :param="item" :popId="key" :acCallback="acCallback"/>
+    <div :key="popKey">
+      <div v-for="(item, key) in contentConfig.pops" :key="key">
+        <MPop :param="item" :popId="key" :acCallback="acCallback"/>
+      </div>
     </div>
   </div>
 </template>

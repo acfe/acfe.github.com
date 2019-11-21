@@ -53,7 +53,7 @@
       </div>
       <!-- theme3 -->
       <div :class="'theme-' + theme" v-if="theme == 3">
-        <div class="fl-container" :style="hiddenStyle">
+        <div class="fl-container" :style="hiddenStyle" @touchstart="stopTouchstart" @mousedown="stopTouchstart">
           <div class="fl-item-content" v-for="(item, key) in dataContent" :key="key" :style="getContentPaddingStyle(contentPaddingStyle, key)">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">

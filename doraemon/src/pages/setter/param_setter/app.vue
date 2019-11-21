@@ -75,6 +75,75 @@
           </div>
         </div>
       </div>
+      <!-- animationGroup -->
+      <div v-if="item.type == 'animationGroup'">
+        <div class="item-tb-group pb0 clear-fix">
+          <div class="item-title">{{item.themeTypeParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.themeTypeParam.param" :callback="item.themeTypeParam.callback"/>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="item.themeTypeParam.param.value == 'in'">
+          <div class="item-content-list clear-fix">
+            <div class="image-tab-item" v-for="(it, k) in item.themeParam.data" :key="k" @click="item.themeParam.callback(it)">
+              <div class="image-content" :class="{'image-content-checked': it.theme == item.themeParam.value}" :style="{'background-image': it.url ? 'url(' + it.url + ')' : 'none'}"></div>
+              <div class="text-content" v-if="it.title">{{it.title}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="item.themeTypeParam.param.value == 'out'">
+          <div class="item-content-list clear-fix">
+            <div class="image-tab-item" v-for="(it, k) in item.themeParam.dataOut" :key="k" @click="item.themeParam.callback(it)">
+              <div class="image-content" :class="{'image-content-checked': it.theme == item.themeParam.value}" :style="{'background-image': it.url ? 'url(' + it.url + ')' : 'none'}"></div>
+              <div class="text-content" v-if="it.title">{{it.title}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group">
+          <div class="item-title">{{item.repeatParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.repeatParam.param" :callback="item.repeatParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group">
+          <div class="item-title">{{item.delayParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.delayParam.param" :callback="item.delayParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group">
+          <div class="item-title">{{item.tEndParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.tEndParam.param" :callback="item.tEndParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [10, 11, 12, 13, 14, 15, 16, 17, 18])">
+          <div class="item-title">{{item.degParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.degParam.param" :callback="item.degParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group">
+          <div class="item-title">{{item.tweenTypeParam.title}}</div>
+          <div class="item-content">
+            <FcSingleSelector :param="item.tweenTypeParam.param" :callback="item.tweenTypeParam.callback"/>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="item.tweenTypeParam.param.value != 'Linear'">
+          <div class="item-title">{{item.tweenAcParam.title}}</div>
+          <div class="item-content">
+            <FcSingleSelector :param="item.tweenAcParam.param" :callback="item.tweenAcParam.callback"/>
+          </div>
+        </div>
+      </div>
       <!-- dataSourceGroup -->
       <div class="item-tb-group clear-fix pt0" v-if="item.type == 'dataSourceGroup' && setterParamValue.dataType == 1">
         <div class="clear-fix">
