@@ -48,10 +48,10 @@ const imageSetTheme = [
         setList: [
           {
             type: 'inputGroup',
-            title: '播放次数',
+            title: '整体播放次数',
             tag: 'animationRepeat',
             param: {
-              placeholder: '无限循环请置空'
+              placeholder: '无限循环请输入0'
             }
           },
           {

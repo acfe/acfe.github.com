@@ -616,6 +616,8 @@ const ParamFunc = {
   getAnimationGroupParam (setterParam, setterParamValue) {
     setterParamValue['tweenType'] = setterParamValue['tweenType'] || 'Cubic'
     setterParamValue['tweenAc'] = setterParamValue['tweenAc'] || 'easeOut'
+    setterParamValue['repeat'] = setterParamValue['repeat'] || 1
+    setterParamValue['tEnd'] = setterParamValue['tEnd'] || 48
     let Obj = {
       type: setterParam.type,
       themeTypeParam: {
@@ -641,139 +643,105 @@ const ParamFunc = {
         value: setterParamValue['theme'] || 1,
         data: [
           {
-            url: '',
-            title: '左侧飞入',
-            theme: 1
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/skk14sjn23.png',
+            title: '飞入',
+            theme: 1,
+            moveDistance: 100
           },
           {
-            url: '',
-            title: '右侧飞入',
-            theme: 2
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/ytfuaaa0wb.png',
+            title: '飞出',
+            theme: 1001,
+            moveDistance: 100
           },
           {
-            url: '',
-            title: '上方飞入',
-            theme: 3
-          },
-          {
-            url: '',
-            title: '下方飞入',
-            theme: 4
-          },
-          {
-            url: '',
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/ql1u8yfloom.png',
             title: '淡入',
-            theme: 5,
+            theme: 2,
             tEnd: 96
           },
           {
-            url: '',
-            title: '左上飞入',
-            theme: 6
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/n14ax27iq8.png',
+            title: '淡出',
+            theme: 1002,
+            tEnd: 96
           },
           {
-            url: '',
-            title: '左下飞入',
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/lvsly8qp5a.png',
+            title: '翻转',
+            theme: 3,
+            deg: 360
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/ijru3mdn2ys.png',
+            title: '翻入',
+            theme: 4,
+            deg: 360,
+            moveDistance: 100
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/22jmysmfw41.png',
+            title: '翻出',
+            theme: 1004,
+            deg: 360,
+            moveDistance: 100
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/yekswts8y7q.png',
+            title: '旋转',
+            theme: 5,
+            deg: 360
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/6j1f23y7fxo.png',
+            title: '旋入',
+            theme: 6,
+            deg: 360,
+            moveDistance: 100
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/ar742yiztp.png',
+            title: '旋出',
+            theme: 1006,
+            deg: 360,
+            moveDistance: 100
+          },
+          {
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/sl9vd7nlhpf.png',
+            title: '放大',
             theme: 7
           },
           {
-            url: '',
-            title: '右上飞入',
-            theme: 8
-          },
-          {
-            url: '',
-            title: '右下飞入',
-            theme: 9
-          },
-          {
-            url: '',
-            title: '翻转',
-            theme: 10,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '左侧翻入',
-            theme: 11,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '右侧翻入',
-            theme: 12,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '上方翻入',
-            theme: 13,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '下方翻入',
-            theme: 14,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '左上翻入',
-            theme: 15,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '左下翻入',
-            theme: 16,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '右上翻入',
-            theme: 17,
-            deg: 360
-          },
-          {
-            url: '',
-            title: '右下翻入',
-            theme: 18,
-            deg: 360
-          }
-        ],
-        dataOut: [
-          {
-            url: '',
-            title: '左侧飞出',
-            theme: 1001
-          },
-          {
-            url: '',
-            title: '右侧飞出',
-            theme: 1002
-          },
-          {
-            url: '',
-            title: '上方飞出',
-            theme: 1003
-          },
-          {
-            url: '',
-            title: '下方飞出',
-            theme: 1004
+            url: '//consumerapp-1251779293.image.myqcloud.com/discovery/201911/xwpwl2ztka.png',
+            title: '缩小',
+            theme: 1007
           }
         ],
         callback: function (item) {
           setterParamValue['title'] = item.title || ''
           Obj.themeParam.value = setterParamValue['theme'] = item.theme || 1
           Obj.repeatParam.param.value = setterParamValue['repeat'] = item.repeat || 1
+          Obj.directionParam.param.value = setterParamValue['direction'] = item.direction || 1
           Obj.delayParam.param.value = setterParamValue['delay'] = item.delay || ''
+          Obj.moveDistanceParam.param.value = setterParamValue['moveDistance'] = item.moveDistance || ''
           Obj.tEndParam.param.value = setterParamValue['tEnd'] = item.tEnd || 48
           if (parseInt(item.deg) || parseInt(item.deg) === 0) {
             Obj.degParam.param.value = setterParamValue['deg'] = item.deg
           }
           Obj.tweenTypeParam.param.option = Obj.tweenTypeParam.param.value = setterParamValue['tweenType'] = item.tweenType || 'Cubic'
           Obj.tweenAcParam.param.option = Obj.tweenAcParam.param.value = setterParamValue['tweenAc'] = item.tweenAc || 'easeOut'
+          if (!setterParam.static) {
+            this.refreshContent()
+          }
+        }.bind(this)
+      },
+      directionParam: {
+        title: '运动方向',
+        param: {
+          value: setterParamValue['direction'] || 1
+        },
+        callback: function (direction) {
+          Obj.directionParam.param.value = setterParamValue['direction'] = direction || 1
           if (!setterParam.static) {
             this.refreshContent()
           }
@@ -803,6 +771,21 @@ const ParamFunc = {
         callback: function (acParam, acType) {
           if (acType == 'focusout') {
             setterParamValue['delay'] = acParam.value
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      moveDistanceParam: {
+        title: '移动距离',
+        param: {
+          value: setterParamValue['moveDistance'] || '',
+          placeholder: '请输入移动距离'
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue['moveDistance'] = acParam.value || ''
             if (!setterParam.static) {
               this.refreshContent()
             }

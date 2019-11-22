@@ -97,6 +97,65 @@
       text-overflow: ellipsis;
     }
   }
+  .direction-setter {
+    width: 100px;
+    position: relative;
+    .direction-flex {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding-bottom: 5px;
+      .direction-item {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        cursor: pointer;
+        .arrow-icon {
+          position: relative;
+          width: 30px;
+          height: 30px;
+          background: url(../../../common/img/arrow.png) no-repeat center;
+          background-size: auto 24px;
+        }
+        .arrow-icon-checked {
+          background: url(../../../common/img/arrow_checked.png) no-repeat center;
+          background-size: auto 24px;
+        }
+        .rt45 {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
+        .rt90 {
+          transform: rotate(90deg);
+          -webkit-transform: rotate(90deg);
+        }
+        .rt135 {
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
+        }
+        .rt180 {
+          transform: rotate(180deg);
+          -webkit-transform: rotate(180deg);
+        }
+        .rt225 {
+          transform: rotate(225deg);
+          -webkit-transform: rotate(225deg);
+        }
+        .rt270 {
+          transform: rotate(270deg);
+          -webkit-transform: rotate(270deg);
+        }
+        .rt315 {
+          transform: rotate(315deg);
+          -webkit-transform: rotate(315deg);
+        }
+      }
+      .direction-item-checked {
+        border: 1px solid #2196F3;
+      }
+    }
+  }
   .add-data-btn {
     border: 1px solid #e5e5e5;
     float: left;

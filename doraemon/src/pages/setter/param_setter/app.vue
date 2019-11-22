@@ -77,13 +77,13 @@
       </div>
       <!-- animationGroup -->
       <div v-if="item.type == 'animationGroup'">
-        <div class="item-tb-group pb0 clear-fix">
+        <!-- <div class="item-tb-group pb0 clear-fix">
           <div class="item-title">{{item.themeTypeParam.title}}</div>
           <div class="item-content">
             <FcRadioTab :param="item.themeTypeParam.param" :callback="item.themeTypeParam.callback"/>
           </div>
-        </div>
-        <div class="item-tb-group clear-fix" v-if="item.themeTypeParam.param.value == 'in'">
+        </div> -->
+        <div class="item-tb-group clear-fix">
           <div class="item-content-list clear-fix">
             <div class="image-tab-item" v-for="(it, k) in item.themeParam.data" :key="k" @click="item.themeParam.callback(it)">
               <div class="image-content" :class="{'image-content-checked': it.theme == item.themeParam.value}" :style="{'background-image': it.url ? 'url(' + it.url + ')' : 'none'}"></div>
@@ -96,6 +96,96 @@
             <div class="image-tab-item" v-for="(it, k) in item.themeParam.dataOut" :key="k" @click="item.themeParam.callback(it)">
               <div class="image-content" :class="{'image-content-checked': it.theme == item.themeParam.value}" :style="{'background-image': it.url ? 'url(' + it.url + ')' : 'none'}"></div>
               <div class="text-content" v-if="it.title">{{it.title}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [1, 4, 6])">
+          <div class="item-title">运动方向</div>
+          <div class="item-content">
+            <div class="direction-setter">
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 1}" @click="item.directionParam.callback(1)">
+                  <div class="arrow-icon rt135" :class="{'arrow-icon-checked': item.directionParam.param.value == 1}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 2}" @click="item.directionParam.callback(2)">
+                  <div class="arrow-icon rt180" :class="{'arrow-icon-checked': item.directionParam.param.value == 2}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 3}" @click="item.directionParam.callback(3)">
+                  <div class="arrow-icon rt225" :class="{'arrow-icon-checked': item.directionParam.param.value == 3}"></div>
+                </div>
+              </div>
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 4}" @click="item.directionParam.callback(4)">
+                  <div class="arrow-icon rt90" :class="{'arrow-icon-checked': item.directionParam.param.value == 4}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 5}" @click="item.directionParam.callback(5)">
+                  <div class="arrow-icon rt270" :class="{'arrow-icon-checked': item.directionParam.param.value == 5}"></div>
+                </div>
+              </div>
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 6}" @click="item.directionParam.callback(6)">
+                  <div class="arrow-icon rt45" :class="{'arrow-icon-checked': item.directionParam.param.value == 6}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 7}" @click="item.directionParam.callback(7)">
+                  <div class="arrow-icon" :class="{'arrow-icon-checked': item.directionParam.param.value == 7}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 8}" @click="item.directionParam.callback(8)">
+                  <div class="arrow-icon rt315" :class="{'arrow-icon-checked': item.directionParam.param.value == 8}"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [1001, 1004, 1006])">
+          <div class="item-title">运动方向</div>
+          <div class="item-content">
+            <div class="direction-setter">
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 1}" @click="item.directionParam.callback(1)">
+                  <div class="arrow-icon rt315" :class="{'arrow-icon-checked': item.directionParam.param.value == 1}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 2}" @click="item.directionParam.callback(2)">
+                  <div class="arrow-icon" :class="{'arrow-icon-checked': item.directionParam.param.value == 2}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 3}" @click="item.directionParam.callback(3)">
+                  <div class="arrow-icon rt45" :class="{'arrow-icon-checked': item.directionParam.param.value == 3}"></div>
+                </div>
+              </div>
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 4}" @click="item.directionParam.callback(4)">
+                  <div class="arrow-icon rt270" :class="{'arrow-icon-checked': item.directionParam.param.value == 4}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 5}" @click="item.directionParam.callback(5)">
+                  <div class="arrow-icon rt90" :class="{'arrow-icon-checked': item.directionParam.param.value == 5}"></div>
+                </div>
+              </div>
+              <div class="direction-flex">
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 6}" @click="item.directionParam.callback(6)">
+                  <div class="arrow-icon rt225" :class="{'arrow-icon-checked': item.directionParam.param.value == 6}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 7}" @click="item.directionParam.callback(7)">
+                  <div class="arrow-icon rt180" :class="{'arrow-icon-checked': item.directionParam.param.value == 7}"></div>
+                </div>
+                <div class="direction-item" :class="{'direction-item-checked': item.directionParam.param.value == 8}" @click="item.directionParam.callback(8)">
+                  <div class="arrow-icon rt135" :class="{'arrow-icon-checked': item.directionParam.param.value == 8}"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [3, 4, 1004, 6, 1006])">
+          <div class="item-title">{{item.degParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.degParam.param" :callback="item.degParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [1, 4, 1001, 1004, 6, 1006])">
+          <div class="item-title">{{item.moveDistanceParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.moveDistanceParam.param" :callback="item.moveDistanceParam.callback"/>
             </div>
           </div>
         </div>
@@ -120,14 +210,6 @@
           <div class="item-content">
             <div class="item-input-bk">
               <FcInput :param="item.tEndParam.param" :callback="item.tEndParam.callback"/>
-            </div>
-          </div>
-        </div>
-        <div class="item-lr-group" v-if="inArr(item.themeParam.value, [10, 11, 12, 13, 14, 15, 16, 17, 18])">
-          <div class="item-title">{{item.degParam.title}}</div>
-          <div class="item-content">
-            <div class="item-input-bk">
-              <FcInput :param="item.degParam.param" :callback="item.degParam.callback"/>
             </div>
           </div>
         </div>

@@ -37,6 +37,30 @@ const textSetTheme = [
             tag: 'action'
           }
         ]
+      },
+      {
+        title: '动画',
+        setType: 'animation',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '整体播放次数',
+            tag: 'animationRepeat',
+            param: {
+              placeholder: '无限循环请输入0'
+            }
+          },
+          {
+            title: '动画设置',
+            type: 'contentGroup',
+            tag: 'animations',
+            setList: [
+              {
+                type: 'animationGroup'
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -75,6 +99,30 @@ const textSetTheme = [
           {
             type: 'actionGroup',
             tag: 'action'
+          }
+        ]
+      },
+      {
+        title: '动画',
+        setType: 'animation',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '整体播放次数',
+            tag: 'animationRepeat',
+            param: {
+              placeholder: '无限循环请输入0'
+            }
+          },
+          {
+            title: '动画设置',
+            type: 'contentGroup',
+            tag: 'animations',
+            setList: [
+              {
+                type: 'animationGroup'
+              }
+            ]
           }
         ]
       }
