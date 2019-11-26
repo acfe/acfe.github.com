@@ -293,10 +293,16 @@ const FcElement = {
           break
         // 放大
         case 7:
+          if (/rotateZ\((-?\d+)/.exec(playElement.style.transform)) {
+            rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
+          }
           playDataArr.scaleArr = getAnimationData(0, 1, tEnd, tween)
           break
         // 缩小
         case 1007:
+          if (/rotateZ\((-?\d+)/.exec(playElement.style.transform)) {
+            rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
+          }
           playDataArr.scaleArr = getAnimationData(2, 1, tEnd, tween)
           break
       }
@@ -412,7 +418,7 @@ const FcElement = {
               break
             case 7:
             case 1007:
-              that.setTransform(playElement.style, 'scale(' + playDataArr.scaleArr[acId] + ')')
+              that.setTransform(playElement.style, 'rotateZ(' + rotateZ + 'deg) scale(' + playDataArr.scaleArr[acId] + ')')
               break
           }
         },

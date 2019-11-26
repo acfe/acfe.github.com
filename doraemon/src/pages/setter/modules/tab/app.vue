@@ -1,6 +1,6 @@
 <template>
   <FcModules :param="param" :mid="mid" :isSet="isSet" :acCallback="acCallback" :key="randKey" :refreshContent="refreshContent" :setSetterContent="setSetterContent">
-    <div class="m-tab" :id="'tab' + param.id">
+    <div class="m-tab" :id="'tab' + param.id" :class="{'lock-envent': isSet}">
       <!-- theme1 -->
       <div :class="'theme-' + theme" v-if="theme == 1">
         <div class="tab-module" v-for="(item, key) in tabContent" :key="key">

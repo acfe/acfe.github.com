@@ -39,6 +39,9 @@ const FcVerticalPlayer = {
     const param = this.param
     this.player = player
     let moduleHeight = param.moduleHeight
+    if (param.heightType == 'screen') {
+      moduleHeight = (document.body.clientHeight || document.documentElement.clientHeight)
+    }
     moduleHeight = moduleHeight > document.body.clientHeight ? document.body.clientHeight : moduleHeight
     this.moduleHeight = moduleHeight
     this.playerStyle = {

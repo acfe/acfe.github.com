@@ -617,6 +617,7 @@ const ParamFunc = {
     setterParamValue['tweenType'] = setterParamValue['tweenType'] || 'Cubic'
     setterParamValue['tweenAc'] = setterParamValue['tweenAc'] || 'easeOut'
     setterParamValue['repeat'] = setterParamValue['repeat'] || 1
+    setterParamValue['theme'] = setterParamValue['theme'] || 1
     setterParamValue['tEnd'] = setterParamValue['tEnd'] || 48
     let Obj = {
       type: setterParam.type,

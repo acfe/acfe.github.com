@@ -142,6 +142,7 @@ const MTab = {
       this.domPlayerParam.renderPage = tabCheckedId
       this.domPlayerParam.singleDatas = param.singleDatas
       this.domPlayerParam.moduleHeight = param.moduleHeight
+      this.domPlayerParam.heightType = param.heightType
     }
   })
 }
