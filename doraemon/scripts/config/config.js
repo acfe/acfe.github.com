@@ -39,6 +39,7 @@ const pages = {
   polyfill: 'polyfill',
   // index: 'index',
   msg_mall: 'msg_mall',
+  example: 'example',
   setter: 'setter',
   play: 'setter/play'
 }

@@ -25,6 +25,8 @@ import MPop from '../../modules/pop'
 import EImage from '../../elements/image'
 import EText from '../../elements/text'
 import EIcon from '../../elements/icon'
+import EBusiness from '../../elements/business'
+import FcInput from 'fcbox/form/input'
 Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
@@ -34,11 +36,13 @@ Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
+Vue.use(EBusiness)
 Vue.use(FcDomPlayer)
 Vue.use(FcVerticalPlayer)
 Vue.use(FcFlipPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
+Vue.use(FcInput)
 
 // eslint-disable-next-line one-var
 var tag, env = 'test', topic = 'comprehensiveFrontEndLog', fioUrl = 'common-sit1.fcbox.com/cdn/staticResource/commonUtil/fio/fio_v2.0.js'
@@ -61,10 +65,13 @@ const Index = {
   name: 'Index',
   data () {
     return {
+      showToTopBtn: false,
       bodyStyle: {},
       pageStyle: {},
       tabItems: {},
+      toTopBtnStyle: {},
       popKey: Math.random(),
+      toTopIconUrl: 'https://common.fcbox.com/cdn/mall/static/images/to-top.png',
       setNormalContentPadding () {
         return {
           'padding-top': (this.showObj.topHeight || 0) / 375 + 'rem',
@@ -98,11 +105,19 @@ const Index = {
       }
       this.scrollChecking = true
       requestAnimationFrame(() => {
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        let clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+        if (this.$refs.toTopBtn) {
+          if (scrollTop > clientHeight) {
+            this.$refs.toTopBtn.style.display = 'block'
+          } else {
+            this.$refs.toTopBtn.style.display = 'none'
+          }
+        }
         let moduleLockList = document.getElementsByClassName('moduleLock')
         if (!moduleLockList || !moduleLockList.length) {
           return false
         }
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         this.scrollTop = scrollTop
         let topHeight = this.$refs.topContent.offsetHeight
         for (let i = 0; i < moduleLockList.length; i++) {
@@ -192,6 +207,13 @@ const Index = {
     },
     setBodyStyle () {
       this.bodyStyle = this.formatStyle(this.contentConfig.body.style || {})
+      if (this.contentConfig.body.toTopIconUrl) {
+        this.toTopIconUrl = this.contentConfig.body.toTopIconUrl
+      }
+      if (this.contentConfig.body.toTopIconWidth) {
+        this.toTopBtnStyle.width = parseInt(this.contentConfig.body.toTopIconWidth) / 375 + 'rem'
+      }
+      this.showToTopBtn = this.contentConfig.body.showToTopBtn || false
     },
     setPageStyle () {
       this.pageStyle = this.formatStyle(this.showPage.style || {})
@@ -276,6 +298,27 @@ const Index = {
         bottomContent
       })
       this.$store.state.showObj = showObj
+    },
+    goToTop () {
+      if (this.animating) {
+        return false
+      }
+      const tween = this.Animation.tween.Cubic.easeOut
+      const that = this
+      this.animating = true
+      this.Animation.play({
+        aStart: document.documentElement.scrollTop || document.body.scrollTop,
+        aEnd: 0,
+        tEnd: 24,
+        tween,
+        handle (num) {
+          document.documentElement.scrollTop = parseInt(num)
+          document.body.scrollTop = parseInt(num)
+        },
+        finish () {
+          that.animating = false
+        }
+      })
     },
     acCallback (item) {
       if (window.fc.isMoveUp) {

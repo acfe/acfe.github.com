@@ -35,9 +35,9 @@ const FcPreImage = {
       this.loadingStyle.width = lW + 'px'
     }
     this.isMounted = true
-    let loadSrc = this.src.split('?')[0] + '?imageView2/2/w/' + pW
+    let loadSrc = this.src.split('?')[0] + '?imageView2/2/w/' + (parseInt(pW) * 2)
     if (pW && pH && pH > pW) {
-      loadSrc = this.src.split('?')[0] + '?imageView2/2/h/' + pH
+      loadSrc = this.src.split('?')[0] + '?imageView2/2/h/' + (parseInt(pH) * 2)
     }
     if (window.fc.FcPreImagesLoaded[loadSrc]) {
       this.isMounted = true
@@ -113,7 +113,7 @@ const FcPreImage = {
     refreshImage (param) {
       if (param.height < param.pH) {
         param.width = param.width * (param.pH / param.height)
-        param.src = param.src.split('?')[0] + '?imageView2/2/h/' + param.pH
+        param.src = param.src.split('?')[0] + '?imageView2/2/h/' + (parseInt(param.pH) * 2)
       }
       this.imageUrl = param.src
       window.fc.FcPreImagesLoaded[param.src] = param

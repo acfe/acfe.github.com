@@ -34,6 +34,9 @@
         <MPop :param="item" :popId="key" :acCallback="acCallback"/>
       </div>
     </div>
+    <div class="to-top-btn" @click="goToTop" ref="toTopBtn" :style="toTopBtnStyle" v-if="showToTopBtn">
+      <img :src="toTopIconUrl">
+    </div>
   </div>
 </template>
 

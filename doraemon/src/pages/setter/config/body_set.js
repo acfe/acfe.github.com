@@ -61,6 +61,42 @@ const bodySetParam = {
           param: {
             placeholder: '请输入关键字'
           }
+        },
+        {
+          type: 'setGroup',
+          title: '返回顶部按钮',
+          open: true,
+          setList: [
+            {
+              type: 'radioTabGroup',
+              title: '是否显示返回顶部按钮',
+              tag: 'showToTopBtn',
+              defaultValue: 0,
+              data: [
+                {
+                  option: '是',
+                  value: 1
+                },
+                {
+                  option: '否',
+                  value: 0
+                }
+              ]
+            },
+            {
+              type: 'imageGroup',
+              title: '按钮图片',
+              tag: 'toTopIconUrl'
+            },
+            {
+              type: 'inputGroup',
+              title: '按钮宽度',
+              tag: 'toTopIconWidth',
+              param: {
+                placeholder: '请输入按钮宽度'
+              }
+            }
+          ]
         }
       ]
     },

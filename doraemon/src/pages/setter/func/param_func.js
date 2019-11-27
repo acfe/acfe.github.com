@@ -190,10 +190,10 @@ const ParamFunc = {
         option: 'tab切换',
         value: 7
       },
-      {
-        option: '返回顶部',
-        value: 6
-      },
+      // {
+      //   option: '返回顶部',
+      //   value: 6
+      // },
       {
         option: '执行事件',
         value: 4

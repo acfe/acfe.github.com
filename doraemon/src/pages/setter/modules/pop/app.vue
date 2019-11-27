@@ -7,6 +7,7 @@
           <EImage v-if="item.tag == 'image'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
           <EText v-if="item.tag == 'text'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
           <EIcon v-if="item.tag == 'icon'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
+          <EBusiness v-if="item.tag == 'business'" :param="item" :isSet="isSet" :acCallback="acCallback" :zIndex="param.elements.length - key"/>
         </div>
       </div>
     </div>

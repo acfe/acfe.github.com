@@ -20,6 +20,7 @@ const FcModules = {
     this.moduleStyle = this.formatStyle(param.moduleStyle || {})
     if (param.heightType == 'set' && param.moduleHeight) {
       this.moduleStyle['height'] = param.moduleHeight / 375 + 'rem'
+      this.moduleStyle['min-height'] = 0
     } else if (param.heightType == 'screen') {
       let mh = this.isSet ? 667 : document.body.clientHeight
       this.moduleStyle['height'] = mh + 'px'

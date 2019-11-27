@@ -1,6 +1,7 @@
 import imageTheme from './image'
 import textTheme from './text'
 import iconTheme from './icon'
+import businessTheme from './business'
 export default {
   showList: 'imageTheme',
   data: [
@@ -22,7 +23,7 @@ export default {
     {
       title: '业务',
       tag: 'businessTheme',
-      data: []
+      data: businessTheme
     }
   ]
 }

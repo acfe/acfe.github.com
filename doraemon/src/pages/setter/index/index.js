@@ -36,6 +36,7 @@ import MPop from '../modules/pop'
 import EImage from '../elements/image'
 import EText from '../elements/text'
 import EIcon from '../elements/icon'
+import EBusiness from '../elements/business'
 Vue.use(MImages)
 Vue.use(MMenus)
 Vue.use(MGoods)
@@ -45,6 +46,7 @@ Vue.use(MPop)
 Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
+Vue.use(EBusiness)
 Vue.use(FcButton)
 Vue.use(FcInput)
 Vue.use(FcEditor)
