@@ -21,7 +21,11 @@ const EText = {
     this.textStyle = this.formatStyle(param.textStyle || {})
   },
   methods: Object.assign({
-
+    stopTouchstart (e) {
+      if (this.$refs.text.scrollHeight > this.$refs.text.clientHeight) {
+        e.stopPropagation()
+      }
+    }
   }, formatAc)
 }
 

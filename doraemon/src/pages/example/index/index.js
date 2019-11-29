@@ -22,6 +22,12 @@ const Index = {
           url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201911/fq4onlbq09v.jpg',
           previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?id=97#/play',
           tag: 'wine'
+        },
+        {
+          title: '时尚专题-鲜衣怒马',
+          url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201911/99b34vba9fo.png',
+          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?id=139#/play',
+          tag: 'fashion'
         }
       ]
     }

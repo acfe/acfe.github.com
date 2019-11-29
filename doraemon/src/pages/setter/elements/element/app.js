@@ -37,7 +37,7 @@ const FcElement = {
     this.elementStyle = this.formatStyle(param.elementStyle || {})
     this.elementStyle.zIndex = this.zIndex || 0
     if (!this.isSet && param.animations && param.animations.data && param.animations.data[0]) {
-      const opThemeArr = [1, 2, 4, 6]
+      const opThemeArr = [1, 2, 3, 4, 5, 6, 7]
       if (this.inArr(parseInt(param.animations.data[0].theme), opThemeArr)) {
         this.elementStyle.opacity = 0
       }
@@ -125,7 +125,7 @@ const FcElement = {
       }
       const playDataArr = {}
       let endLeft = playElement.offsetLeft
-      let endOpacity = parseFloat(playElement.style.opacity) || 1
+      let endOpacity = parseInt(this.param.elementStyle.opacity) / 100 || 1
       let endTop = playElement.offsetTop
       let startLeft
       let startTop
@@ -243,6 +243,7 @@ const FcElement = {
           break
         // 翻转
         case 3:
+          playElement.style.opacity = endOpacity
           if (/rotateZ\((-?\d+)/.exec(playElement.style.transform)) {
             rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
           }
@@ -268,6 +269,7 @@ const FcElement = {
           break
         // 旋转
         case 5:
+          playElement.style.opacity = endOpacity
           if (/rotateZ\((-?\d+)/.exec(playElement.style.transform)) {
             rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
           }
@@ -297,6 +299,7 @@ const FcElement = {
             rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
           }
           playDataArr.scaleArr = getAnimationData(0, 1, tEnd, tween)
+          playDataArr.opacityArr = getAnimationData(0, endOpacity, tEnd, tween)
           break
         // 缩小
         case 1007:
@@ -304,6 +307,7 @@ const FcElement = {
             rotateZ = parseInt(/rotateZ\((-?\d+)/.exec(playElement.style.transform)[1]) || 0
           }
           playDataArr.scaleArr = getAnimationData(2, 1, tEnd, tween)
+          playDataArr.opacityArr = getAnimationData(endOpacity, 0, tEnd, tween)
           break
       }
       let that = this
@@ -418,7 +422,9 @@ const FcElement = {
               break
             case 7:
             case 1007:
-              that.setTransform(playElement.style, 'rotateZ(' + rotateZ + 'deg) scale(' + playDataArr.scaleArr[acId] + ')')
+              that.setTransform(playElement.style, 'rotateZ(' + rotateZ + 'deg) scale(' + playDataArr.scaleArr[acId] + ')', {
+                opacity: playDataArr.opacityArr[acId]
+              })
               break
           }
         },
