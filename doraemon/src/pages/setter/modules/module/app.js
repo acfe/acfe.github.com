@@ -29,6 +29,9 @@ const FcModules = {
       this.param.heightType = 'auto'
     }
     // console.log(this.param)
+    if (!this.isSet) {
+      this.moduleStyle['overflow-x'] = 'hidden'
+    }
   },
   mounted () {
     setTimeout(() => {

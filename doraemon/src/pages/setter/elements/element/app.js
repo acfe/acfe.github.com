@@ -24,7 +24,7 @@ const FcElement = {
       }
     }
   },
-  props: ['param', 'isSet', 'zIndex', 'acCallback'],
+  props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
     this.eid = this.param.id
@@ -51,12 +51,35 @@ const FcElement = {
       this.playKey = 0
       this.animationRepeatNum = 1
       requestAnimationFrame(() => {
-        this.playAnimation()
+        if (this.entry == 'm') {
+          this.checkPlay()
+          window.addEventListener('message', (e) => {
+            if (e.data && e.data.ac == 'docScroll') {
+              this.checkPlay()
+            }
+          })
+        } else {
+          this.playAnimation()
+        }
       })
     }
   },
   methods: Object.assign({
+    checkPlay () {
+      if (this.animationPlayted) {
+        return false
+      }
+      let moduleTop = this.$refs.element.parentNode.parentNode.parentNode.parentNode.offsetTop
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let clientHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let moduleHeight = this.$refs.element.parentNode.parentNode.parentNode.parentNode.clientHeight
+      moduleHeight = moduleHeight > clientHeight ? clientHeight : moduleHeight
+      if (moduleTop - clientHeight + (moduleHeight / 2) < scrollTop) {
+        this.playAnimation()
+      }
+    },
     playAnimation () {
+      this.animationPlayted = true
       const param = this.param
       const playElement = this.$refs.element
       param.animations = param.animations || {}

@@ -33,7 +33,9 @@ export default {
         case 'padding-right':
         case 'padding-top':
         case 'padding-bottom':
-          if (style[i] || parseInt(style[i]) === 0) {
+          if (/%/.test(style[i])) {
+            newStyle[i] = style[i]
+          } else if (style[i] || parseInt(style[i]) === 0) {
             newStyle[i] = (parseInt(style[i]) / remStandar) + 'rem'
           }
           if (parseInt(style['width']) && !parseInt(style['height'])) {

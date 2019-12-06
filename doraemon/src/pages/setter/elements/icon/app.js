@@ -16,7 +16,7 @@ const EIcon = {
       svgContent: ''
     }
   },
-  props: ['param', 'isSet', 'zIndex', 'acCallback'],
+  props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
     if (param.svgContent && /<svg.*><\/svg>/.test(param.svgContent)) {

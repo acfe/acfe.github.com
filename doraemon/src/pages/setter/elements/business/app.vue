@@ -1,5 +1,5 @@
 <template>
-  <FcElement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback">
+  <FcElement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback" :entry="entry">
     <div class="e-business">
       <div class="mall-search" v-if="param.businessTag == 'mallSearch'">
         <div class="search-input-container">

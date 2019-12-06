@@ -67,6 +67,79 @@ const imageSetTheme = [
         ]
       }
     ]
+  },
+  {
+    theme: 2,
+    setType: 'style',
+    data: [
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '元素名称',
+            tag: 'name',
+            param: {
+              placeholder: '请输入名称'
+            }
+          },
+          {
+            type: 'setGroup',
+            title: '视频设置',
+            open: true,
+            setList: [
+              {
+                type: 'imageGroup',
+                tag: 'poster',
+                title: '封面图',
+                showTitle: true
+              },
+              {
+                type: 'textareaGroup',
+                tag: 'src',
+                title: '视频地址'
+              }
+            ]
+          },
+          commonSet.elementStyleSetGroup
+        ]
+      },
+      {
+        title: '事件',
+        setType: 'action',
+        setList: [
+          {
+            type: 'actionGroup',
+            tag: 'action'
+          }
+        ]
+      },
+      {
+        title: '动画',
+        setType: 'animation',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '整体播放次数',
+            tag: 'animationRepeat',
+            param: {
+              placeholder: '无限循环请输入0'
+            }
+          },
+          {
+            title: '动画设置',
+            type: 'contentGroup',
+            tag: 'animations',
+            setList: [
+              {
+                type: 'animationGroup'
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
 export default imageSetTheme

@@ -241,6 +241,24 @@ const elementStyleSetGroup = {
       setValueKey: 'elementStyle'
     },
     {
+      type: 'inputGroup',
+      title: '元素右边距(px)',
+      tag: 'right',
+      param: {
+        placeholder: '请输入边距'
+      },
+      setValueKey: 'elementStyle'
+    },
+    {
+      type: 'inputGroup',
+      title: '元素下边距(px)',
+      tag: 'bottom',
+      param: {
+        placeholder: '请输入边距'
+      },
+      setValueKey: 'elementStyle'
+    },
+    {
       type: 'sliderGroup',
       title: '透明度',
       tag: 'opacity',

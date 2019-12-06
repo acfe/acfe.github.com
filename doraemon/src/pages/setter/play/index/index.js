@@ -97,6 +97,9 @@ const Index = {
     scrollEventInit () {
       document.onscroll = () => {
         this.checkScroll()
+        window.postMessage({
+          ac: 'docScroll'
+        }, '*')
       }
     },
     checkScroll () {
@@ -207,6 +210,7 @@ const Index = {
     },
     setBodyStyle () {
       this.bodyStyle = this.formatStyle(this.contentConfig.body.style || {})
+      Object.assign(document.body.style, this.bodyStyle)
       if (this.contentConfig.body.toTopIconUrl) {
         this.toTopIconUrl = this.contentConfig.body.toTopIconUrl
       }

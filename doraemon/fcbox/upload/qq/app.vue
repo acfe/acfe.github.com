@@ -1,6 +1,6 @@
 <template>
     <div class="FcSingleUpload" ref="FcSingleUpload" :key="picKey">
-        <div class="upBk">
+        <div class="upBk" v-if="!param.value">
             <div class="upBg"></div>
         </div>
         <input type="file" class="iFile" v-if="!param.value" @change="fileSelect"/>

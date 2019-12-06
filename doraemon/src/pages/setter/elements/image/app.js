@@ -15,7 +15,7 @@ const EImage = {
       imageStyle: {}
     }
   },
-  props: ['param', 'isSet', 'zIndex', 'acCallback'],
+  props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
     this.imageStyle = this.formatStyle(param.imageStyle || {})

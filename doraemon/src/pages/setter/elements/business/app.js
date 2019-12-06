@@ -19,7 +19,7 @@ const EBusiness = {
       }
     }
   },
-  props: ['param', 'isSet', 'zIndex', 'acCallback'],
+  props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
     this.btnStyle = this.formatStyle(param.btnStyle || {})

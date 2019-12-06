@@ -15,7 +15,7 @@ const EText = {
       textStyle: {}
     }
   },
-  props: ['param', 'isSet', 'zIndex', 'acCallback'],
+  props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
     this.textStyle = this.formatStyle(param.textStyle || {})

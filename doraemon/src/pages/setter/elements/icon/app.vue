@@ -1,5 +1,5 @@
 <template>
-  <FcEelement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback">
+  <FcEelement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback" :entry="entry">
     <div class="e-icon">
       <div class="icon-mask" v-if="isSet"></div>
       <div class="mh" v-if="isSet && !hasIcon"></div>

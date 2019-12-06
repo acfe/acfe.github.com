@@ -1,5 +1,5 @@
 <template>
-  <div class="index" :style="bodyStyle" ref="index" :key="pageKey">
+  <div class="index" ref="index" :key="pageKey">
     <div class="page" :style="pageStyle" ref="page">
       <div class="top-content" ref="topContent">
         <div class="module-relative" v-for="(item, key) in showObj.topContent" :key="key">
@@ -34,7 +34,7 @@
         <MPop :param="item" :popId="key" :acCallback="acCallback"/>
       </div>
     </div>
-    <div class="to-top-btn" @click="goToTop" ref="toTopBtn" :style="toTopBtnStyle" v-if="showToTopBtn">
+    <div class="to-top-btn" @click="goToTop" ref="toTopBtn" :style="toTopBtnStyle" v-if="showToTopBtn && toTopIconUrl">
       <img :src="toTopIconUrl">
     </div>
   </div>

@@ -37,9 +37,38 @@ const imageTheme = [
           name: '白底色块',
           tag: 'image',
           theme: 1,
+          animationRepeat: 1,
           elementStyle: {
             'width': 200,
             'height': 60,
+            'left': 0,
+            'top': 0,
+            'rotateZ': 0,
+            'background-color': '#fff'
+          },
+          imageStyle: {}
+        }
+      ]
+    }
+  },
+  // 视频
+  {
+    title: '视频',
+    titleStyle: {
+      'font-size': '14px',
+      'line-height': '30px',
+      'padding-top': 0
+    },
+    config: {
+      elements: [
+        {
+          name: '视频',
+          tag: 'image',
+          theme: 2,
+          animationRepeat: 1,
+          elementStyle: {
+            'width': 320,
+            'height': 200,
             'left': 0,
             'top': 0,
             'rotateZ': 0,
