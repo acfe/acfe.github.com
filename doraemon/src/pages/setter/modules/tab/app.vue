@@ -15,7 +15,7 @@
       <div :class="'theme-' + theme" v-if="theme == 2">
         <FcDomPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
           <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
-            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :guildTheme="param.guildTheme"/>
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
           </template>
           <template slot="s1" slot-scope="props">
             <div>
@@ -34,7 +34,7 @@
       <div :class="'theme-' + theme" v-if="theme == 3">
         <FcVerticalPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
           <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
-            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :guildTheme="param.guildTheme"/>
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
           </template>
           <template slot="s1" slot-scope="props">
             <div>
@@ -53,7 +53,7 @@
       <div :class="'theme-' + theme" v-if="theme == 4">
         <FcFlipPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
           <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
-            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :guildTheme="param.guildTheme"/>
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
           </template>
           <template slot="s1" slot-scope="props">
             <div>

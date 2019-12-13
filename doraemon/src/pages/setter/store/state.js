@@ -1,6 +1,5 @@
 import moduleTheme from '../config/module_theme'
 import elementTheme from '../config/element_theme'
-import moduleThemeSet from '../config/module_theme/set'
 import elementThemeSet from '../config/element_theme/set'
 import pageSetParam from '../config/page_set'
 import popSetParam from '../config/pop_set'
@@ -17,7 +16,7 @@ module.exports = {
     moduleTheme,
     popTheme,
     pageTheme,
-    moduleThemeSet,
+    moduleThemeSet: moduleTheme.set,
     elementThemeSet,
     elementTheme,
     setPageId: 0,

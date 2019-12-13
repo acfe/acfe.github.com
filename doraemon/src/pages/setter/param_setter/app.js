@@ -68,9 +68,17 @@ const ParamSetter = {
               break
             }
             setList.push(this.getRadioTabGroupParam(setterParam[i], setterParamValue))
+            if (setterParam[i].type == 'imageTabGroup' && setterParam[i].tag == 'guildTheme') {
+              setterParam[i].callback = (value) => {
+                this.setGuildDefaultValue(setterParam[i], value)
+              }
+            }
             break
           case 'selectorGroup':
             setList.push(this.getSelectorGroupParam(setterParam[i], setterParamValue))
+            break
+          case 'fitImageGroup':
+            setList.push(this.getFitImageGroupParam(setterParam[i], setterParamValue))
             break
           case 'dataSourceGroup':
             setList.push(this.getDataSourceGroupParam(setterParam[i], setterParamValue))
@@ -133,6 +141,19 @@ const ParamSetter = {
         }
       }
       this.setList = setList
+    },
+    setGuildDefaultValue (setterParam, setterParamValue) {
+      const guildDefaultData = setterParam.guildDefaultData
+      if (!guildDefaultData || !guildDefaultData[setterParamValue.guildTheme]) {
+        this.refreshSetter()
+        return false
+      }
+      let guildStyle = guildDefaultData[setterParamValue.guildTheme]
+      setterParamValue.barContainerStyle = guildStyle.barContainerStyle || ''
+      setterParamValue.barStyle = guildStyle.barStyle || ''
+      setterParamValue.barCheckedStyle = guildStyle.barCheckedStyle || ''
+      this.refreshSetter()
+      this.refreshContent()
     }
   }, ParamFunc)
 }

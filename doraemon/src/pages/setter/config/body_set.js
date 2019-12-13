@@ -65,7 +65,7 @@ const bodySetParam = {
         {
           type: 'setGroup',
           title: '返回顶部按钮',
-          open: true,
+          open: false,
           setList: [
             {
               type: 'radioTabGroup',
@@ -100,7 +100,10 @@ const bodySetParam = {
         }
       ]
     },
-    commonSet.getBackgroundParam('文档背景设置', 'style')
+    Object.assign(commonSet.getBackgroundParam('文档背景设置', 'style'), {
+      isSub: false,
+      open: false
+    })
   ]
 }
 export default bodySetParam

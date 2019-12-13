@@ -88,7 +88,7 @@ const ParamFunc = {
       callback: function (acParam) {
         setterParamValue[setterParam.tag] = acParam.value || setterParam.defaultValue
         this.refreshContent()
-        setterParam.callback && setterParam.callback(acParam)
+        setterParam.callback && setterParam.callback(setterParamValue)
       }.bind(this)
     }
     return Obj
@@ -161,6 +161,117 @@ const ParamFunc = {
       }
     }
     return slParam
+  },
+  // fitImageGroup
+  getFitImageGroupParam (setterParam, setterParamValue) {
+    setterParamValue.imageStyle = setterParamValue.imageStyle || {}
+    let alignData = [
+      {
+        option: '靠左',
+        value: 'left'
+      },
+      {
+        option: '居中',
+        value: 'center'
+      },
+      {
+        option: '靠右',
+        value: 'right'
+      }
+    ]
+    let Obj = {
+      type: setterParam.type,
+      heightParam: {
+        title: '高度(px)',
+        param: {
+          placeholder: '请输入高度',
+          value: setterParamValue.imageStyle['height'] || ''
+        },
+        callback: function (acParam, acType) {
+          if (acType == 'focusout') {
+            setterParamValue.imageStyle['height'] = acParam.value || ''
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }
+        }.bind(this)
+      },
+      fitTypeParam: {
+        title: '适配方式',
+        param: {
+          value: setterParamValue.imageStyle['fitType'] || 3,
+          data: [
+            {
+              option: '适配高度',
+              value: 2
+            },
+            {
+              option: '自适应',
+              value: 3
+            },
+            {
+              option: '拉伸',
+              value: 4
+            }
+          ]
+        },
+        callback: function (acParam) {
+          setterParamValue.imageStyle['fitType'] = acParam.value || 3
+          this.refreshContent()
+          setterParam.callback && setterParam.callback(acParam)
+        }.bind(this)
+      },
+      alignParam: {
+        title: '对齐',
+        param: {
+          value: setterParamValue.imageStyle['align'] || 'center',
+          data: alignData
+        },
+        callback: function (acParam) {
+          setterParamValue.imageStyle['align'] = acParam.value || 'center'
+          this.refreshContent()
+          setterParam.callback && setterParam.callback(acParam)
+        }.bind(this)
+      },
+      vAlignParam: {
+        title: '垂直对齐',
+        param: {
+          value: setterParamValue.imageStyle['vAlign'] || 'center',
+          data: [
+            {
+              option: '顶部',
+              value: 'top'
+            },
+            {
+              option: '居中',
+              value: 'center'
+            },
+            {
+              option: '底部',
+              value: 'bottom'
+            }
+          ]
+        },
+        callback: function (acParam) {
+          setterParamValue.imageStyle['vAlign'] = acParam.value || 'center'
+          this.refreshContent()
+          setterParam.callback && setterParam.callback(acParam)
+        }.bind(this)
+      },
+      hAlignParam: {
+        title: '水平对齐',
+        param: {
+          value: setterParamValue.imageStyle['hAlign'] || 'center',
+          data: alignData
+        },
+        callback: function (acParam) {
+          setterParamValue.imageStyle['hAlign'] = acParam.value || 'center'
+          this.refreshContent()
+          setterParam.callback && setterParam.callback(acParam)
+        }.bind(this)
+      }
+    }
+    return Obj
   },
   // actionGroup
   getActionGroupParam (setterParam, setterParamValue) {
@@ -302,7 +413,7 @@ const ParamFunc = {
         optionObj: acTypeObj,
         data: acTypeData
       }, Object.assign({}, setterParam, {
-        title: '事件类型'
+        title: '点击触发'
       }), setterParamValue.action, this),
       acUrlParam: {
         title: '链接地址',

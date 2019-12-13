@@ -5,11 +5,8 @@
       <div :class="'theme-1'" v-if="inTheme(theme, [1, 5, 6, 7])">
         <div class="image-group" :style="contentPaddingStyle" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
           <div :style="itemStyle">
-            <div class="t-center clear-fix" v-if="item.url">
-              <div class="image" :style="imageFloatStyle">
-                <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
-                <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
-              </div>
+            <div v-if="item.url">
+              <FcFitImage :src="item.url" :imageStyle="param.imageStyle"/>
             </div>
             <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
             <div class="description" :style="descriptionStyle" v-if="item.description" v-html="item.description"></div>
@@ -22,9 +19,8 @@
           <div v-for="(item, key) in lItem" :key="key" :class="{'fl-item-group': !item.blankStyle}" :style="item.blankStyle || {}">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
-                <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
-                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
+                <div v-if="item.url">
+                  <FcFitImage :src="item.url" :imageStyle="param.imageStyle"/>
                 </div>
               </div>
               <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
@@ -39,9 +35,8 @@
           <div class="fl-item-content" v-for="(item, key) in dataContent" :key="key" :style="getContentPaddingStyle(contentPaddingStyle, key)">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
-                <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
-                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
+                <div v-if="item.url">
+                  <FcFitImage :src="item.url" :imageStyle="param.imageStyle"/>
                 </div>
               </div>
               <div class="title" :style="titleStyle" v-if="item.title" v-html="item.title"></div>
@@ -54,15 +49,22 @@
       <div :class="'theme-' + theme" v-if="theme == 4">
         <FcDomPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
           <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
-            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :guildTheme="param.guildTheme"/>
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
           </template>
           <template slot="s1" slot-scope="props">
-            <div class="image" :style="imageStyle" @click="clickCallback(props.data)">
-              <img :src="props.data.url" v-if="props.data.url && isSet"/>
-              <FcPreImage :src="props.data.url" v-if="props.data.url && !isSet" first="1"/>
+            <div @click="clickCallback(props.data)">
+              <FcFitImage :src="props.data.url" :imageStyle="param.imageStyle" v-if="props.data.url"/>
             </div>
           </template>
         </FcDomPlayer>
+      </div>
+      <!-- theme9 10-->
+      <div :class="'theme-1'" v-if="inTheme(theme, [9, 10])">
+        <div class="title" :style="titleStyle" v-if="param.title" v-html="param.title" @click="clickCallback(param)"></div>
+      </div>
+      <!-- theme11-->
+      <div :class="'theme-11'" v-if="inTheme(theme, [11])">
+        <FcFitImage :src="param.url" :imageStyle="param.imageStyle"/>
       </div>
     </div>  
   </FcModules>

@@ -37,7 +37,10 @@ const pageSetParam = {
             }
           ]
         },
-        commonSet.getBackgroundParam('页面背景设置', 'style')
+        Object.assign(commonSet.getBackgroundParam('页面背景设置', 'style'), {
+          isSub: false,
+          open: false
+        })
       ]
     }
   ]

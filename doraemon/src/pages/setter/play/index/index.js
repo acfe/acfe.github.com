@@ -16,6 +16,7 @@ import FcVerticalPlayer from 'fcbox/player/vertical'
 import FcFlipPlayer from 'fcbox/player/flip'
 import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
+import FcFitImage from 'fcbox/image/fit'
 import MImages from '../../modules/images'
 import MMenus from '../../modules/menus'
 import MGoods from '../../modules/goods'
@@ -42,6 +43,7 @@ Vue.use(FcVerticalPlayer)
 Vue.use(FcFlipPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
+Vue.use(FcFitImage)
 Vue.use(FcInput)
 
 // eslint-disable-next-line one-var

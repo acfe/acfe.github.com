@@ -24,6 +24,7 @@ import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
 import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
+import FcFitImage from 'fcbox/image/fit'
 import FcPop from 'fcbox/pop/pop'
 import { ColorPicker } from 'element-ui'
 // modules
@@ -60,6 +61,7 @@ Vue.use(ParamSetter)
 Vue.use(FcDomPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
+Vue.use(FcFitImage)
 Vue.use(FcPop)
 Vue.use(ColorPicker)
 

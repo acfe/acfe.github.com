@@ -33,9 +33,8 @@
           <div v-for="(item, key) in lItem" :key="key" :class="{'fl-item-group': !item.blankStyle}" :style="item.blankStyle || {}">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
-                <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
-                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
+                <div v-if="item.url">
+                  <FcFitImage :src="item.url" :imageStyle="param.imageStyle"/>
                 </div>
               </div>
               <div class="name" :style="nameStyle" v-if="item.name" v-html="item.name"></div>
@@ -57,9 +56,8 @@
           <div class="fl-item-content" v-for="(item, key) in dataContent" :key="key" :style="getContentPaddingStyle(contentPaddingStyle, key)">
             <div :style="itemStyle" v-if="!item.blankStyle && !item.emptyContent"  @click="clickCallback(item)">
               <div class="image-bk clear-fix">
-                <div class="image" :style="imageFloatStyle" v-if="item.url">
-                  <img :src="item.url" :style="imageStyle" v-if="item.url && isSet"/>
-                  <FcPreImage :src="item.url" :imageStyle="imageStyle" v-if="item.url && !isSet"/>
+                <div v-if="item.url">
+                  <FcFitImage :src="item.url" :imageStyle="param.imageStyle"/>
                 </div>
               </div>
               <div class="name" :style="nameStyle" v-if="item.name" v-html="item.name"></div>

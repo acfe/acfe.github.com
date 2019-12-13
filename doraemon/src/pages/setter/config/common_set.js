@@ -484,8 +484,140 @@ const getTextGroupParam = (title, setValueKey = '') => {
   }
   return textStyleSetGroup
 }
+
+const tabGuildData = [
+  {
+    url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/fdwegkksi0a.png',
+    value: 0
+  },
+  {
+    url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/zklg404rkff.png',
+    value: 1
+  },
+  {
+    url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/5snbdc7l1j.png',
+    value: 2
+  },
+  {
+    url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/maqqmtek4xm.png',
+    value: 3
+  }
+]
+
+const guildDefaultData = {
+  0: {
+    barContainerStyle: {},
+    barStyle: {
+      'border-top-left-radius': 4,
+      'border-top-right-radius': 4,
+      'border-bottom-left-radius': 4,
+      'border-bottom-right-radius': 4,
+      'margin-right': 5
+    },
+    barCheckedStyle: {
+      'border-top-left-radius': 4,
+      'border-top-right-radius': 4,
+      'border-bottom-left-radius': 4,
+      'border-bottom-right-radius': 4,
+      'margin-right': 5
+    }
+  },
+  1: {
+    barContainerStyle: {},
+    barStyle: {
+      'width': 8,
+      'height': 8,
+      'border-top-width': 1,
+      'border-bottom-width': 1,
+      'border-left-width': 1,
+      'border-right-width': 1,
+      'border-top-color': '#979797',
+      'border-bottom-color': '#979797',
+      'border-left-color': '#979797',
+      'border-right-color': '#979797',
+      'border-top-style': 'solid',
+      'border-bottom-style': 'solid',
+      'border-left-style': 'solid',
+      'border-right-style': 'solid',
+      'border-top-left-radius': 4,
+      'border-top-right-radius': 4,
+      'border-bottom-left-radius': 4,
+      'border-bottom-right-radius': 4,
+      'margin-right': 5
+    },
+    barCheckedStyle: {
+      'border-top-left-radius': 4,
+      'border-top-right-radius': 4,
+      'border-bottom-left-radius': 4,
+      'border-bottom-right-radius': 4,
+      'margin-right': 5
+    }
+  },
+  2: {
+    barContainerStyle: {},
+    barStyle: {
+      'width': 10,
+      'height': 2,
+      'border-top-left-radius': 2,
+      'border-top-right-radius': 2,
+      'border-bottom-left-radius': 2,
+      'border-bottom-right-radius': 2,
+      'background-color': '#ddd',
+      'margin-right': 5
+    },
+    barCheckedStyle: {
+      'width': 10,
+      'height': 2,
+      'border-top-left-radius': 2,
+      'border-top-right-radius': 2,
+      'border-bottom-left-radius': 2,
+      'border-bottom-right-radius': 2,
+      'background-color': '#F83A61',
+      'margin-right': 5
+    }
+  },
+  3: {
+    barContainerStyle: {},
+    barStyle: {
+      'width': 12,
+      'height': 4,
+      'border-top-left-radius': 2,
+      'border-top-right-radius': 2,
+      'border-bottom-left-radius': 2,
+      'border-bottom-right-radius': 2,
+      'background-color': '#ddd',
+      'margin-right': 5
+    },
+    barCheckedStyle: {
+      'width': 12,
+      'height': 4,
+      'border-top-left-radius': 2,
+      'border-top-right-radius': 2,
+      'border-bottom-left-radius': 2,
+      'border-bottom-right-radius': 2,
+      'background-color': '#F83A61',
+      'margin-right': 5
+    }
+  }
+}
+
+const fitImageSetGroup = {
+  title: '图片样式设置',
+  type: 'setGroup',
+  setList: [
+    {
+      type: 'fitImageGroup'
+    },
+    getPaddingParam('图片边距设置', 'imageStyle'),
+    getRadiusParam('图片圆角设置', 'imageStyle'),
+    getBorderParam('图片边框设置', 'imageStyle')
+  ]
+}
+
 const commonSet = {
   contentSetList,
+  tabGuildData,
+  guildDefaultData,
   getBackgroundParam,
   moduleStyleSetGroup,
   elementStyleSetGroup,
@@ -495,6 +627,7 @@ const commonSet = {
   getRadiusParam,
   getBorderParam,
   getTextGroupParam,
+  fitImageSetGroup,
   titleStyleGroup: getTextGroupParam('标题', 'titleStyle'),
   descriptionStyleGroup: getTextGroupParam('描述', 'descriptionStyle')
 }

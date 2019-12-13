@@ -75,6 +75,41 @@
           </div>
         </div>
       </div>
+      <!-- fitImageGroup -->
+      <div v-if="item.type == 'fitImageGroup'">
+        <div class="item-lr-group">
+          <div class="item-title">{{item.heightParam.title}}</div>
+          <div class="item-content">
+            <div class="item-input-bk">
+              <FcInput :param="item.heightParam.param" :callback="item.heightParam.callback"/>
+            </div>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="parseInt(item.heightParam.param.value)">
+          <div class="item-title">{{item.fitTypeParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.fitTypeParam.param" :callback="item.fitTypeParam.callback"/>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="parseInt(item.heightParam.param.value) && item.fitTypeParam.param.value == 2">
+          <div class="item-title">{{item.alignParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.alignParam.param" :callback="item.alignParam.callback"/>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="parseInt(item.heightParam.param.value) && item.fitTypeParam.param.value == 3">
+          <div class="item-title">{{item.vAlignParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.vAlignParam.param" :callback="item.vAlignParam.callback"/>
+          </div>
+        </div>
+        <div class="item-tb-group clear-fix" v-if="parseInt(item.heightParam.param.value) && item.fitTypeParam.param.value == 3">
+          <div class="item-title">{{item.hAlignParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.hAlignParam.param" :callback="item.hAlignParam.callback"/>
+          </div>
+        </div>
+      </div>
       <!-- animationGroup -->
       <div v-if="item.type == 'animationGroup'">
         <!-- <div class="item-tb-group pb0 clear-fix">

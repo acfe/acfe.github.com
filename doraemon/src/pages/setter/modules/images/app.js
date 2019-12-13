@@ -18,7 +18,9 @@ const MImages = {
       hiddenStyle: {},
       contentPaddingStyle: {},
       itemStyle: {},
-      imageFloatStyle: {},
+      imageFloatStyle: {
+        overflow: 'hidden'
+      },
       imageStyle: {},
       titleStyle: {},
       descriptionStyle: {},
