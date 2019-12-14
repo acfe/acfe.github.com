@@ -55,9 +55,12 @@ const theme = {
         'padding-right': 15
       },
       itemStyle: {},
-      imageStyle: {},
+      imageStyle: {
+        height: 100,
+        fitType: 2
+      },
       nameStyle: {
-        'font-size': 16,
+        'font-size': 14,
         'color': '#333333',
         'line-height': 20,
         'padding-top': 10

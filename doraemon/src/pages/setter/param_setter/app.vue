@@ -77,7 +77,7 @@
       </div>
       <!-- fitImageGroup -->
       <div v-if="item.type == 'fitImageGroup'">
-        <div class="item-lr-group">
+        <div class="item-lr-group" v-if="!item.hideHeight">
           <div class="item-title">{{item.heightParam.title}}</div>
           <div class="item-content">
             <div class="item-input-bk">
@@ -362,9 +362,10 @@
           </div>
           <div class="item-blank"></div>
           <div class="color-item">
-            <div class="border-bk">
-              <FcInput :param="item[oItem].colorParam.param" :callback="item[oItem].colorParam.callback"/>
-            </div>
+            <!-- <div class="border-bk"> -->
+              <el-color-picker v-model="item[oItem].colorParam.param.value" size="medium" @change="item[oItem].colorParam.callback"></el-color-picker>
+              <!-- <FcInput :param="item[oItem].colorParam.param" :callback="item[oItem].colorParam.callback"/> -->
+            <!-- </div> -->
           </div>
           <div class="item-blank"></div>
           <div class="style-item">
@@ -464,6 +465,19 @@
           <div class="item-title">{{item.tabItemParam.title}}</div>
           <div class="item-content">
             <FcSingleSelector :param="item.tabItemParam.param" :callback="item.tabItemParam.callback"/>
+          </div>
+        </div>
+        <!-- 操作模块 -->
+        <div class="item-tb-group clear-fix" v-if="item.acTypeParam.param.value == 8">
+          <div class="item-title">{{item.moduleAcParam.title}}</div>
+          <div class="item-content">
+            <FcRadioTab :param="item.moduleAcParam.param" :callback="item.moduleAcParam.callback"/>
+          </div>
+        </div>
+        <div class="item-lr-group" v-if="item.acTypeParam.param.value == 8">
+          <div class="item-title">{{item.moduleIdParam.title}}</div>
+          <div class="item-content">
+            <FcSingleSelector :param="item.moduleIdParam.param" :callback="item.moduleIdParam.callback"/>
           </div>
         </div>
         <!-- 埋点标识 -->

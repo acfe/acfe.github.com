@@ -134,6 +134,10 @@ const ParamSetter = {
               setterParamValue.animations = setterParamValue.animations || { data: [] }
               setSource = setterParamValue.animations
             }
+            if (setterParam[i].tag == 'frames') {
+              setterParamValue.frames = setterParamValue.frames || { data: [] }
+              setSource = setterParamValue.frames
+            }
             if (setSource) {
               setList.push(this.getContentGroupParam(setterParam[i], setterParamValue, setSource))
             }

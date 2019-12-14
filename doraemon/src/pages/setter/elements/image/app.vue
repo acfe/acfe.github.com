@@ -1,6 +1,7 @@
 <template>
   <FcElement :param="param" :isSet="isSet" :zIndex="zIndex" :acCallback="acCallback" :entry="entry">
-    <div class="e-image" :style="imageStyle" v-if="param.theme == 1">
+    <div class="e-image" v-if="param.theme == 1" :key="randKey">
+      <FcFitImage :src="param.url" :imageStyle="imageStyle"/>
       <div class="img-mask" v-if="isSet"></div>
       <div class="mh" v-if="isSet && !param.url"></div>
     </div>
@@ -22,6 +23,9 @@
         style="object-fit:fill"
         >
       </video>
+    </div>
+    <div v-if="param.theme == 3" :key="randKey">
+      <FcFramePlayer :param="param" :isSet="isSet"/>
     </div>
   </FcElement>
 </template>

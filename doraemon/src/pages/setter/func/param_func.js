@@ -181,6 +181,7 @@ const ParamFunc = {
     ]
     let Obj = {
       type: setterParam.type,
+      hideHeight: setterParam.hideHeight,
       heightParam: {
         title: '高度(px)',
         param: {
@@ -308,6 +309,10 @@ const ParamFunc = {
       {
         option: '执行事件',
         value: 4
+      },
+      {
+        option: '操作模块',
+        value: 8
       }
     ]
     const acTypeObj = {
@@ -318,7 +323,8 @@ const ParamFunc = {
       4: '执行事件',
       5: '关闭弹窗',
       6: '返回顶部',
-      7: 'tab切换'
+      7: 'tab切换',
+      8: '操作模块'
     }
     let pages = this.contentConfig.pages
     let pops = this.contentConfig.pops
@@ -341,6 +347,21 @@ const ParamFunc = {
         value: pops[i].id
       })
       popsNames[pops[i].id] = pops[i].name
+    }
+    let modulePageContent = pages[this.setConfig.setPageId].content
+    const moudleData = [{
+      option: '请选择',
+      value: 0
+    }]
+    const moudleDataObj = {}
+    if (modulePageContent && modulePageContent.length) {
+      for (let i in modulePageContent) {
+        moudleData.push({
+          option: modulePageContent[i].name,
+          value: modulePageContent[i].id
+        })
+        moudleDataObj[modulePageContent[i].id] = modulePageContent[i].name
+      }
     }
     // tabs
     const getTabData = () => {
@@ -413,7 +434,7 @@ const ParamFunc = {
         optionObj: acTypeObj,
         data: acTypeData
       }, Object.assign({}, setterParam, {
-        title: '点击触发'
+        title: setterParam.acTitle || '点击触发'
       }), setterParamValue.action, this),
       acUrlParam: {
         title: '链接地址',
@@ -430,6 +451,38 @@ const ParamFunc = {
           }
         }.bind(this)
       },
+      moduleAcParam: {
+        title: '操作模块',
+        param: {
+          value: setterParamValue.action['moduleAc'] || 'goto',
+          data: [
+            {
+              option: '跳转到模块',
+              value: 'goto'
+            },
+            {
+              option: '隐藏',
+              value: 'hide'
+            },
+            {
+              option: '显示',
+              value: 'show'
+            }
+          ]
+        },
+        callback: function (acParam) {
+          setterParamValue.action['moduleAc'] = acParam.value || 'goto'
+          this.refreshContent()
+        }.bind(this)
+      },
+      moduleIdParam: getSelectorParam({
+        tag: 'moduleId',
+        defaultOption: '请选择',
+        optionObj: moudleDataObj,
+        data: moudleData
+      }, Object.assign({}, setterParam, {
+        title: '选择模块'
+      }), setterParamValue.action, this),
       acTargetParam: {
         title: '打开方式',
         param: {
@@ -604,7 +657,18 @@ const ParamFunc = {
       Obj[setGroup[i].key] = {
         title: setGroup[i].title,
         sizeParam: getTextParam('border-' + setGroup[i].key + '-width', setterParam, setterParamValue, this),
-        colorParam: getTextParam('border-' + setGroup[i].key + '-color', setterParam, setterParamValue, this),
+        // colorParam: getTextParam('border-' + setGroup[i].key + '-color', setterParam, setterParamValue, this),
+        colorParam: {
+          param: {
+            value: setterParamValue['border-' + setGroup[i].key + '-color']
+          },
+          callback: function (acParam) {
+            setterParamValue['border-' + setGroup[i].key + '-color'] = acParam || ''
+            if (!setterParam.static) {
+              this.refreshContent()
+            }
+          }.bind(this)
+        },
         styleParam: getSelectorParam({
           tag: 'border-' + setGroup[i].key + '-style',
           data: borderStyleData,

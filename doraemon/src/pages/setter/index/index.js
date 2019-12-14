@@ -22,6 +22,7 @@ import FcRadioTab from 'fcbox/form/radio_tab'
 import OrderSetter from 'fcbox/order_setter'
 import ParamSetter from '../param_setter'
 import FcDomPlayer from 'fcbox/player/dom'
+import FcFramePlayer from 'fcbox/player/frame'
 import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import FcFitImage from 'fcbox/image/fit'
@@ -59,6 +60,7 @@ Vue.use(FcRadioTab)
 Vue.use(OrderSetter)
 Vue.use(ParamSetter)
 Vue.use(FcDomPlayer)
+Vue.use(FcFramePlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
 Vue.use(FcFitImage)

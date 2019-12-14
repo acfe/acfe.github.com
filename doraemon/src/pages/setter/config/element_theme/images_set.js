@@ -1,4 +1,52 @@
 import commonSet from '../common_set'
+
+const actionSetParam = {
+  title: '事件',
+  setType: 'action',
+  setList: [
+    {
+      type: 'actionGroup',
+      tag: 'action'
+    }
+  ]
+}
+const animationSetParam = {
+  title: '动画',
+  setType: 'animation',
+  setList: [
+    {
+      type: 'inputGroup',
+      title: '整体播放次数',
+      tag: 'animationRepeat',
+      param: {
+        placeholder: '无限循环请输入0'
+      }
+    },
+    {
+      title: '动画设置',
+      type: 'contentGroup',
+      tag: 'animations',
+      setList: [
+        {
+          type: 'animationGroup'
+        }
+      ]
+    }
+  ]
+}
+const imageStyleParam = {
+  title: '图片样式设置',
+  type: 'setGroup',
+  setList: [
+    {
+      type: 'fitImageGroup',
+      hideHeight: true
+    },
+    commonSet.getPaddingParam('图片边距设置', 'imageStyle'),
+    commonSet.getRadiusParam('图片圆角设置', 'imageStyle'),
+    commonSet.getBorderParam('图片边框设置', 'imageStyle')
+  ]
+}
 const imageSetTheme = [
   {
     theme: 1,
@@ -24,48 +72,15 @@ const imageSetTheme = [
               {
                 type: 'imageGroup',
                 tag: 'url'
-              },
-              Object.assign(commonSet.getRadiusParam('图片圆角设置', 'imageStyle'), { open: false }),
-              Object.assign(commonSet.getBorderParam('图片边框设置', 'imageStyle'), { open: false })
+              }
             ]
           },
+          imageStyleParam,
           commonSet.elementStyleSetGroup
         ]
       },
-      {
-        title: '事件',
-        setType: 'action',
-        setList: [
-          {
-            type: 'actionGroup',
-            tag: 'action'
-          }
-        ]
-      },
-      {
-        title: '动画',
-        setType: 'animation',
-        setList: [
-          {
-            type: 'inputGroup',
-            title: '整体播放次数',
-            tag: 'animationRepeat',
-            param: {
-              placeholder: '无限循环请输入0'
-            }
-          },
-          {
-            title: '动画设置',
-            type: 'contentGroup',
-            tag: 'animations',
-            setList: [
-              {
-                type: 'animationGroup'
-              }
-            ]
-          }
-        ]
-      }
+      actionSetParam,
+      animationSetParam
     ]
   },
   {
@@ -105,40 +120,66 @@ const imageSetTheme = [
           commonSet.elementStyleSetGroup
         ]
       },
+      actionSetParam,
+      animationSetParam
+    ]
+  },
+  {
+    theme: 3,
+    setType: 'style',
+    data: [
       {
-        title: '事件',
-        setType: 'action',
-        setList: [
-          {
-            type: 'actionGroup',
-            tag: 'action'
-          }
-        ]
-      },
-      {
-        title: '动画',
-        setType: 'animation',
+        title: '内容',
+        setType: 'content',
         setList: [
           {
             type: 'inputGroup',
-            title: '整体播放次数',
-            tag: 'animationRepeat',
+            title: '帧频',
+            tag: 'fps',
             param: {
-              placeholder: '无限循环请输入0'
+              placeholder: '请输入帧频'
             }
           },
           {
-            title: '动画设置',
+            type: 'inputGroup',
+            title: '播放次数',
+            tag: 'playNum',
+            param: {
+              placeholder: '无限循环请置空'
+            }
+          },
+          {
+            title: '帧图片设置',
             type: 'contentGroup',
-            tag: 'animations',
+            tag: 'frames',
             setList: [
               {
-                type: 'animationGroup'
+                type: 'imageGroup',
+                title: '图片地址',
+                tag: 'url'
               }
             ]
           }
         ]
-      }
+      },
+      {
+        title: '样式',
+        setType: 'style',
+        setList: [
+          {
+            type: 'inputGroup',
+            title: '元素名称',
+            tag: 'name',
+            param: {
+              placeholder: '请输入名称'
+            }
+          },
+          imageStyleParam,
+          commonSet.elementStyleSetGroup
+        ]
+      },
+      actionSetParam,
+      animationSetParam
     ]
   }
 ]

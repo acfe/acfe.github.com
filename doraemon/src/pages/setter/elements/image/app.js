@@ -18,13 +18,18 @@ const EImage = {
   props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
   created () {
     const param = this.param
-    this.imageStyle = this.formatStyle(param.imageStyle || {})
-    if (param.url) {
-      this.imageStyle['background-image'] = 'url(' + param.url + ')'
-    }
-    if (param.elementStyle.height > param.elementStyle.width) {
-      this.imageStyle['background-size'] = 'auto 100%'
-    }
+    param.elementStyle = param.elementStyle || {}
+    param.imageStyle = param.imageStyle || {}
+    this.imageStyle = param.imageStyle
+    this.imageStyle.height = param.elementStyle.height
+  },
+  mounted () {
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.ac == 'resizeElement') {
+        this.imageStyle.height = this.param.elementStyle.height
+        this.randKey = Math.random()
+      }
+    })
   },
   methods: Object.assign({
 

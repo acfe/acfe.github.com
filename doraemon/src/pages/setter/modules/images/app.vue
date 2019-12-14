@@ -63,7 +63,7 @@
         <div class="title" :style="titleStyle" v-if="param.title" v-html="param.title" @click="clickCallback(param)"></div>
       </div>
       <!-- theme11-->
-      <div :class="'theme-11'" v-if="inTheme(theme, [11])">
+      <div :class="'theme-11'" v-if="inTheme(theme, [11])"  @click="clickCallback(param)">
         <FcFitImage :src="param.url" :imageStyle="param.imageStyle"/>
       </div>
     </div>  

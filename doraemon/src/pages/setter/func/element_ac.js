@@ -165,6 +165,9 @@ export default {
     e.stopPropagation()
     moveParam.moveLock = false
     // this.refreshContent()
+    window.postMessage({
+      ac: 'resizeElement'
+    }, '*')
     this.setSetterContent(true)
   },
   getAcInfo (e, tag) {

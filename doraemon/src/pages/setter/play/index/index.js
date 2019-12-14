@@ -14,6 +14,7 @@ import FormatFunc from '../../func/format_style'
 import FcDomPlayer from 'fcbox/player/dom'
 import FcVerticalPlayer from 'fcbox/player/vertical'
 import FcFlipPlayer from 'fcbox/player/flip'
+import FcFramePlayer from 'fcbox/player/frame'
 import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
 import FcFitImage from 'fcbox/image/fit'
@@ -40,6 +41,7 @@ Vue.use(EIcon)
 Vue.use(EBusiness)
 Vue.use(FcDomPlayer)
 Vue.use(FcVerticalPlayer)
+Vue.use(FcFramePlayer)
 Vue.use(FcFlipPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
@@ -121,6 +123,7 @@ const Index = {
         }
         let moduleLockList = document.getElementsByClassName('moduleLock')
         if (!moduleLockList || !moduleLockList.length) {
+          this.scrollChecking = false
           return false
         }
         this.scrollTop = scrollTop
@@ -233,6 +236,7 @@ const Index = {
       }
       if (pages && pages[showPageId]) {
         this.showPage = pages[showPageId]
+        this.checkPageAction(this.showPage)
       }
       this.setPageStyle()
       this.setShowObj()
@@ -248,6 +252,7 @@ const Index = {
       }
       if (showPage) {
         this.showPage = showPage
+        this.checkPageAction(this.showPage)
         this.setPageStyle()
         this.setShowObj()
         this.$store.state.pageKey = Math.random()
@@ -255,6 +260,16 @@ const Index = {
           this.scrollEventInit()
         })
       }
+    },
+    checkPageAction (page) {
+      if (page.acDone && page.isFirstDo) {
+        return false
+      }
+      page.acDelay = parseInt(page.acDelay) || 16
+      setTimeout(() => {
+        page.action && this.acCallback(page)
+        page.acDone = 1
+      }, page.acDelay)
     },
     setPopContent (action) {
       const pops = this.contentConfig.pops
@@ -358,7 +373,7 @@ const Index = {
             window.fc.userActions[action.acFun](param, this)
           }
           break
-        case 6:
+        case 6: // 跳到顶部
           if (this.animating) {
             return false
           }
@@ -379,7 +394,7 @@ const Index = {
             }
           })
           break
-        case 7:
+        case 7: // 操作tab
           let showPageContent
           let tabId = action.tabId
           let hasLock
@@ -413,6 +428,48 @@ const Index = {
                   }
                 }
                 break
+              }
+            }
+          }
+          break
+        case 8: // 操作模块
+          if (this.$refs.page && this.$refs.page.getElementsByClassName('moduleItem')) {
+            let moduleItems = this.$refs.page.getElementsByClassName('moduleItem')
+            let acModule
+            for (let i = 0; i < moduleItems.length; i++) {
+              if (moduleItems[i].getAttribute('data-id') == action.moduleId) {
+                acModule = moduleItems[i]
+              }
+            }
+            if (acModule) {
+              switch (action.moduleAc) {
+                case 'show':
+                  acModule.style.display = 'block'
+                  break
+                case 'hide':
+                  acModule.style.display = 'none'
+                  break
+                default:
+                  if (this.animating) {
+                    return false
+                  }
+                  const tween = this.Animation.tween.Cubic.easeOut
+                  const that = this
+                  this.animating = true
+                  this.Animation.play({
+                    aStart: document.documentElement.scrollTop || document.body.scrollTop,
+                    aEnd: acModule.offsetTop || 0,
+                    tEnd: 24,
+                    tween,
+                    handle (num) {
+                      document.documentElement.scrollTop = parseInt(num)
+                      document.body.scrollTop = parseInt(num)
+                    },
+                    finish () {
+                      that.animating = false
+                    }
+                  })
+                  break
               }
             }
           }

@@ -11,7 +11,7 @@ const imageTheme = [
       elements: [
         {
           name: '白底色块',
-          tag: 'image',
+          tag: 'text',
           theme: 1,
           animationRepeat: 1,
           elementStyle: {
@@ -21,8 +21,7 @@ const imageTheme = [
             'top': 0,
             'rotateZ': 0,
             'background-color': '#fff'
-          },
-          imageStyle: {}
+          }
         }
       ]
     }
@@ -47,6 +46,46 @@ const imageTheme = [
             'rotateZ': 0
           },
           imageStyle: {}
+        }
+      ]
+    }
+  },
+  // 帧动画
+  {
+    url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/qa9rlz8c7o.png',
+    title: '帧动画',
+    config: {
+      elements: [
+        {
+          name: '帧动画',
+          tag: 'image',
+          theme: 3,
+          animationRepeat: 1,
+          playNum: 1,
+          fps: 200,
+          frames: {
+            data: [
+              {
+                url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/qa9rlz8c7o.png'
+              },
+              {
+                url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/y0i03yje3ta.png'
+              },
+              {
+                url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/axsx6rs465.png'
+              },
+              {
+                url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/u0qt1lrgw2m.png'
+              }
+            ]
+          },
+          elementStyle: {
+            'width': 100,
+            'height': 100,
+            'left': 0,
+            'top': 0,
+            'rotateZ': 0
+          }
         }
       ]
     }

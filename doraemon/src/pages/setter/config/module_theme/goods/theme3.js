@@ -49,7 +49,8 @@ const theme = {
       },
       itemStyle: {},
       imageStyle: {
-        'height': 120
+        'height': 100,
+        'fitType': 2
       },
       nameStyle: {
         'font-size': 14,

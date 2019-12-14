@@ -55,7 +55,9 @@ const FcElement = {
           this.checkPlay()
           window.addEventListener('message', (e) => {
             if (e.data && e.data.ac == 'docScroll') {
-              this.checkPlay()
+              setTimeout(() => {
+                this.checkPlay()
+              }, 500)
             }
           })
         } else {
@@ -66,7 +68,7 @@ const FcElement = {
   },
   methods: Object.assign({
     checkPlay () {
-      if (this.animationPlayted) {
+      if (!this.$refs.element) {
         return false
       }
       let moduleTop = this.$refs.element.parentNode.parentNode.parentNode.parentNode.offsetTop
@@ -74,11 +76,21 @@ const FcElement = {
       let clientHeight = document.documentElement.clientHeight || document.body.clientHeight
       let moduleHeight = this.$refs.element.parentNode.parentNode.parentNode.parentNode.clientHeight
       moduleHeight = moduleHeight > clientHeight ? clientHeight : moduleHeight
-      if (moduleTop - clientHeight + (moduleHeight / 2) < scrollTop) {
-        this.playAnimation()
+      let playLine = moduleTop - clientHeight + (moduleHeight / 2)
+      if (this.animationPlayted) {
+        // if (scrollTop > moduleTop || scrollTop < moduleTop - clientHeight) {
+        //   this.animationPlayted = false
+        //   this.animationRepeatNum = 1
+        //   this.playKey = 0
+        //   this.lockRound = true
+        // }
+        return false
+      }
+      if (playLine < scrollTop) {
+        this.playAnimation(this.lockRound)
       }
     },
-    playAnimation () {
+    playAnimation (lockRound) {
       this.animationPlayted = true
       const param = this.param
       const playElement = this.$refs.element
@@ -96,6 +108,9 @@ const FcElement = {
       const animation = param.animations.data[this.playKey] || {}
       animation.theme = parseInt(animation.theme) || 1
       animation.delay = animation.delay || 0
+      if (!parseInt(animation.repeat) && lockRound) {
+        return false
+      }
       setTimeout(() => {
         playElement.style.display = 'block'
         this['animationAc'](animation)

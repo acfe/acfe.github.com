@@ -34,6 +34,35 @@ const pageSetParam = {
                   value: 0
                 }
               ]
+            },
+            {
+              type: 'inputGroup',
+              title: '加载事件延迟',
+              tag: 'acDelay',
+              param: {
+                placeholder: '请输入毫秒数'
+              }
+            },
+            {
+              type: 'radioTabGroup',
+              title: '仅首次加载触发',
+              tag: 'isFirstDo',
+              defaultValue: 0,
+              data: [
+                {
+                  option: '是',
+                  value: 1
+                },
+                {
+                  option: '否',
+                  value: 0
+                }
+              ]
+            },
+            {
+              type: 'actionGroup',
+              tag: 'action',
+              acTitle: '页面加载触发'
             }
           ]
         },
