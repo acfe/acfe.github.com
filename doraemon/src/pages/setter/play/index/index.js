@@ -222,6 +222,9 @@ const Index = {
       if (this.contentConfig.body.toTopIconWidth) {
         this.toTopBtnStyle.width = parseInt(this.contentConfig.body.toTopIconWidth) / 375 + 'rem'
       }
+      if (this.contentConfig.body.toTopIconBottom) {
+        this.toTopBtnStyle.bottom = parseInt(this.contentConfig.body.toTopIconBottom) / 375 + 'rem'
+      }
       this.showToTopBtn = this.contentConfig.body.showToTopBtn || false
     },
     setPageStyle () {
@@ -448,6 +451,13 @@ const Index = {
                   break
                 case 'hide':
                   acModule.style.display = 'none'
+                  break
+                case 'sh':
+                  if (acModule.style.display == 'block' || !acModule.style.display) {
+                    acModule.style.display = 'none'
+                  } else {
+                    acModule.style.display = 'block'
+                  }
                   break
                 default:
                   if (this.animating) {

@@ -9,12 +9,16 @@ const FcModules = {
   data () {
     return {
       randKey: Math.random(),
-      moduleStyle: {}
+      moduleStyle: {},
+      baseZindex: 0
     }
   },
   props: ['param', 'isSet', 'refreshContent', 'setSetterContent', 'mid', 'acCallback'],
   created () {
     const param = this.param
+    if (param.tag == 'tab') {
+      this.baseZindex = 1000
+    }
     this.moveParam = {}
     this.sizeMoveParam = {}
     this.moduleStyle = this.formatStyle(param.moduleStyle || {})

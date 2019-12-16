@@ -13,6 +13,7 @@ const MTab = {
       randKey: Math.random(),
       theme: 1,
       tabContent: [],
+      showTabId: 0,
       domPlayerParam: {
         loop: true,
         autoPlay: true,
@@ -47,20 +48,50 @@ const MTab = {
         case 2:
           this.setContent2()
           if (this.domPlayerParam.FcDomPlayer) {
-            this.domPlayerParam.FcDomPlayer.goto(this.domPlayerParam.renderPage)
+            switch (this.param.singleDatas.checkedId) {
+              case 'pre':
+                this.domPlayerParam.FcDomPlayer.goPre()
+                break
+              case 'next':
+                this.domPlayerParam.FcDomPlayer.goNext()
+                break
+              default:
+                this.domPlayerParam.FcDomPlayer.goto(this.domPlayerParam.renderPage)
+                break
+            }
           }
           break
         case 3:
           this.setContent2()
           if (this.domPlayerParam.FcVerticalPlayer) {
-            this.domPlayerParam.FcVerticalPlayer.goto(this.domPlayerParam.renderPage)
+            switch (this.param.singleDatas.checkedId) {
+              case 'pre':
+                this.domPlayerParam.FcVerticalPlayer.goPre()
+                break
+              case 'next':
+                this.domPlayerParam.FcVerticalPlayer.goNext()
+                break
+              default:
+                this.domPlayerParam.FcVerticalPlayer.goto(this.domPlayerParam.renderPage)
+                break
+            }
           }
           break
         case 4:
           this.setContent2()
           this.domPlayerParam.loop = true
           if (this.domPlayerParam.FcFlipPlayer) {
-            this.domPlayerParam.FcFlipPlayer.goto(this.domPlayerParam.renderPage)
+            switch (this.param.singleDatas.checkedId) {
+              case 'pre':
+                this.domPlayerParam.FcFlipPlayer.goPre()
+                break
+              case 'next':
+                this.domPlayerParam.FcFlipPlayer.goNext()
+                break
+              default:
+                this.domPlayerParam.FcFlipPlayer.goto(this.domPlayerParam.renderPage)
+                break
+            }
           }
           break
       }
@@ -76,7 +107,19 @@ const MTab = {
         for (let i in dataContent) {
           if (dataContent[i].checkedId == param.singleDatas.checkedId) {
             tabPageId = dataContent[i].tabPageId
+            this.showTabId = parseInt(i)
           }
+        }
+        if (param.singleDatas.checkedId == 'next' || param.singleDatas.checkedId == 'pre') {
+          if (param.singleDatas.checkedId == 'next') {
+            this.showTabId += 1
+          }
+          if (param.singleDatas.checkedId == 'pre') {
+            this.showTabId--
+          }
+          this.showTabId = this.showTabId > dataContent.length - 1 ? 0 : this.showTabId
+          this.showTabId = this.showTabId < 0 ? dataContent.length - 1 : this.showTabId
+          tabPageId = dataContent[this.showTabId].tabPageId
         }
       }
       if (tabPageId && this.pages && this.pages.length) {

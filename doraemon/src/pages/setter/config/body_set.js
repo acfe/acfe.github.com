@@ -90,10 +90,18 @@ const bodySetParam = {
             },
             {
               type: 'inputGroup',
-              title: '按钮宽度',
+              title: '按钮宽度px',
               tag: 'toTopIconWidth',
               param: {
                 placeholder: '请输入按钮宽度'
+              }
+            },
+            {
+              type: 'inputGroup',
+              title: '底部距离px',
+              tag: 'toTopIconBottom',
+              param: {
+                placeholder: '按钮距底部距离'
               }
             }
           ]

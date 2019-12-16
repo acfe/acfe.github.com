@@ -130,13 +130,9 @@ const ParamSetter = {
                 }
                 break
             }
-            if (setterParam[i].tag == 'animations') {
-              setterParamValue.animations = setterParamValue.animations || { data: [] }
-              setSource = setterParamValue.animations
-            }
-            if (setterParam[i].tag == 'frames') {
-              setterParamValue.frames = setterParamValue.frames || { data: [] }
-              setSource = setterParamValue.frames
+            if (setterParam[i].tag) {
+              setterParamValue[setterParam[i].tag] = setterParamValue[setterParam[i].tag] || { data: [] }
+              setSource = setterParamValue[setterParam[i].tag]
             }
             if (setSource) {
               setList.push(this.getContentGroupParam(setterParam[i], setterParamValue, setSource))

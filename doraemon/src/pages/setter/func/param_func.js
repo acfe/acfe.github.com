@@ -391,8 +391,20 @@ const ParamFunc = {
           }
         }
       }
-      let tabItemData = []
-      let tabItemNames = {}
+      let tabItemData = [
+        {
+          option: '下一页',
+          value: 'next'
+        },
+        {
+          option: '上一页',
+          value: 'pre'
+        }
+      ]
+      let tabItemNames = {
+        'pre': '上一页',
+        'next': '下一页'
+      }
       if (tabContent && tabContent.length) {
         for (let i in tabContent) {
           tabItemData.push({
@@ -457,7 +469,7 @@ const ParamFunc = {
           value: setterParamValue.action['moduleAc'] || 'goto',
           data: [
             {
-              option: '跳转到模块',
+              option: '跳转到',
               value: 'goto'
             },
             {
@@ -467,6 +479,10 @@ const ParamFunc = {
             {
               option: '显示',
               value: 'show'
+            },
+            {
+              option: '显隐',
+              value: 'sh'
             }
           ]
         },

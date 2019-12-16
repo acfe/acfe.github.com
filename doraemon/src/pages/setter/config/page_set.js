@@ -34,7 +34,14 @@ const pageSetParam = {
                   value: 0
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          type: 'setGroup',
+          title: '页面事件设置',
+          open: false,
+          setList: [
             {
               type: 'inputGroup',
               title: '加载事件延迟',
