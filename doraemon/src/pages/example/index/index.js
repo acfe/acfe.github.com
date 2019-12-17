@@ -14,19 +14,19 @@ const Index = {
         {
           title: '电商网站首页',
           url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201911/53idim7a15.jpg',
-          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?id=111#/play',
+          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?demoId=mall#/play',
           tag: 'mall'
         },
         {
           title: '酒类营销长页',
           url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201911/fq4onlbq09v.jpg',
-          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?id=97#/play',
+          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?demoId=wine#/play',
           tag: 'wine'
         },
         {
           title: '时尚专题-鲜衣怒马',
           url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201911/99b34vba9fo.png',
-          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?id=139#/play',
+          previewUrl: 'http://common-sit2.fcbox.com/cdn/staticResource/program/app/advice/index.html?demoId=fashion#/play',
           tag: 'fashion'
         }
       ]

@@ -3,7 +3,7 @@
 */
 
 const theme = {
-  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/rp3m983xc0k.png',
+  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/vfb9zci67aj.jpg',
   title: '单图模块-banner',
   config: {
     module: {

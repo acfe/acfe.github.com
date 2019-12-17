@@ -1,27 +1,33 @@
 /*
-  4.侧滑轮播
+  16.侧滑轮播-文字内嵌
 */
 import commonSet from '../../common_set'
 
 const theme = {
-  url: 'http://static.fcbox.com/fcapp/mall/lx9j545dyi.jpg',
-  title: '侧滑轮播',
+  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/b9htt7pkgmc.jpg',
+  title: '侧滑轮播-文字内嵌',
   config: {
     module: {
-      name: '侧滑轮播',
+      name: '侧滑轮播-文字内嵌',
       tag: 'images',
-      theme: 4,
+      theme: 16,
       dataType: 0,
       singleDatas: {
         data: [
           {
-            url: 'http://static.fcbox.com/fcapp/mall/lx9j545dyi.jpg'
+            url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/c3crh6bud59.jpg',
+            fTitle: '',
+            fDescription: '丝巾围巾系法千万种 但这些却解锁时髦'
           },
           {
-            url: 'http://static.fcbox.com/fcapp/mall/gjpw0cd0shf.jpg'
+            url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/srhkyq1liaa.jpg',
+            fTitle: '',
+            fDescription: '10款大牌眼线评测不容错过'
           },
           {
-            url: 'http://static.fcbox.com/fcapp/mall/6x36vr5h5tg.jpg'
+            url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/rhakcs9t38.jpg',
+            fTitle: '',
+            fDescription: '杨幂肖战都在穿的费尔岛毛衣原来这么潮'
           }
         ]
       },
@@ -44,7 +50,29 @@ const theme = {
         'border-top-right-radius': 4,
         'border-bottom-left-radius': 4,
         'border-bottom-right-radius': 4,
-        'margin-right': 5
+        'margin-right': 5,
+        'background-color': '#f00b7e'
+      },
+      fContentStyle: {
+        bottom: 35
+      },
+      textMaskImage: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/ctx62guuli.png',
+      fTitleStyle: {
+        'font-size': 18,
+        'color': '#fff',
+        'line-height': 20,
+        'text-align': 'center',
+        'padding-left': 10,
+        'padding-right': 10
+      },
+      fDescriptionStyle: {
+        'font-size': 16,
+        'color': '#fff',
+        'line-height': 20,
+        'text-align': 'center',
+        'padding-left': 10,
+        'padding-right': 10,
+        'padding-top': 10
       }
     }
   }
@@ -60,6 +88,22 @@ const contentSetParam4 = {
       tag: 'url'
     },
     {
+      type: 'textareaGroup',
+      title: '标题',
+      tag: 'fTitle',
+      param: {
+        placeholder: '请输入标题'
+      }
+    },
+    {
+      type: 'textareaGroup',
+      title: '描述',
+      tag: 'fDescription',
+      param: {
+        placeholder: '请输入描述'
+      }
+    },
+    {
       type: 'actionGroup',
       tag: 'action'
     }
@@ -69,7 +113,7 @@ const contentSetList4 = JSON.parse(JSON.stringify(commonSet.contentSetList))
 contentSetList4.push(contentSetParam4)
 
 const themeSet = {
-  theme: 4,
+  theme: 16,
   setType: 'content',
   data: [
     {
@@ -274,7 +318,40 @@ const themeSet = {
             }
           ]
         },
-        commonSet.fitImageSetGroup
+        commonSet.fitImageSetGroup,
+        {
+          type: 'setGroup',
+          title: '内容设置',
+          open: false,
+          setList: [
+            {
+              type: 'imageGroup',
+              title: '文字蒙层背景',
+              showTitle: true,
+              tag: 'textMaskImage'
+            },
+            {
+              type: 'inputGroup',
+              title: '顶部距离px',
+              tag: 'top',
+              setValueKey: 'fContentStyle',
+              param: {
+                placeholder: '请输入顶部距离'
+              }
+            },
+            {
+              type: 'inputGroup',
+              title: '底部距离px',
+              tag: 'bottom',
+              setValueKey: 'fContentStyle',
+              param: {
+                placeholder: '请输入底部距离'
+              }
+            }
+          ]
+        },
+        commonSet.getTextGroupParam('标题', 'fTitleStyle'),
+        commonSet.getTextGroupParam('描述', 'fDescriptionStyle')
       ]
     }
   ]

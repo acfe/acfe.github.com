@@ -1,6 +1,7 @@
 /**
  * Created by 001264 on 2017/9/10.
  */
+import Vue from 'vue'
 import FcModules from '../module/app.vue'
 
 const MTab = {
@@ -22,6 +23,11 @@ const MTab = {
         renderPage: 0,
         drag: false,
         data: []
+      },
+      playerLoaded: {
+        dom: false,
+        vertical: false,
+        flip: false
       }
     }
   },
@@ -37,8 +43,34 @@ const MTab = {
       this.tabItems[param.id] = this
     }
     this.refreshTabContent()
+    this.loadPiece()
   },
   methods: Object.assign({
+    loadPiece () {
+      switch (this.theme) {
+        case 2:
+          const FcDomPlayerLoader = () => import(/* webpackChunkName: "dom_player_piece" */ 'fcbox/player/dom')
+          FcDomPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.dom = true
+          })
+          break
+        case 3:
+          const FcVerticalPlayerLoader = () => import(/* webpackChunkName: "vertical_player_piece" */ 'fcbox/player/vertical')
+          FcVerticalPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.vertical = true
+          })
+          break
+        case 4:
+          const FcFlipPlayerLoader = () => import(/* webpackChunkName: "flip_player_piece" */ 'fcbox/player/flip')
+          FcFlipPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.flip = true
+          })
+          break
+      }
+    },
     refreshTabContent () {
       switch (this.theme) {
         case 1:

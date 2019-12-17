@@ -4,11 +4,11 @@
 import commonSet from '../../common_set'
 
 const theme = {
-  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/pbidjddczg8.png',
+  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/s780719wr3p.jpg',
   title: '横向滚动',
   config: {
     module: {
-      name: '多列排版',
+      name: '横向滚动',
       tag: 'images',
       theme: 3,
       dataType: 0,

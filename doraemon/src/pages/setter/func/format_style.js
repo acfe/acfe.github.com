@@ -103,6 +103,7 @@ export default {
     let dataContent = this.dataContent
     switch (this.theme) {
       case 2:
+      case 15:
       case 1001:
         let cl = dataContent.length
         if (cl % param.columNum) {
@@ -127,9 +128,11 @@ export default {
         }
         break
       case 3:
+      case 14:
         this.contentPaddingStyle['width'] = 100 / param.columNum + '%'
         break
       case 4:
+      case 16:
         let data = []
         for (let c in dataContent) {
           data.push(Object.assign(dataContent[c], {

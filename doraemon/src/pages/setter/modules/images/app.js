@@ -1,6 +1,7 @@
 /**
  * Created by 001264 on 2017/9/10.
  */
+import Vue from 'vue'
 import FcModules from '../module/app.vue'
 import formatAc from '../../func/format_style'
 
@@ -24,7 +25,13 @@ const MImages = {
       imageStyle: {},
       titleStyle: {},
       descriptionStyle: {},
+      fContentStyle: {},
+      fTitleStyle: {},
+      fDescriptionStyle: {},
+      fTagStyle: {},
+      textMaskStyle: {},
       domPlayerParam: {
+        loaded: false,
         loop: true,
         autoPlay: true,
         autoPlayTime: 5000,
@@ -81,6 +88,28 @@ const MImages = {
     this.imageStyle = this.formatStyle(param.imageStyle || {})
     this.titleStyle = this.formatStyle(param.titleStyle || {})
     this.descriptionStyle = this.formatStyle(param.descriptionStyle || {})
+    this.fTitleStyle = this.formatStyle(param.fTitleStyle || {})
+    this.fDescriptionStyle = this.formatStyle(param.fDescriptionStyle || {})
+    this.fTagStyle = this.formatStyle(param.fTagStyle || {})
+    if (param.fContentStyle) {
+      if (param.fContentStyle.bottom) {
+        this.fContentStyle = {
+          top: 'none',
+          bottom: parseInt(param.fContentStyle.bottom) / 375 + 'rem'
+        }
+      } else if (param.fContentStyle.top) {
+        this.fContentStyle = {
+          bottom: 'none',
+          top: parseInt(param.fContentStyle.top) / 375 + 'rem'
+        }
+      }
+      this.fContentStyle['text-align'] = this.fTagStyle['text-align'] || 'center'
+    }
+    if (param.textMaskImage) {
+      this.textMaskStyle = {
+        'background-image': 'url(' + param.textMaskImage + ')'
+      }
+    }
     if (this.imageStyle.float) {
       this.imageFloatStyle.float = this.imageStyle.float
     }
@@ -94,8 +123,21 @@ const MImages = {
       this.contentPaddingStyle['padding-right'] = (parseInt(param.contentPaddingRight) / 375) + 'rem'
     }
     this.setThemeContent()
+    this.loadPiece()
   },
   methods: Object.assign({
+    loadPiece () {
+      switch (this.theme) {
+        case 4:
+        case 16:
+          const FcDomPlayerLoader = () => import(/* webpackChunkName: "dom_player_piece" */ 'fcbox/player/dom')
+          FcDomPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.domPlayerParam.loaded = true
+          })
+          break
+      }
+    },
     stopTouchstart (e) {
       e.stopPropagation()
     }

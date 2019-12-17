@@ -4,7 +4,7 @@
 import commonSet from '../../common_set'
 
 const theme = {
-  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/en39k28lnmq.png',
+  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/dzzodaniz4.jpg',
   title: '多列排版-双列',
   config: {
     module: {

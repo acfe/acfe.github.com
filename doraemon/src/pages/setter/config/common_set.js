@@ -614,7 +614,44 @@ const fitImageSetGroup = {
   ]
 }
 
+const actionSetParam = {
+  title: '事件',
+  setType: 'action',
+  setList: [
+    {
+      type: 'actionGroup',
+      tag: 'action'
+    }
+  ]
+}
+const animationSetParam = {
+  title: '动画',
+  setType: 'animation',
+  setList: [
+    {
+      type: 'inputGroup',
+      title: '整体播放次数',
+      tag: 'animationRepeat',
+      param: {
+        placeholder: '无限循环请输入0'
+      }
+    },
+    {
+      title: '动画设置',
+      type: 'contentGroup',
+      tag: 'animations',
+      setList: [
+        {
+          type: 'animationGroup'
+        }
+      ]
+    }
+  ]
+}
+
 const commonSet = {
+  actionSetParam,
+  animationSetParam,
   contentSetList,
   tabGuildData,
   guildDefaultData,

@@ -45,7 +45,9 @@ const FcFlipPlayer = {
     player.addEventListener('mousedown', this.touchstart.bind(this))
     document.documentElement.addEventListener('mousemove', this.touchmove.bind(this))
     document.documentElement.addEventListener('mouseup', this.touchend.bind(this))
-    this.autoPlay()
+    setTimeout(() => {
+      this.autoPlay()
+    })
   },
   beforeDestroy () {
     this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)

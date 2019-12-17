@@ -11,9 +11,6 @@ import Location from 'fcbox/utils/location'
 import Share from 'fcbox/utils/share'
 import Animation from 'fcbox/utils/animation'
 import FormatFunc from '../../func/format_style'
-import FcDomPlayer from 'fcbox/player/dom'
-import FcVerticalPlayer from 'fcbox/player/vertical'
-import FcFlipPlayer from 'fcbox/player/flip'
 import FcFramePlayer from 'fcbox/player/frame'
 import PlayerStatusBar from 'fcbox/player/player_status_bar'
 import FcPreImage from 'fcbox/image/pre'
@@ -39,10 +36,7 @@ Vue.use(EImage)
 Vue.use(EText)
 Vue.use(EIcon)
 Vue.use(EBusiness)
-Vue.use(FcDomPlayer)
-Vue.use(FcVerticalPlayer)
 Vue.use(FcFramePlayer)
-Vue.use(FcFlipPlayer)
 Vue.use(PlayerStatusBar)
 Vue.use(FcPreImage)
 Vue.use(FcFitImage)
@@ -177,6 +171,12 @@ const Index = {
           this.setBodyStyle()
           this.pageInit()
         }
+      } else if (Location.queryParams['demoId']) {
+        this.createJs('demo_data/' + Location.queryParams['demoId'], () => {
+          this.$store.state.contentConfig = window.demoData[Location.queryParams['demoId']]
+          this.setBodyStyle()
+          this.pageInit()
+        })
       } else if (Location.queryParams['id']) {
         ajax.get({
           url: envConfig.apiHost,
@@ -213,7 +213,58 @@ const Index = {
         })
       }
     },
+    createJs (name, callback) {
+      var head = document.getElementsByTagName('head')[0]
+      var script = document.createElement('script')
+      script.src = envConfig.publicPath + name + '.js'
+      head.appendChild(script)
+      script.onload = function () {
+        callback && callback()
+      }
+    },
+    preloadImages () {
+      let str = JSON.stringify(this.contentConfig)
+      let reg = /(http|https|\/\/).*?(\.(jpg|gif|png|bmp))/ig
+      let images = str.match(reg)
+      if (images && images.length) {
+        let imageArr = [...new Set(images)]
+        let total = imageArr.length
+        // console.log(imageArr)
+        this.doPreload(imageArr, total)
+      }
+    },
+    doPreload (imageArr, total) {
+      let src = imageArr.shift()
+      const loadedFunc = () => {
+        if (!imageArr.length) {
+          window.postMessage({
+            ac: 'preloadImageFinish',
+            total
+          }, '*')
+          // console.log('finish')
+        } else {
+          // console.log(imageArr.length, total)
+          // console.log('precent', ((total - imageArr.length) / total) * 100)
+          window.postMessage({
+            ac: 'preloadImageHandle',
+            loaded: total - imageArr.length,
+            total,
+            precent: ((total - imageArr.length) / total) * 100
+          }, '*')
+          this.doPreload(imageArr, total)
+        }
+      }
+      let img = new Image()
+      img.onload = () => {
+        loadedFunc()
+      }
+      img.onerror = () => {
+        loadedFunc()
+      }
+      img.src = src
+    },
     setBodyStyle () {
+      this.preloadImages()
       this.bodyStyle = this.formatStyle(this.contentConfig.body.style || {})
       Object.assign(document.body.style, this.bodyStyle)
       if (this.contentConfig.body.toTopIconUrl) {
