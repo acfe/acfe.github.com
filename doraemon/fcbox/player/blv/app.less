@@ -1,0 +1,36 @@
+.fc-blv-player {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .blv-player-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .blv-player-scroll {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      .blv-player-content {
+        transform: translate3d(0, 0 , 0);
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+.avatar-loop(@n, @i:1) when (@i <= @n) {
+  .blv@{i} {
+    -webkit-filter: blur(1px * @i);
+    -moz-filter: blur(1px * @i);
+    -ms-filter: blur(1px * @i);
+    filter: blur(1px * @i);
+  }
+  .avatar-loop(@n, (@i + 1));
+}
+.avatar-loop(100, 1);

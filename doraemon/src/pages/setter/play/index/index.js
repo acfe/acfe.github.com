@@ -67,6 +67,13 @@ const Index = {
       bodyStyle: {},
       pageStyle: {},
       tabItems: {},
+      musicStyle: {},
+      musicObj: {
+        key: Math.random(),
+        autoplay: false,
+        play: false,
+        src: ''
+      },
       toTopBtnStyle: {},
       popKey: Math.random(),
       toTopIconUrl: 'https://common.fcbox.com/cdn/mall/static/images/to-top.png',
@@ -92,6 +99,16 @@ const Index = {
     this.scrollEventInit()
   },
   methods: Object.assign({
+    musicControl () {
+      this.musicObj.play = !this.musicObj.play
+      if (this.musicObj.play) {
+        this.$refs.music.className = 'music-btn animate'
+        this.$refs.audio.play()
+      } else {
+        this.$refs.music.className = 'music-btn'
+        this.$refs.audio.pause()
+      }
+    },
     scrollEventInit () {
       document.onscroll = () => {
         this.checkScroll()
@@ -224,7 +241,7 @@ const Index = {
     },
     preloadImages () {
       let str = JSON.stringify(this.contentConfig)
-      let reg = /(http|https|\/\/).*?(\.(jpg|gif|png|bmp))/ig
+      let reg = /(http|https|\/\/)[^'"]*?(\.(jpg|gif|png|bmp))/ig
       let images = str.match(reg)
       if (images && images.length) {
         let imageArr = [...new Set(images)]
@@ -264,6 +281,7 @@ const Index = {
       img.src = src
     },
     setBodyStyle () {
+      document.title = this.contentConfig.body.title || ''
       this.preloadImages()
       this.bodyStyle = this.formatStyle(this.contentConfig.body.style || {})
       Object.assign(document.body.style, this.bodyStyle)
@@ -277,6 +295,11 @@ const Index = {
         this.toTopBtnStyle.bottom = parseInt(this.contentConfig.body.toTopIconBottom) / 375 + 'rem'
       }
       this.showToTopBtn = this.contentConfig.body.showToTopBtn || false
+      if (this.contentConfig.body.music) {
+        this.musicObj.src = this.contentConfig.body.music
+        this.musicObj.autoplay = this.contentConfig.body.autoplay || false
+        this.musicStyle = this.formatStyle(this.contentConfig.body.musicStyle || {})
+      }
     },
     setPageStyle () {
       this.pageStyle = this.formatStyle(this.showPage.style || {})

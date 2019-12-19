@@ -1,16 +1,16 @@
 /*
-  3.侧滑-纵向
+  5.模糊-横向
 */
 import commonSet from '../../common_set'
 
 const theme = {
-  title: '侧滑-纵向',
-  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/b4l1kx9sjon.jpg',
+  title: '模糊-横向',
+  url: 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/tu7qwtynhy.jpg',
   config: {
     module: {
-      name: '侧滑-纵向tab',
+      name: '模糊-横向tab',
       tag: 'tab',
-      theme: 3,
+      theme: 5,
       guildTheme: 0,
       dataType: 0,
       singleDatas: {
@@ -42,7 +42,7 @@ const theme = {
 }
 
 const themeSet = {
-  theme: 3,
+  theme: 5,
   setType: 'content',
   data: commonSet.tabSetData
 }

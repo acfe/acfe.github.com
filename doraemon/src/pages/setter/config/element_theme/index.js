@@ -21,7 +21,7 @@ export default {
       data: iconTheme.theme
     },
     {
-      title: '业务',
+      title: '功能',
       tag: 'businessTheme',
       data: businessTheme.theme
     }

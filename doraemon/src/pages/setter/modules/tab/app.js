@@ -3,10 +3,12 @@
  */
 import Vue from 'vue'
 import FcModules from '../module/app.vue'
+import MTabItem from './tab_item/app.vue'
 
 const MTab = {
   components: {
-    FcModules
+    FcModules,
+    MTabItem
   },
   name: 'MTab',
   data () {
@@ -27,7 +29,9 @@ const MTab = {
       playerLoaded: {
         dom: false,
         vertical: false,
-        flip: false
+        flip: false,
+        blh: false,
+        blv: false
       }
     }
   },
@@ -43,6 +47,8 @@ const MTab = {
       this.tabItems[param.id] = this
     }
     this.refreshTabContent()
+  },
+  mounted () {
     this.loadPiece()
   },
   methods: Object.assign({
@@ -69,59 +75,51 @@ const MTab = {
             this.playerLoaded.flip = true
           })
           break
+        case 5:
+          const FcBlurHPlayerLoader = () => import(/* webpackChunkName: "blh_player_piece" */ 'fcbox/player/blh')
+          FcBlurHPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.blh = true
+          })
+          break
+        case 6:
+          const FcBlurVPlayerLoader = () => import(/* webpackChunkName: "blv_player_piece" */ 'fcbox/player/blv')
+          FcBlurVPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.blv = true
+          })
+          break
       }
     },
     refreshTabContent () {
+      const playerKeys = {
+        2: 'FcDomPlayer',
+        3: 'FcVerticalPlayer',
+        4: 'FcFlipPlayer',
+        5: 'FcBlurHPlayer',
+        6: 'FcBlurVPlayer'
+      }
       switch (this.theme) {
         case 1:
           this.setContent()
           this.randKey = Math.random()
           break
         case 2:
-          this.setContent2()
-          if (this.domPlayerParam.FcDomPlayer) {
-            switch (this.param.singleDatas.checkedId) {
-              case 'pre':
-                this.domPlayerParam.FcDomPlayer.goPre()
-                break
-              case 'next':
-                this.domPlayerParam.FcDomPlayer.goNext()
-                break
-              default:
-                this.domPlayerParam.FcDomPlayer.goto(this.domPlayerParam.renderPage)
-                break
-            }
-          }
-          break
         case 3:
-          this.setContent2()
-          if (this.domPlayerParam.FcVerticalPlayer) {
-            switch (this.param.singleDatas.checkedId) {
-              case 'pre':
-                this.domPlayerParam.FcVerticalPlayer.goPre()
-                break
-              case 'next':
-                this.domPlayerParam.FcVerticalPlayer.goNext()
-                break
-              default:
-                this.domPlayerParam.FcVerticalPlayer.goto(this.domPlayerParam.renderPage)
-                break
-            }
-          }
-          break
         case 4:
+        case 5:
+        case 6:
           this.setContent2()
-          this.domPlayerParam.loop = true
-          if (this.domPlayerParam.FcFlipPlayer) {
+          if (this.domPlayerParam[playerKeys[this.theme]]) {
             switch (this.param.singleDatas.checkedId) {
               case 'pre':
-                this.domPlayerParam.FcFlipPlayer.goPre()
+                this.domPlayerParam[playerKeys[this.theme]].goPre()
                 break
               case 'next':
-                this.domPlayerParam.FcFlipPlayer.goNext()
+                this.domPlayerParam[playerKeys[this.theme]].goNext()
                 break
               default:
-                this.domPlayerParam.FcFlipPlayer.goto(this.domPlayerParam.renderPage)
+                this.domPlayerParam[playerKeys[this.theme]].goto(this.domPlayerParam.renderPage)
                 break
             }
           }
