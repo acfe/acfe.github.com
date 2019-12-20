@@ -31,7 +31,8 @@ const MTab = {
         vertical: false,
         flip: false,
         blh: false,
-        blv: false
+        blv: false,
+        cardh: false
       }
     }
   },
@@ -89,6 +90,13 @@ const MTab = {
             this.playerLoaded.blv = true
           })
           break
+        case 7:
+          const FcCardHPlayerLoader = () => import(/* webpackChunkName: "cardh_player_piece" */ 'fcbox/player/cardh')
+          FcCardHPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.playerLoaded.cardh = true
+          })
+          break
       }
     },
     refreshTabContent () {
@@ -97,7 +105,8 @@ const MTab = {
         3: 'FcVerticalPlayer',
         4: 'FcFlipPlayer',
         5: 'FcBlurHPlayer',
-        6: 'FcBlurVPlayer'
+        6: 'FcBlurVPlayer',
+        7: 'FcCardHPlayer'
       }
       switch (this.theme) {
         case 1:
@@ -109,6 +118,7 @@ const MTab = {
         case 4:
         case 5:
         case 6:
+        case 7:
           this.setContent2()
           if (this.domPlayerParam[playerKeys[this.theme]]) {
             switch (this.param.singleDatas.checkedId) {

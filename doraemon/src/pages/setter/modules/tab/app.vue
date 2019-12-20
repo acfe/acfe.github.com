@@ -66,6 +66,17 @@
           </template>
         </FcBlurVPlayer>
       </div>
+      <!-- theme7 -->
+      <div :class="'theme-' + theme" v-if="theme == 7 && playerLoaded.cardh">
+        <FcCardHPlayer :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
+          <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
+          </template>
+          <template slot="s1" slot-scope="props">
+            <MTabItem :param="props.data" :pages="pages" :tabItems="tabItems" :isSet="isSet" :dataSource="dataSource" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+          </template>
+        </FcCardHPlayer>
+      </div>
     </div>
   </FcModules>
 </template>

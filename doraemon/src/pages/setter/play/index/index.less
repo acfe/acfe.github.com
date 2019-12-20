@@ -80,8 +80,14 @@ html,body {
     height: 32px;
     border-radius: 18px;
     border: 2px solid #fff;
-    background: rgba(0, 0, 0, .8) url('../../../../common/img/music.png') no-repeat top right;
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-color: rgba(0, 0, 0, .8);
+    background-image: url('../../../../common/img/music.png');
     background-size: 100% auto;
+    img {
+      width: 100%;
+    }
   }
   .animate {
     -webkit-animation: rot 2s linear infinite;

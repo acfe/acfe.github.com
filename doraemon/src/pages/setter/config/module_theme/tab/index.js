@@ -4,6 +4,7 @@ import theme3 from './theme3'
 import theme4 from './theme4'
 import theme5 from './theme5'
 import theme6 from './theme6'
+import theme7 from './theme7'
 
 const themes = [
   theme1,
@@ -11,7 +12,8 @@ const themes = [
   theme3,
   theme4,
   theme5,
-  theme6
+  theme6,
+  theme7
 ]
 
 const theme = []

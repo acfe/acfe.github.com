@@ -114,6 +114,12 @@ const bodySetParam = {
       open: false,
       setList: [
         {
+          type: 'imageGroup',
+          title: '音乐图标',
+          showTitle: 1,
+          tag: 'musicIcon'
+        },
+        {
           type: 'textareaGroup',
           title: '音乐地址',
           tag: 'music',

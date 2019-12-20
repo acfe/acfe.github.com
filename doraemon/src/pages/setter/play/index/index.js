@@ -72,7 +72,8 @@ const Index = {
         key: Math.random(),
         autoplay: false,
         play: false,
-        src: ''
+        src: '',
+        icon: '' // http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/455qaccj5gp.png
       },
       toTopBtnStyle: {},
       popKey: Math.random(),
@@ -297,8 +298,16 @@ const Index = {
       this.showToTopBtn = this.contentConfig.body.showToTopBtn || false
       if (this.contentConfig.body.music) {
         this.musicObj.src = this.contentConfig.body.music
+        this.musicObj.icon = this.contentConfig.body.musicIcon
         this.musicObj.autoplay = this.contentConfig.body.autoplay || false
         this.musicStyle = this.formatStyle(this.contentConfig.body.musicStyle || {})
+        if (this.musicObj.icon) {
+          Object.assign(this.musicStyle, {
+            border: 'none',
+            'background-image': 'none',
+            'background': 'none'
+          })
+        }
       }
     },
     setPageStyle () {

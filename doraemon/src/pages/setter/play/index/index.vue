@@ -38,6 +38,7 @@
       <img :src="toTopIconUrl">
     </div>
     <div class="music-btn" :class="{'animate': musicObj.autoplay}" :style="musicStyle" ref="music" @click="musicControl" v-if="musicObj.src" :key="musicObj.key">
+      <img :src="musicObj.icon" v-if="musicObj.icon">
       <audio :autoplay="musicObj.autoplay" ref="audio" loop="loop" :src="musicObj.src" class="music-audio"></audio>
     </div>
   </div>
