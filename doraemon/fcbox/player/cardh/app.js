@@ -143,14 +143,14 @@ const FcCardHPlayer = {
       let autoPlayTime = this.param.autoPlayTime || 3000
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlayTimeout = setTimeout(() => {
-        this.changeX = 300
+        this.changeX = 200
         this.nextFlip = this.$refs.nextFlip[0]
         if (this.nextFlip) {
           Object.assign(this.nextFlip.style, {
-            position: 'absolute',
             display: 'block',
-            'z-Index': 0,
-            opacity: 0
+            position: 'absolute',
+            left: '100%',
+            'z-index': 2
           })
         }
         this.moveBack(true)
@@ -238,7 +238,7 @@ const FcCardHPlayer = {
       e.stopPropagation()
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlaying = false
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       const scrollParam = this.scrollParam
       const sX = event.pageX || event.x
       const sY = event.pageY || event.y
@@ -253,13 +253,13 @@ const FcCardHPlayer = {
     },
     touchmove (e) {
       const scrollParam = this.scrollParam
-      if (!scrollParam || !scrollParam.moveLock) {
+      this.renderFlip = this.$refs.renderFlip[0]
+      if (!scrollParam || !scrollParam.moveLock || !this.renderFlip) {
         return false
       }
-      this.renderFlip = this.$refs.renderFlip[0]
       this.preFlip = this.$refs.preFlip[0]
       this.nextFlip = this.$refs.nextFlip[0]
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       scrollParam.mX = event.pageX || event.x
       scrollParam.mY = event.pageY || event.y
       let changeX = scrollParam.sX - scrollParam.mX

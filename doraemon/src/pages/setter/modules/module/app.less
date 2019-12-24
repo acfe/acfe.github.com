@@ -5,6 +5,7 @@
   box-sizing: border-box;
   user-select: none;
   min-height: 34px;
+  overflow: hidden;
   .module-mask {
     position: absolute;
     z-index: 1;
@@ -12,5 +13,34 @@
     height: 100%;
     top: 0;
     left: 0;
+  }
+  .show-more {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 40px;
+    padding-top: 30px;
+    line-height: 30px;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    background-image: -webkit-linear-gradient(top,hsla(0,0%,98%,0),hsla(0,0%,98%,.9) 38%,#f6f6f6 49.1%,#f6f6f6);
+    background-image: linear-gradient(top,hsla(0,0%,98%,0),hsla(0,0%,98%,.9) 38%,#f6f6f6 49.1%,#f6f6f6);
+    .show-more-content {
+      display: inline-block;
+      .show-more-text {
+        color: #666;
+        float: left;
+      }
+      .show-more-icon {
+        float: left;
+        width: 24px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-size: 12px auto;
+        background-position: center;
+        background-image: url(http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/b7ztftll89n.png);
+      }
+    }
   }
 }

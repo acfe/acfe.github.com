@@ -128,7 +128,7 @@ const themeSet = {
             },
             {
               type: 'imageTabGroup',
-              title: '导航样式',
+              title: '导航选择',
               tag: 'guildTheme',
               defaultValue: 0,
               guildDefaultData: commonSet.guildDefaultData,

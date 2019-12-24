@@ -235,7 +235,7 @@ const FcBlurVPlayer = {
       e.stopPropagation()
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlaying = false
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       const scrollParam = this.scrollParam
       const sY = event.pageY || event.y
       this.changeY = 0
@@ -252,7 +252,7 @@ const FcBlurVPlayer = {
         return false
       }
       this.renderFlip = this.$refs.renderFlip[0]
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       scrollParam.mY = event.pageY || event.y
       let changeY = scrollParam.mY - scrollParam.sY
       let maxScroll = this.renderFlip.scrollHeight - this.renderFlip.offsetHeight
@@ -333,7 +333,9 @@ const FcBlurVPlayer = {
         renderPage = this.renderPage
         added = 0
       }
-      if (Math.abs(this.changeY) < 185) {
+      let ch = this.moduleHeight / 2
+      ch = ch > 185 ? 185 : ch
+      if (Math.abs(this.changeY) < ch) {
         renderPage = this.renderPage
         added = 0
       }

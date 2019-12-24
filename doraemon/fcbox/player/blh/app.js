@@ -227,7 +227,7 @@ const FcBlurHPlayer = {
       e.stopPropagation()
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlaying = false
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       const scrollParam = this.scrollParam
       const sX = event.pageX || event.x
       const sY = event.pageY || event.y
@@ -248,7 +248,7 @@ const FcBlurHPlayer = {
       this.renderFlip = this.$refs.renderFlip[0]
       this.preFlip = this.$refs.preFlip[0]
       this.nextFlip = this.$refs.nextFlip[0]
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       scrollParam.mX = event.pageX || event.x
       scrollParam.mY = event.pageY || event.y
       let changeX = scrollParam.sX - scrollParam.mX

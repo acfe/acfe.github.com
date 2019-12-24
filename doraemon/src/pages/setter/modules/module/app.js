@@ -10,7 +10,8 @@ const FcModules = {
     return {
       randKey: Math.random(),
       moduleStyle: {},
-      baseZindex: 0
+      baseZindex: 0,
+      isShowMore: false
     }
   },
   props: ['param', 'isSet', 'refreshContent', 'setSetterContent', 'mid', 'acCallback'],
@@ -42,6 +43,9 @@ const FcModules = {
       if (this.$refs.fcModule && this.param.heightType == 'auto') {
         this.param.moduleHeight = this.$refs.fcModule.offsetHeight
       }
+      if (this.$refs.fcModule.scrollHeight > this.$refs.fcModule.offsetHeight) {
+        this.isShowMore = true
+      }
     }, 100)
     if (this.isSet) {
       this.$refs.fcModule.addEventListener('mousedown', this.mousedown)
@@ -50,7 +54,10 @@ const FcModules = {
     }
   },
   methods: Object.assign({
-
+    showMore () {
+      this.isShowMore = false
+      this.$refs.fcModule.style.height = 'auto'
+    }
   }, formatAc, ElementAc)
 }
 

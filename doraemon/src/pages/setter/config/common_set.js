@@ -192,6 +192,14 @@ const moduleStyleSetGroup = {
       type: 'heightGroup',
       title: '模块高度'
     },
+    {
+      type: 'textareaGroup',
+      title: '查看全部文案',
+      tag: 'showMoreText',
+      param: {
+        placeholder: '内容溢出时查看全部文案'
+      }
+    },
     getPaddingParam('模块边距设置', 'moduleStyle'),
     getRadiusParam('模块圆角设置', 'moduleStyle'),
     getBackgroundParam('模块背景设置', 'moduleStyle'),
@@ -654,21 +662,158 @@ const playerStyleSetGroup = {
       ]
     },
     {
-      type: 'imageTabGroup',
-      title: '导航样式',
-      tag: 'guildTheme',
-      refreshSetter: true,
-      defaultValue: 0,
-      guildDefaultData: guildDefaultData,
-      data: tabGuildData
-    },
-    {
       type: 'inputGroup',
       title: '轮播时间(ms)',
       tag: 'autoPlayTime',
       param: {
         placeholder: '请输入时间(毫秒ms)'
       }
+    },
+    {
+      type: 'imageTabGroup',
+      title: '导航选择',
+      tag: 'guildTheme',
+      defaultValue: 0,
+      guildDefaultData: guildDefaultData,
+      data: tabGuildData
+    },
+    {
+      type: 'setGroup',
+      title: '导航样式',
+      isSub: true,
+      setList: [
+        {
+          type: 'radioTabGroup',
+          title: '导航对齐',
+          tag: 'text-align',
+          defaultValue: 'center',
+          setValueKey: 'barContainerStyle',
+          data: [
+            {
+              option: '靠左',
+              value: 'left'
+            },
+            {
+              option: '居中',
+              value: 'center'
+            },
+            {
+              option: '靠右',
+              value: 'right'
+            }
+          ]
+        },
+        {
+          type: 'inputGroup',
+          title: '底部边距(px)',
+          tag: 'bottom',
+          setValueKey: 'barContainerStyle',
+          param: {
+            placeholder: '导航距离底部边距'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '左边距(px)',
+          tag: 'padding-left',
+          setValueKey: 'barContainerStyle',
+          param: {
+            placeholder: '导航左边距'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '右边距(px)',
+          tag: 'padding-right',
+          setValueKey: 'barContainerStyle',
+          param: {
+            placeholder: '导航右边距'
+          }
+        },
+        {
+          type: 'colorGroup',
+          title: '背景色',
+          tag: 'background-color',
+          setValueKey: 'barStyle',
+          param: {
+            placeholder: '导航右边距'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '宽度(px)',
+          tag: 'width',
+          setValueKey: 'barStyle',
+          param: {
+            placeholder: '请输入宽度'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '高度(px)',
+          tag: 'height',
+          setValueKey: 'barStyle',
+          param: {
+            placeholder: '请输入高度'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '导航间距px',
+          tag: 'margin-right',
+          setValueKey: 'barStyle',
+          param: {
+            placeholder: '请输入导航间距'
+          }
+        },
+        getRadiusParam('圆角设置', 'barStyle'),
+        getBorderParam('边框设置', 'barStyle')
+      ]
+    },
+    {
+      type: 'setGroup',
+      title: '导航选中样式',
+      isSub: true,
+      setList: [
+        {
+          type: 'colorGroup',
+          title: '背景色',
+          tag: 'background-color',
+          setValueKey: 'barCheckedStyle',
+          param: {
+            placeholder: '导航右边距'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '宽度(px)',
+          tag: 'width',
+          setValueKey: 'barCheckedStyle',
+          param: {
+            placeholder: '请输入宽度'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '高度(px)',
+          tag: 'height',
+          setValueKey: 'barCheckedStyle',
+          param: {
+            placeholder: '请输入高度'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '导航间距px',
+          tag: 'margin-right',
+          setValueKey: 'barCheckedStyle',
+          param: {
+            placeholder: '请输入导航间距'
+          }
+        },
+        getRadiusParam('圆角设置', 'barCheckedStyle'),
+        getBorderParam('边框设置', 'barCheckedStyle')
+      ]
     }
   ]
 }

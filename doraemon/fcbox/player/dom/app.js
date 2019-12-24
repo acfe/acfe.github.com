@@ -173,10 +173,9 @@ const FcDomPlayer = {
       if (!this.param.drag || this.animating || this.scrollParam.moveLock) {
         return false
       }
-      e.stopPropagation()
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlaying = false
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       const scrollParam = this.scrollParam
       const sX = event.pageX || event.x
       const sY = event.pageY || event.y
@@ -195,11 +194,12 @@ const FcDomPlayer = {
       if (!scrollParam || !scrollParam.moveLock) {
         return false
       }
-      const event = (!e.pageX && !e.x) ? e.targetTouches[0] : e
+      const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       scrollParam.mX = event.pageX || event.x
       scrollParam.mY = event.pageY || event.y
       if (Math.abs(scrollParam.mX - scrollParam.sX) > 30 || (Math.abs(scrollParam.mX - scrollParam.sX) > Math.abs(scrollParam.mY - scrollParam.sY)) || scrollParam.move) {
         e.preventDefault()
+        e.stopPropagation()
         let changeX = scrollParam.sX - scrollParam.mX
         this.player.scrollLeft = scrollParam.sL + changeX / 3
         this.changeX = changeX

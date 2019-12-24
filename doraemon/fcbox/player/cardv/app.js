@@ -1,11 +1,11 @@
 /**
- * Created by 001264 on 2018/11/12.
+ * Created by 001264 on 2019/12/23.
  */
 import Animation from 'fcbox/utils/animation'
 let autoPlayTimeout = []
 
-const FcVerticalPlayer = {
-  name: 'FcVerticalPlayer',
+const FcCardVPlayer = {
+  name: 'FcCardVPlayer',
   data () {
     return {
       randKey: Math.random(),
@@ -27,7 +27,7 @@ const FcVerticalPlayer = {
     this.dataLength = dataLength
     this.renderDataInit()
     this.Animation = new Animation()
-    this.param.FcVerticalPlayer = this
+    this.param.FcCardVPlayer = this
     this.param.drag = this.param.drag === undefined ? true : this.param.drag
     this.param.initCallback && this.param.initCallback(this)
   },
@@ -106,28 +106,38 @@ const FcVerticalPlayer = {
       for (let i in this.renderData) {
         this.renderData[i].show = false
         this.renderData[i].style = {
-          top: (3 * this.moduleHeight) + 'px'
+          display: 'none',
+          position: 'absolute'
         }
         this.renderData[i].ref = 'empty'
         this.renderData[i].dataRender = 'empty'
         if (i == page) {
+          this.renderData[i].ref = 'preFlip'
           this.renderData[i].show = true
           this.renderData[i].style = {
-            top: -this.moduleHeight + 'px'
+            display: 'none',
+            position: 'absolute',
+            top: -this.moduleHeight + 'px',
+            'z-index': 1
           }
         }
         if (i == page + 1) {
           this.renderData[i].show = true
           this.renderData[i].style = {
-            top: 0
+            display: 'block',
+            position: 'relative'
           }
-          this.renderData[i].ref = 'renderScroll'
+          this.renderData[i].ref = 'renderFlip'
           this.renderData[i].dataRender = 'render'
         }
         if (i == page + 2) {
+          this.renderData[i].ref = 'nextFlip'
           this.renderData[i].show = true
           this.renderData[i].style = {
-            top: this.moduleHeight + 'px'
+            display: 'block',
+            position: 'absolute',
+            top: this.moduleHeight + 'px',
+            'z-index': 2
           }
         }
       }
@@ -141,17 +151,44 @@ const FcVerticalPlayer = {
       let autoPlayTime = this.param.autoPlayTime || 3000
       this.autoPlayTimeout && clearTimeout(this.autoPlayTimeout)
       this.autoPlayTimeout = setTimeout(() => {
-        this.changeY = -100
+        this.changeY = -300
+        this.nextFlip = this.$refs.nextFlip[0]
+        if (this.nextFlip) {
+          Object.assign(this.nextFlip.style, {
+            position: 'absolute',
+            display: 'block',
+            top: this.moduleHeight + 'px',
+            'z-index': 2
+          })
+        }
         this.moveBack(true)
       }, autoPlayTime)
       autoPlayTimeout.push(this.autoPlayTimeout)
     },
     goPre () {
-      this.changeY = 100
+      this.changeY = 200
+      this.preFlip = this.$refs.preFlip[0]
+      if (this.preFlip) {
+        Object.assign(this.preFlip.style, {
+          display: 'block',
+          position: 'absolute',
+          top: -this.moduleHeight + 'px',
+          'z-index': 2
+        })
+      }
       this.moveBack()
     },
     goNext () {
-      this.changeY = -100
+      this.changeY = -200
+      this.nextFlip = this.$refs.nextFlip[0]
+      if (this.nextFlip) {
+        Object.assign(this.nextFlip.style, {
+          display: 'block',
+          position: 'absolute',
+          top: this.moduleHeight + 'px',
+          'z-index': 2
+        })
+      }
       this.moveBack()
     },
     goto (setPage, callback) {
@@ -164,37 +201,46 @@ const FcVerticalPlayer = {
       let max = this.dataLength - 1
       page = page < 0 ? max : page
       page = page > max ? 0 : page
-      let added = page > this.renderPage ? -1 : 1
-      let eT = added * this.moduleHeight
+      let added = page > this.renderPage ? 1 : -1
       for (let i in this.renderData) {
         this.renderData[i].show = false
         this.renderData[i].style = {
-          top: (3 * this.moduleHeight) + 'px'
+          display: 'none'
         }
         this.renderData[i].ref = 'empty'
-        if (i == parseInt(page) + 1) {
-          this.renderData[i].show = true
-          this.renderData[i].style = {
-            top: -eT + 'px'
-          }
-        }
+        this.renderData[i].dataRender = 'empty'
         if (i == parseInt(this.renderPage) + 1) {
           this.renderData[i].show = true
           this.renderData[i].style = {
-            top: 0
+            position: 'relative',
+            display: 'block'
           }
-          this.renderData[i].ref = 'renderScroll'
+          this.renderData[i].ref = 'renderFlip'
+        }
+        if (i == parseInt(page) + 1) {
+          this.renderData[i].ref = added > 0 ? 'nextFlip' : 'preFlip'
+          this.renderData[i].show = true
+          this.renderData[i].style = {
+            display: 'block',
+            position: 'absolute',
+            'z-index': 2,
+            top: added * this.moduleHeight + 'px'
+          }
         }
       }
       this.randKey = Math.random()
-      this.play(0, eT, () => {
-        this.setRenderPage(page)
-        callback && callback()
+      this.changeY = added * 200
+      setTimeout(() => {
+        this.play(added, () => {
+          this.setRenderPage(page, true)
+          callback && callback()
+        })
+        this.changeY = 0
       })
     },
     touchstart (e) {
       this.scrollParam = this.scrollParam || {}
-      if (!this.param.drag || this.animating || this.scrollParam.moveLock || !this.$refs.renderScroll || !this.$refs.renderScroll[0]) {
+      if (!this.param.drag || this.animating || this.scrollParam.moveLock || !this.$refs.renderFlip || !this.$refs.renderFlip[0]) {
         return false
       }
       e.stopPropagation()
@@ -202,14 +248,11 @@ const FcVerticalPlayer = {
       this.autoPlaying = false
       const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
       const scrollParam = this.scrollParam
-      const sX = event.pageX || event.x
       const sY = event.pageY || event.y
       this.changeY = 0
       Object.assign(scrollParam, {
-        sX,
         sY,
         moveLock: true,
-        sT: 0,
         move: false
       })
       return true
@@ -219,26 +262,44 @@ const FcVerticalPlayer = {
       if (!scrollParam || !scrollParam.moveLock) {
         return false
       }
-      this.renderScroll = this.$refs.renderScroll[0]
+      this.renderFlip = this.$refs.renderFlip[0]
       const event = (!e.pageX && !e.x && e.targetTouches) ? e.targetTouches[0] : e
-      scrollParam.mX = event.pageX || event.x
       scrollParam.mY = event.pageY || event.y
       let changeY = scrollParam.mY - scrollParam.sY
-      let maxScroll = this.renderScroll.scrollHeight - this.renderScroll.offsetHeight
+      let maxScroll = this.renderFlip.scrollHeight - this.renderFlip.offsetHeight
       scrollParam.move = false
-      if ((this.renderScroll.scrollTop == 0 && changeY > 30) || (this.renderScroll.scrollTop >= maxScroll && changeY < 30)) {
+      if ((this.renderFlip.scrollTop == 0 && changeY > 30) || (this.renderFlip.scrollTop >= maxScroll && changeY < 30)) {
         scrollParam.move = true
         this.changeY = changeY
       }
       if (scrollParam.move) {
-        e.preventDefault()
-        Object.assign(this.player.childNodes[0].style, {
-          transform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
-          WebkitTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
-          OTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
-          MozTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)',
-          MsTransform: 'translateY(' + (scrollParam.sT + changeY / 3) + 'px)'
-        })
+        this.renderFlip = this.$refs.renderFlip[0]
+        this.preFlip = this.$refs.preFlip[0]
+        this.nextFlip = this.$refs.nextFlip[0]
+        e.preventDefault(this.renderFlip)
+        let added = this.changeY < 0 ? 1 : -1
+        let clientHeight = this.moduleHeight
+        let scale = Math.abs(changeY / 5) / clientHeight
+        scale = 1 - scale
+        scale = scale < 0.7 ? 0.7 : scale
+        this.setTransform(this.renderFlip.style, 'scale(' + (scale) + ')')
+        if (added > 0) {
+          Object.assign(this.nextFlip.style, {
+            display: 'block'
+          })
+          this.setTransform(this.nextFlip.style, 'translateY(' + (changeY) + 'px)')
+          Object.assign(this.preFlip.style, {
+            display: 'none'
+          })
+        } else {
+          Object.assign(this.preFlip.style, {
+            display: 'block'
+          })
+          this.setTransform(this.preFlip.style, 'translateY(' + (changeY) + 'px)')
+          Object.assign(this.nextFlip.style, {
+            display: 'none'
+          })
+        }
       }
     },
     touchend (e) {
@@ -259,49 +320,93 @@ const FcVerticalPlayer = {
         this.moveBack(true)
       }
     },
+    setTransform (style, transform) {
+      Object.assign(style, {
+        transform: transform,
+        WebkitTransform: transform,
+        OTransform: transform,
+        MozTransform: transform,
+        MsTransform: transform
+      })
+    },
     clickCallback (renderPage) {
       this.autoPlay()
     },
     moveBack (fromDrag) {
-      let added = this.changeY > 0 ? 1 : -1
-      let renderPage = this.renderPage - added
+      let added = this.changeY < 0 ? 1 : -1
+      let renderPage = this.renderPage + added
       if (!this.param.loop && (renderPage < 0 || renderPage > this.dataLength - 1)) {
         renderPage = this.renderPage
         added = 0
       }
-      if (Math.abs(this.changeY) < 100) {
+      let ch = this.moduleHeight / 2
+      ch = ch > 200 ? 200 : ch
+      if (Math.abs(this.changeY) < ch) {
         renderPage = this.renderPage
         added = 0
       }
-      this.changeY = 0
-      let sT = 0
-      if (/^translateY\((-?\d+)/.exec(this.player.childNodes[0].style.transform)) {
-        sT = parseInt(/^translateY\((-?\d+)/.exec(this.player.childNodes[0].style.transform)[1]) || 0
-      }
-      let eT = added * this.moduleHeight
-      this.play(sT, eT, () => {
-        if (added) {
-          this.setRenderPage(renderPage, fromDrag)
-        }
+      this.play(added, () => {
+        this.setRenderPage(renderPage, fromDrag)
       })
+      this.changeY = 0
     },
-    play (toPageStart, toPageEnd, callback) {
+    play (added, callback) {
+      let changeY = this.changeY
+      this.renderFlip = this.$refs.renderFlip[0]
+      this.preFlip = this.$refs.preFlip[0]
+      this.nextFlip = this.$refs.nextFlip[0]
       const tween = this.Animation.tween.Cubic.easeOut
+      const getAnimationData = this.Animation.getAnimationData
       const that = this
       this.animating = true
+      let tEnd = 48
+      let clientHeight = this.moduleHeight
+      let scale = 1 - Math.abs(changeY / 5) / clientHeight
+      scale = scale < 0.7 ? 0.7 : scale
+      let scaleArr = getAnimationData(scale, 1, tEnd, tween)
+      let opArr = getAnimationData(1, 0, tEnd, tween)
+      let rmArr
+      switch (added) {
+        case 0:
+          rmArr = getAnimationData(changeY, 0, tEnd, tween)
+          break
+        case 1:
+          scaleArr = getAnimationData(scale, 0.7, tEnd, tween)
+          rmArr = getAnimationData(changeY, -clientHeight, tEnd, tween)
+          break
+        case -1:
+          scaleArr = getAnimationData(scale, 0.7, tEnd, tween)
+          rmArr = getAnimationData(changeY, clientHeight, tEnd, tween)
+          break
+      }
       this.Animation.play({
-        aStart: toPageStart,
-        aEnd: toPageEnd,
-        tEnd: 24,
+        aStart: 0,
+        aEnd: 0,
+        tEnd,
         tween,
-        handle (num) {
-          Object.assign(that.player.childNodes[0].style, {
-            transform: 'translateY(' + parseInt(num) + 'px)',
-            WebkitTransform: 'translateY(' + parseInt(num) + 'px)',
-            OTransform: 'translateY(' + parseInt(num) + 'px)',
-            MozTransform: 'translateY(' + parseInt(num) + 'px)',
-            MsTransform: 'translateY(' + parseInt(num) + 'px)'
-          })
+        handle (num, acNum) {
+          that.setTransform(that.renderFlip.style, 'scale(' + (scaleArr[acNum]) + ')')
+          switch (added) {
+            case 0:
+              if (changeY > 0) {
+                that.setTransform(that.preFlip.style, 'translateY(' + (rmArr[acNum]) + 'px)')
+              } else {
+                that.setTransform(that.nextFlip.style, 'translateY(' + (rmArr[acNum]) + 'px)')
+              }
+              break
+            case 1:
+              Object.assign(that.renderFlip.style, {
+                opacity: opArr[acNum]
+              })
+              that.setTransform(that.nextFlip.style, 'translateY(' + (rmArr[acNum]) + 'px)')
+              break
+            case -1:
+              Object.assign(that.renderFlip.style, {
+                opacity: opArr[acNum]
+              })
+              that.setTransform(that.preFlip.style, 'translateY(' + (rmArr[acNum]) + 'px)')
+              break
+          }
         },
         finish () {
           that.animating = false
@@ -316,4 +421,4 @@ const FcVerticalPlayer = {
   }
 }
 
-export default FcVerticalPlayer
+export default FcCardVPlayer

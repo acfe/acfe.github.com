@@ -10,17 +10,17 @@
       <video
         ref="video"
         :src="param.src || ''"
-        controls=""
         :poster="param.poster || ''"
         preload="auto"
         webkit-playsinline="true"
         playsinline="true"
         x-webkit-airplay="allow"
         x5-playsinline
-        x5-video-player-type="h5"
+        x5-video-player-type=""
         x5-video-player-fullscreen="true"
         x5-video-orientation="portraint"
-        style="object-fit:fill"
+        style="object-fit:cover"
+        @click="playVideo"
         >
       </video>
     </div>

@@ -12,7 +12,8 @@ const EImage = {
   data () {
     return {
       randKey: Math.random(),
-      imageStyle: {}
+      imageStyle: {},
+      videoPlaying: false
     }
   },
   props: ['param', 'isSet', 'zIndex', 'acCallback', 'entry'],
@@ -32,7 +33,14 @@ const EImage = {
     })
   },
   methods: Object.assign({
-
+    playVideo () {
+      this.videoPlaying = !this.videoPlaying
+      if (this.videoPlaying) {
+        this.$refs.video.play()
+      } else {
+        this.$refs.video.pause()
+      }
+    }
   }, formatAc)
 }
 
