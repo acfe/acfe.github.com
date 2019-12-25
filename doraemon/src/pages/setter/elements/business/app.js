@@ -13,6 +13,15 @@ const EBusiness = {
     return {
       randKey: Math.random(),
       btnStyle: {},
+      textStyle: {},
+      textAlignStyle: {},
+      loading1BarStyle: {},
+      loading1BarLoadedStyle: {},
+      loading: {
+        percent: 0,
+        total: 0,
+        loaded: 0
+      },
       inputParam: {
         value: '',
         placeholder: '搜索'
@@ -23,6 +32,11 @@ const EBusiness = {
   created () {
     const param = this.param
     this.btnStyle = this.formatStyle(param.btnStyle || {})
+    this.textStyle = this.formatStyle(param.textStyle || {})
+    this.loading1BarStyle = this.formatStyle(param.loading1BarStyle || {})
+    this.loading1BarStyle.width = '100%'
+    this.loading1BarLoadedStyle = this.formatStyle(param.loading1BarLoadedStyle || {})
+    this.textAlignStyle['text-align'] = this.textStyle['text-align']
     if (param.defaultValue) {
       this.inputParam.value = param.defaultValue
     }
@@ -34,6 +48,16 @@ const EBusiness = {
     if (this.inputParam.value) {
       this.$refs.searchBtn.style.display = 'block'
     }
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.ac == 'preloadImageHandle') {
+        this.preloadImageHandle(e.data)
+      }
+    })
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.ac == 'preloadImageFinish') {
+        this.preloadImageFinish(e.data)
+      }
+    })
   },
   methods: Object.assign({
     doSeach () {
@@ -55,6 +79,17 @@ const EBusiness = {
             }
           })
           break
+      }
+    },
+    preloadImageHandle (data) {
+      this.loading = data
+      this.loading1BarLoadedStyle.width = data.percent + '%'
+    },
+    preloadImageFinish (data) {
+      this.loading = data
+      this.loading1BarLoadedStyle.width = data.percent + '%'
+      if (this.param.loadedHide) {
+        this.$refs.loading1.style.display = 'none'
       }
     }
   }, formatAc)

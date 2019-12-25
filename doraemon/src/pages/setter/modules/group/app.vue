@@ -52,7 +52,25 @@
           {{param.author}} {{param.time}}
         </div>
       </div>
-    </div>  
+      <!-- theme1001 -->
+      <div :class="'theme-' + theme" v-if="theme == 1001">
+        <div v-for="(itemC, keyC) in dataContent" :key="keyC" :style="contentPaddingStyle">
+          <div class="switch-control clear-fix" :style="itemStyle" @click="switchControl(itemC)">
+            <div class="switch-title" v-if="itemC.title" :style="titleStyle">{{itemC.title}}</div>
+            <div class="switch-icon" :style="iconStyle" v-html="iconContent" :ref="'i' + itemC.tabPageId"></div>
+          </div>
+          <div class="switch-content" v-if="itemC.content" :ref="'c' + itemC.tabPageId">
+            <div v-for="(item, key) in itemC.content" :key="key">
+              <MImages v-if="item && item.tag == 'images'" :isSet="isSet" :dataSource="dataSource" :param="item" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+              <MMenus v-if="item && item.tag == 'menus'" :isSet="isSet" :dataSource="dataSource" :param="item" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+              <MGroup v-if="item && item.tag == 'group'" :tabItems="tabItems" :isSet="isSet" :dataSource="dataSource" :param="item" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+              <MGoods v-if="item && item.tag == 'goods'" :isSet="isSet" :dataSource="dataSource" :param="item" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+              <MTab v-if="item && item.tag == 'tab'" :pages="pages" :tabItems="tabItems" :isSet="isSet" :dataSource="dataSource" :param="item" :acCallback="acCallback" :refreshContent="refreshContent" :setSetterContent="setSetterContent"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </FcModules>
 </template>
 

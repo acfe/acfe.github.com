@@ -133,6 +133,125 @@ const getBackgroundParam = (title, setValueKey = '') => {
   }
   return backgroundParam
 }
+// getTextParam
+const getTextGroupParam = (title, setValueKey = '', isSub = false) => {
+  let fontWeightObj = {
+    normal: '正常',
+    bold: '粗体'
+  }
+  let fontWeightData = [
+    {
+      option: '正常',
+      value: 'normal'
+    },
+    {
+      option: '粗体',
+      value: 'bold'
+    }
+  ]
+  for (let i = 1; i <= 9; i++) {
+    const num = i * 100
+    fontWeightObj[num] = num
+    fontWeightData.push({
+      option: num,
+      value: num
+    })
+  }
+  const textStyleSetGroup = {
+    type: 'setGroup',
+    title: title + '样式设置',
+    isSub,
+    setList: [
+      {
+        type: 'inputGroup',
+        title: '文字大小(px)',
+        tag: 'font-size',
+        param: {
+          placeholder: '请输入文字大小'
+        },
+        setValueKey
+      },
+      {
+        type: 'inputGroup',
+        title: '行高(px)',
+        tag: 'line-height',
+        param: {
+          placeholder: '请输入行高'
+        },
+        setValueKey
+      },
+      {
+        type: 'colorGroup',
+        title: '颜色',
+        tag: 'color',
+        param: {
+          placeholder: '请输入颜色(#fff000)'
+        },
+        setValueKey
+      },
+      {
+        type: 'selectorGroup',
+        title: '粗细',
+        tag: 'font-weight',
+        data: fontWeightData,
+        defaultOption: '正常',
+        defaultValue: 'normal',
+        optionObj: fontWeightObj,
+        setValueKey
+      },
+      {
+        type: 'selectorGroup',
+        title: '样式',
+        tag: 'text-decoration',
+        data: [
+          {
+            option: '正常',
+            value: 'none'
+          },
+          {
+            option: '删除线',
+            value: 'line-through'
+          },
+          {
+            option: '下划线',
+            value: 'underline'
+          }
+        ],
+        defaultOption: '正常',
+        defaultValue: 'none',
+        optionObj: {
+          'none': '正常',
+          'line-through': '删除线',
+          'underline': '下划线'
+        },
+        setValueKey
+      },
+      {
+        type: 'radioTabGroup',
+        title: '对齐',
+        tag: 'text-align',
+        defaultValue: 'left',
+        data: [
+          {
+            option: '靠左',
+            value: 'left'
+          },
+          {
+            option: '居中',
+            value: 'center'
+          },
+          {
+            option: '靠右',
+            value: 'right'
+          }
+        ],
+        setValueKey
+      },
+      getPaddingParam(title + '边距设置', setValueKey)
+    ]
+  }
+  return textStyleSetGroup
+}
 // getPaddingParam
 const getPaddingParam = (title, setValueKey = '') => {
   let paddingParam = {
@@ -199,6 +318,36 @@ const moduleStyleSetGroup = {
       param: {
         placeholder: '内容溢出时查看全部文案'
       }
+    },
+    getTextGroupParam('全部文案', 'moreTextStyle', true),
+    {
+      type: 'setGroup',
+      title: '全部文案图标设置',
+      open: false,
+      isSub: true,
+      setList: [
+        {
+          type: 'inputGroup',
+          title: '图标宽度(px)',
+          tag: 'moreIconWidth',
+          param: {
+            placeholder: '请输入图标宽度'
+          }
+        },
+        {
+          type: 'inputGroup',
+          title: '图标行高(px)',
+          tag: 'moreIconLineHeight',
+          param: {
+            placeholder: '请输入图标行高'
+          }
+        },
+        {
+          type: 'colorGroup',
+          title: '图标颜色',
+          tag: 'moreIconColor'
+        }
+      ]
     },
     getPaddingParam('模块边距设置', 'moduleStyle'),
     getRadiusParam('模块圆角设置', 'moduleStyle'),
@@ -373,124 +522,6 @@ const imageStyleSetGroup = {
     getRadiusParam('图片圆角设置', 'imageStyle'),
     getBorderParam('图片边框设置', 'imageStyle')
   ]
-}
-// getTextParam
-const getTextGroupParam = (title, setValueKey = '') => {
-  let fontWeightObj = {
-    normal: '正常',
-    bold: '粗体'
-  }
-  let fontWeightData = [
-    {
-      option: '正常',
-      value: 'normal'
-    },
-    {
-      option: '粗体',
-      value: 'bold'
-    }
-  ]
-  for (let i = 1; i <= 9; i++) {
-    const num = i * 100
-    fontWeightObj[num] = num
-    fontWeightData.push({
-      option: num,
-      value: num
-    })
-  }
-  const textStyleSetGroup = {
-    type: 'setGroup',
-    title: title + '样式设置',
-    setList: [
-      {
-        type: 'inputGroup',
-        title: '文字大小(px)',
-        tag: 'font-size',
-        param: {
-          placeholder: '请输入文字大小'
-        },
-        setValueKey
-      },
-      {
-        type: 'inputGroup',
-        title: '行高(px)',
-        tag: 'line-height',
-        param: {
-          placeholder: '请输入行高'
-        },
-        setValueKey
-      },
-      {
-        type: 'colorGroup',
-        title: '颜色',
-        tag: 'color',
-        param: {
-          placeholder: '请输入颜色(#fff000)'
-        },
-        setValueKey
-      },
-      {
-        type: 'selectorGroup',
-        title: '粗细',
-        tag: 'font-weight',
-        data: fontWeightData,
-        defaultOption: '正常',
-        defaultValue: 'normal',
-        optionObj: fontWeightObj,
-        setValueKey
-      },
-      {
-        type: 'selectorGroup',
-        title: '样式',
-        tag: 'text-decoration',
-        data: [
-          {
-            option: '正常',
-            value: 'none'
-          },
-          {
-            option: '删除线',
-            value: 'line-through'
-          },
-          {
-            option: '下划线',
-            value: 'underline'
-          }
-        ],
-        defaultOption: '正常',
-        defaultValue: 'none',
-        optionObj: {
-          'none': '正常',
-          'line-through': '删除线',
-          'underline': '下划线'
-        },
-        setValueKey
-      },
-      {
-        type: 'radioTabGroup',
-        title: '对齐',
-        tag: 'text-align',
-        defaultValue: 'left',
-        data: [
-          {
-            option: '靠左',
-            value: 'left'
-          },
-          {
-            option: '居中',
-            value: 'center'
-          },
-          {
-            option: '靠右',
-            value: 'right'
-          }
-        ],
-        setValueKey
-      },
-      getPaddingParam(title + '边距设置', setValueKey)
-    ]
-  }
-  return textStyleSetGroup
 }
 
 const tabGuildData = [

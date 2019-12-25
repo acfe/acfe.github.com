@@ -23,7 +23,9 @@ const theme = {
           'rotateZ': 0,
           'background-color': '#fff'
         },
-        imageStyle: {}
+        imageStyle: {
+          width: 60
+        }
       }
     ]
   }
@@ -55,6 +57,21 @@ const themeSet = {
               tag: 'poster',
               title: '封面图',
               showTitle: true
+            },
+            {
+              type: 'imageGroup',
+              tag: 'maskIcon',
+              title: '播放图标',
+              showTitle: true
+            },
+            {
+              type: 'inputGroup',
+              title: '播放图标宽度',
+              tag: 'width',
+              param: {
+                placeholder: '请输入播放图标宽度'
+              },
+              setValueKey: 'imageStyle'
             },
             {
               type: 'textareaGroup',

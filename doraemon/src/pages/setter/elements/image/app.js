@@ -21,8 +21,11 @@ const EImage = {
     const param = this.param
     param.elementStyle = param.elementStyle || {}
     param.imageStyle = param.imageStyle || {}
-    this.imageStyle = param.imageStyle
+    this.imageStyle = Object.assign({}, param.imageStyle)
     this.imageStyle.height = param.elementStyle.height
+    if (param.imageStyle.width) {
+      this.imageStyle.width = param.imageStyle.width + 'px'
+    }
   },
   mounted () {
     window.addEventListener('message', (e) => {
@@ -31,9 +34,15 @@ const EImage = {
         this.randKey = Math.random()
       }
     })
+    if (this.$refs.video) {
+      this.$refs.video.addEventListener('pause', (e) => {
+        this.$refs.videoMask.style.opacity = 1
+      })
+    }
   },
   methods: Object.assign({
-    playVideo () {
+    playVideo (e) {
+      e.currentTarget.style.opacity = 0
       this.videoPlaying = !this.videoPlaying
       if (this.videoPlaying) {
         this.$refs.video.play()

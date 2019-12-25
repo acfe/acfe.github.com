@@ -10,8 +10,8 @@
     </div>
     <div class="show-more" @click="showMore" v-if="isShowMore && param.showMoreText">
       <div class="show-more-content clear-fix">
-        <div class="show-more-text">{{param.showMoreText}}</div>
-        <div class="show-more-icon"></div>
+        <div class="show-more-text" :style="moreTextStyle">{{param.showMoreText}}</div>
+        <div class="show-more-icon" v-html="moreIconContent" :style="moreIconStyle"></div>
       </div>
     </div>
   </div>

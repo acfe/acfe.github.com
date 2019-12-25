@@ -131,4 +131,34 @@
       padding-top: 10/@rem;
     }
   }
+  // theme-1001
+  .theme-1001 {
+    position: relative;
+    .switch-control {
+      position: relative;
+      .switch-title {
+        float: left;
+      }
+      .switch-icon {
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        right: 10/@rem;
+        top: 50%;
+        margin-top: -6px;
+        transition: transform .5s ease;
+        -webkit-transition: transform .5s ease;
+      }
+      .switch-icon-open {
+        -webkit-transform: rotateZ(180deg);
+        transform: rotateZ(180deg);
+      }
+    }
+    .switch-content {
+      overflow: hidden;
+      height: 0;
+      transition: height .5s ease;
+      -webkit-transition: height .5s ease;
+    }
+  }
 }

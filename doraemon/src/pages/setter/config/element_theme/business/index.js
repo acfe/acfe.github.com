@@ -1,7 +1,9 @@
 import theme1 from './theme1'
+import theme2 from './theme2'
 
 const themes = [
-  theme1
+  theme1,
+  theme2
 ]
 
 const theme = []

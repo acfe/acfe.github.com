@@ -257,17 +257,20 @@ const Index = {
         if (!imageArr.length) {
           window.postMessage({
             ac: 'preloadImageFinish',
+            loaded: total - imageArr.length,
+            percent: ((total - imageArr.length) / total) * 100,
             total
           }, '*')
+          this.checkloadedAction()
           // console.log('finish')
         } else {
           // console.log(imageArr.length, total)
-          // console.log('precent', ((total - imageArr.length) / total) * 100)
+          // console.log('percent', ((total - imageArr.length) / total) * 100)
           window.postMessage({
             ac: 'preloadImageHandle',
             loaded: total - imageArr.length,
             total,
-            precent: ((total - imageArr.length) / total) * 100
+            percent: ((total - imageArr.length) / total) * 100
           }, '*')
           this.doPreload(imageArr, total)
         }
@@ -346,6 +349,16 @@ const Index = {
           this.scrollEventInit()
         })
       }
+    },
+    checkloadedAction () {
+      let body = this.contentConfig.body
+      if (!body.action) {
+        return false
+      }
+      let acDelay = parseInt(body.acDelay) || 16
+      setTimeout(() => {
+        this.acCallback(body)
+      }, acDelay)
     },
     checkPageAction (page) {
       if (page.acDone && page.isFirstDo) {

@@ -5,8 +5,15 @@
       <div class="img-mask" v-if="isSet"></div>
       <div class="mh" v-if="isSet && !param.url"></div>
     </div>
-    <div class="e-image" :style="imageStyle" v-if="param.theme == 2">
+    <div class="e-image" v-if="param.theme == 2">
       <div class="img-mask" v-if="isSet"></div>
+      <div class="video-mask" @click="playVideo" ref="videoMask">
+        <div class="mask-td">
+          <div class="mask-icon" :style="imageStyle">
+            <img :src="param.maskIcon || 'http://consumerapp-1251779293.image.myqcloud.com/discovery/201912/smv9cj3qsj.png'">
+          </div>
+        </div>
+      </div>
       <video
         ref="video"
         :src="param.src || ''"
@@ -20,7 +27,6 @@
         x5-video-player-fullscreen="true"
         x5-video-orientation="portraint"
         style="object-fit:cover"
-        @click="playVideo"
         >
       </video>
     </div>

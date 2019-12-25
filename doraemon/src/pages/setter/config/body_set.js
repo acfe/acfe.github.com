@@ -173,6 +173,26 @@ const bodySetParam = {
         }
       ]
     },
+    {
+      type: 'setGroup',
+      title: '资源加载完毕事件设置',
+      open: false,
+      setList: [
+        {
+          type: 'inputGroup',
+          title: '加载事件延迟',
+          tag: 'acDelay',
+          param: {
+            placeholder: '请输入毫秒数'
+          }
+        },
+        {
+          type: 'actionGroup',
+          tag: 'action',
+          acTitle: '加载完毕触发'
+        }
+      ]
+    },
     Object.assign(commonSet.getBackgroundParam('文档背景设置', 'style'), {
       isSub: false,
       open: false
