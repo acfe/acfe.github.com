@@ -13,6 +13,7 @@ import theme3 from './theme3'
 import theme14 from './theme14'
 import theme4 from './theme4'
 import theme16 from './theme16'
+import theme17 from './theme17'
 // 兼容旧文本配置
 import theme6 from './theme6'
 import theme7 from './theme7'
@@ -31,7 +32,8 @@ const themes = [
   theme3,
   theme14,
   theme4,
-  theme16
+  theme16,
+  theme17
 ]
 
 const theme = []

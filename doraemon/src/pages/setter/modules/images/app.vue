@@ -90,7 +90,26 @@
       <div :class="'theme-11'" v-if="inTheme(theme, [11])"  @click="clickCallback(param)">
         <FcFitImage :src="param.url" :imageStyle="param.imageStyle"/>
       </div>
-    </div>  
+      <!-- theme17 -->
+      <div class="theme-4"  v-if="inTheme(theme, [17]) && domPlayerParam.loaded">
+        <FcPartHPlayer :isSet="isSet" :param="domPlayerParam" v-if="domPlayerParam.data && domPlayerParam.data.length">
+          <template slot="statusBar" slot-scope="props" v-if="domPlayerParam.showGuild">
+            <PlayerStatusBar :pageData="props.data" :checkedKey="props.checked" :param="param"/>
+          </template>
+          <template slot="s1" slot-scope="props">
+            <div class="image-content" @click="clickCallback(props.data)">
+              <FcFitImage :src="props.data.url" :imageStyle="param.imageStyle" v-if="props.data.url"/>
+              <div class="f-content-mask" v-if="param.textMaskImage" :style="textMaskStyle"></div>
+              <div class="f-content" :style="fContentStyle">
+                <div class="f-tag" :style="fTagStyle" v-if="props.data.fTag" v-html="props.data.fTag"></div>
+                <div class="title" :style="fTitleStyle" v-if="props.data.fTitle" v-html="props.data.fTitle"></div>
+                <div class="description" :style="fDescriptionStyle" v-if="props.data.fDescription" v-html="props.data.fDescription"></div>
+              </div>
+            </div>
+          </template>
+        </FcPartHPlayer>
+      </div>
+    </div>
   </FcModules>
 </template>
 

@@ -52,10 +52,10 @@ const FcModules = {
       if (this.$refs.fcModule && this.param.heightType == 'auto') {
         this.param.moduleHeight = this.$refs.fcModule.offsetHeight
       }
-      if (this.$refs.fcModule.scrollHeight > this.$refs.fcModule.offsetHeight) {
+      if (this.$refs.fcModule && this.$refs.fcModule.scrollHeight > this.$refs.fcModule.offsetHeight) {
         this.isShowMore = true
       }
-    }, 100)
+    }, 500)
     if (this.isSet) {
       this.$refs.fcModule.addEventListener('mousedown', this.mousedown)
       this.$refs.fcModule.addEventListener('mousemove', this.mousemove)

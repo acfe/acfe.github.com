@@ -133,6 +133,7 @@ export default {
         break
       case 4:
       case 16:
+      case 17:
         let data = []
         for (let c in dataContent) {
           data.push(Object.assign(dataContent[c], {

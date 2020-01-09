@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- theme3 -->
-      <div :class="'theme-' + theme" v-if="theme == 3">
+      <div :class="'group-theme-' + theme" v-if="theme == 3">
         <div class="theme3-item" v-for="(item, key) in dataContent" :key="key" @click="clickCallback(item)">
           <div class="item-content">
             <div class="title" :style="titleStyle" v-if="item.title">

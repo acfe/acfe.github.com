@@ -127,11 +127,26 @@ const MImages = {
   },
   methods: Object.assign({
     loadPiece () {
+      const param = this.param
       switch (this.theme) {
         case 4:
         case 16:
           const FcDomPlayerLoader = () => import(/* webpackChunkName: "dom_player_piece" */ 'fcbox/player/dom')
           FcDomPlayerLoader().then((data) => {
+            Vue.use(data.default)
+            this.domPlayerParam.loaded = true
+          })
+          break
+        case 17:
+          Object.assign(this.domPlayerParam, {
+            addedNum: parseInt(param.addedNum) || 2,
+            showHeight: parseInt(param.showHeight) || 0,
+            contentWidth: param.contentWidth || 0,
+            leftPos: param.leftPos || 0,
+            space: param.space || 0
+          })
+          const FcPartHPlayerLoader = () => import(/* webpackChunkName: "parth_player_piece" */ 'fcbox/player/parth')
+          FcPartHPlayerLoader().then((data) => {
             Vue.use(data.default)
             this.domPlayerParam.loaded = true
           })
